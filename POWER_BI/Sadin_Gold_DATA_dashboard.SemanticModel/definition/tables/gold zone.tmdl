@@ -1,0 +1,174 @@
+table 'gold zone'
+	lineageTag: 6dc41f50-5b03-4799-a6c1-5a09c92d8575
+
+	column zone_key
+		dataType: string
+		lineageTag: e44fd997-b296-4166-a6cd-bcc5919c2d4f
+		summarizeBy: none
+		sourceColumn: zone_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_key
+		dataType: string
+		lineageTag: 2946d8fa-0c84-4e41-b194-53099944ca22
+		summarizeBy: none
+		sourceColumn: facility_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column parent_zone_key
+		dataType: string
+		lineageTag: 2a6391e0-cba7-40e2-8b7b-5ebb739064ad
+		summarizeBy: none
+		sourceColumn: parent_zone_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column parent_zone_name
+		dataType: string
+		lineageTag: ce99025e-de40-4838-8e9b-070ca28a98e1
+		summarizeBy: none
+		sourceColumn: parent_zone_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_name
+		dataType: string
+		lineageTag: 2bfe0308-8bd6-499e-897d-209c9d6e3e7c
+		summarizeBy: none
+		sourceColumn: zone_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_type_key
+		dataType: string
+		lineageTag: 3b0068d8-19c7-493a-befa-6eae809abe0c
+		summarizeBy: none
+		sourceColumn: zone_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_type_name
+		dataType: string
+		lineageTag: 6b6e9270-a559-48f7-a521-2de9130a6332
+		summarizeBy: none
+		sourceColumn: zone_type_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column hierarchy_level
+		dataType: int64
+		formatString: 0
+		lineageTag: 7418a606-7a47-4c4d-8c39-482f673014da
+		summarizeBy: sum
+		sourceColumn: hierarchy_level
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_building
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e243451c-0eef-4657-b14e-d2ac65b20cc3
+		summarizeBy: none
+		sourceColumn: is_building
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a6aacd3f-e329-4b39-9e04-32cc3ea2b6af
+		summarizeBy: none
+		sourceColumn: is_active
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_children
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 866dd21b-3058-4413-9c72-fecf6d99b93c
+		summarizeBy: none
+		sourceColumn: has_children
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		lineageTag: 69947ace-428c-47f7-b4d9-a58fdb14f82b
+		summarizeBy: sum
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column longitude
+		dataType: double
+		lineageTag: 60b1f702-28e4-4364-a3f8-8cf2111cfcd6
+		summarizeBy: sum
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column x_coordinate
+		dataType: double
+		lineageTag: c0fce3b5-8753-4869-9ba1-257bbe995151
+		summarizeBy: sum
+		sourceColumn: x_coordinate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column y_coordinate
+		dataType: double
+		lineageTag: 9db29366-b920-4719-b12d-5f2f52220678
+		summarizeBy: sum
+		sourceColumn: y_coordinate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column html_hex_color
+		dataType: string
+		lineageTag: 88711db4-9a39-4c91-9167-4e32a5f1e3af
+		summarizeBy: none
+		sourceColumn: html_hex_color
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 360b0957-9741-4853-afa2-2acb00667eb8
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_created_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e75f308a-f25a-4ef1-89ba-b5e701beb022
+		summarizeBy: none
+		sourceColumn: source_created_at
+
+		variation Variation
+			isDefault
+			relationship: 29ce378a-edd3-4b58-9912-502118c433fe
+			defaultHierarchy: LocalDateTable_8e336d75-7956-48f2-9e96-4bc6015e7503.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'gold zone' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "sadinhub"),
+				    gold_zone = Source{[Schema="gold",Item="zone"]}[Data]
+				in
+				    gold_zone
+

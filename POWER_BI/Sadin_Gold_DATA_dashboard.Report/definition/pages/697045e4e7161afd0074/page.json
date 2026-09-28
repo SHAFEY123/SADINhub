@@ -1,0 +1,45 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "697045e4e7161afd0074",
+  "displayName": "Current & Measurement Consistency",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1400,
+  "objects": {
+    "outspacePane": [
+      {
+        "properties": {
+          "width": {
+            "expr": {
+              "Literal": {
+                "Value": "298L"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "0c9b59c3e4c091029bac",
+      "target": "588a2ae6e529028d447f",
+      "type": "DataFilter"
+    },
+    {
+      "source": "0c9b59c3e4c091029bac",
+      "target": "30f062c374474aa3f644",
+      "type": "DataFilter"
+    },
+    {
+      "source": "0c9b59c3e4c091029bac",
+      "target": "eceb3089f7bbe4306464",
+      "type": "DataFilter"
+    },
+    {
+      "source": "0c9b59c3e4c091029bac",
+      "target": "8162b4033f1984c8d510",
+      "type": "DataFilter"
+    }
+  ]
+}

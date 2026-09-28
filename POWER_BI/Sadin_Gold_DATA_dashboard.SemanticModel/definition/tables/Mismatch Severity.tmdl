@@ -1,0 +1,85 @@
+table 'Mismatch Severity'
+	lineageTag: 1d991fe7-ef9e-42db-b6f3-f3fc4d64b8ba
+
+	measure 'All Phase Mismatch Severity' =
+			
+			VAR SelectedSeverity =
+			    SELECTEDVALUE ( 'Mismatch Severity'[Severity] )
+			
+			VAR MajorIssueCount =
+			    CALCULATE(
+			        COUNTROWS('gold energy_raw'),
+			        'gold energy_raw'[status_amp1] = "Major Issue"
+			    )
+			    +
+			    CALCULATE(
+			        COUNTROWS('gold energy_raw'),
+			        'gold energy_raw'[status_amp2] = "Major Issue"
+			    )
+			    +
+			    CALCULATE(
+			        COUNTROWS('gold energy_raw'),
+			        'gold energy_raw'[status_amp3] = "Major Issue"
+			    )
+			
+			VAR MajorProblemCount =
+			    CALCULATE(
+			        COUNTROWS('gold energy_raw'),
+			        'gold energy_raw'[status_amp1] = "Major Problem"
+			    )
+			    +
+			    CALCULATE(
+			        COUNTROWS('gold energy_raw'),
+			        'gold energy_raw'[status_amp2] = "Major Problem"
+			    )
+			    +
+			    CALCULATE(
+			        COUNTROWS('gold energy_raw'),
+			        'gold energy_raw'[status_amp3] = "Major Problem"
+			    )
+			
+			RETURN
+			IF(
+			    ISINSCOPE('Mismatch Severity'[Severity]),
+			    SWITCH(
+			        SelectedSeverity,
+			        "Major Issue", MajorIssueCount,
+			        "Major Problem", MajorProblemCount
+			    ),
+			    MajorIssueCount + MajorProblemCount
+			)
+		formatString: 0
+		lineageTag: e348bb93-b602-4aa4-9176-f36048d5496d
+
+	column Severity
+		lineageTag: 1403fbf4-a93c-4f36-9375-a1e59a885ec1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Severity]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Sort Order'
+		formatString: 0
+		lineageTag: c77ed18c-e748-4f8e-9378-246af5c2c7e8
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Sort Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Mismatch Severity' = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "Severity", STRING,
+				    "Sort Order", INTEGER,
+				    {
+				        {"Major Issue", 1},
+				        {"Major Problem", 2}
+				    }
+				)
+
+	annotation PBI_Id = e2256011c7924f9aa3a5f5c567606aa8
+

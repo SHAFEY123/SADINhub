@@ -1,0 +1,139 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "90289a3ed4b599095d78",
+  "position": {
+    "x": 726.60039385584878,
+    "y": 427.18424576604963,
+    "z": 4000,
+    "height": 292.96321386372585,
+    "width": 553.66175659708551,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Zone13 Decrement Events"
+                    }
+                  },
+                  "Property": "meter"
+                }
+              },
+              "queryRef": "Zone13 Decrement Events.meter",
+              "nativeQueryRef": "meter"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Zone13 Decrement Events"
+                    }
+                  },
+                  "Property": "decrement_timestamp_saudi"
+                }
+              },
+              "queryRef": "Zone13 Decrement Events.decrement_timestamp_saudi",
+              "nativeQueryRef": "decrement_timestamp_saudi"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Zone13 Decrement Events"
+                    }
+                  },
+                  "Property": "problem_type"
+                }
+              },
+              "queryRef": "Zone13 Decrement Events.problem_type",
+              "nativeQueryRef": "problem_type"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Zone13 Decrement Events"
+                    }
+                  },
+                  "Property": "previous_kwh"
+                }
+              },
+              "queryRef": "Sum(Zone13 Decrement Events.previous_kwh)",
+              "nativeQueryRef": "previous_kwh"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Zone13 Decrement Events"
+                    }
+                  },
+                  "Property": "current_kwh"
+                }
+              },
+              "queryRef": "Sum(Zone13 Decrement Events.current_kwh)",
+              "nativeQueryRef": "current_kwh"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Zone13 Decrement Events"
+                    }
+                  },
+                  "Property": "next_kwh"
+                }
+              },
+              "queryRef": "Sum(Zone13 Decrement Events.next_kwh)",
+              "nativeQueryRef": "next_kwh"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Zone13 Decrement Events"
+                    }
+                  },
+                  "Property": "decrement_size_kwh"
+                }
+              },
+              "queryRef": "Sum(Zone13 Decrement Events.decrement_size_kwh)",
+              "nativeQueryRef": "decrement_size_kwh"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Zone13 Decrement Events"
+                  }
+                },
+                "Property": "meter"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

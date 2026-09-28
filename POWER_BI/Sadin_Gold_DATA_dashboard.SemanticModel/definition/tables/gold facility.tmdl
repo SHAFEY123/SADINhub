@@ -1,0 +1,182 @@
+table 'gold facility'
+	lineageTag: 6ff1c30f-fa95-428c-ba37-bfe76cfa3ae6
+
+	column facility_key
+		dataType: string
+		lineageTag: 6bdc1b44-715a-4e21-8e65-51e4ef39e61a
+		summarizeBy: none
+		sourceColumn: facility_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_name
+		dataType: string
+		lineageTag: 69d9bd3b-a014-466f-8300-b0c7e806e678
+		summarizeBy: none
+		sourceColumn: facility_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_type_key
+		dataType: string
+		lineageTag: e3f3e640-3f74-417e-9405-0859a6d1117a
+		summarizeBy: none
+		sourceColumn: facility_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_type_name
+		dataType: string
+		lineageTag: 1b6a23e4-aa39-4b9d-a287-8e16fa0ba367
+		summarizeBy: none
+		sourceColumn: facility_type_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		lineageTag: f37489f6-5346-402d-9c3b-b6ab72b9097a
+		summarizeBy: sum
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column longitude
+		dataType: double
+		lineageTag: abfda98b-da12-4946-a8df-dd83de047064
+		summarizeBy: sum
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column x_coordinate
+		dataType: double
+		lineageTag: 5152de22-ca0a-4f61-b05d-37987e5b9342
+		summarizeBy: sum
+		sourceColumn: x_coordinate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column y_coordinate
+		dataType: double
+		lineageTag: 96231077-da47-4141-a9a0-d9968ab2ade8
+		summarizeBy: sum
+		sourceColumn: y_coordinate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column address_key
+		dataType: string
+		lineageTag: a253d7c6-e11b-4f47-a54f-1725f96a5961
+		summarizeBy: none
+		sourceColumn: address_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column address_title
+		dataType: string
+		lineageTag: 5e4bd8a6-1dec-4b5c-80ac-98b82a1f21ec
+		summarizeBy: none
+		sourceColumn: address_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column short_address
+		dataType: string
+		lineageTag: 88a2b440-8696-4f48-a147-c50a1b280c2e
+		summarizeBy: none
+		sourceColumn: short_address
+
+		annotation SummarizationSetBy = Automatic
+
+	column building_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 2c58a4ae-78f3-4733-9883-7c5d83a92c84
+		summarizeBy: sum
+		sourceColumn: building_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column street_name
+		dataType: string
+		lineageTag: a69b9bf1-6ec8-4ea4-9339-8d9d6dc3137f
+		summarizeBy: none
+		sourceColumn: street_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column district_name
+		dataType: string
+		lineageTag: 6a9064a1-8f83-4846-b960-a8213776fa5f
+		summarizeBy: none
+		sourceColumn: district_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column city_name
+		dataType: string
+		lineageTag: f835760e-d2d2-450e-a9d4-c6c230ad8cbb
+		summarizeBy: none
+		sourceColumn: city_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column zip_code
+		dataType: int64
+		formatString: 0
+		lineageTag: 9be850d0-216a-492e-baf0-c2c1978ad88c
+		summarizeBy: sum
+		sourceColumn: zip_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column additional_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 2c3f7caa-c870-42ef-9c62-f7a0e53e5d35
+		summarizeBy: sum
+		sourceColumn: additional_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_number
+		dataType: int64
+		formatString: 0
+		lineageTag: b2a72504-26cb-4d3c-91ea-db3c8cb7950d
+		summarizeBy: sum
+		sourceColumn: unit_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_created_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: d74e2a07-a67b-478f-acb2-96099cfc348d
+		summarizeBy: none
+		sourceColumn: source_created_at
+
+		variation Variation
+			isDefault
+			relationship: 6cfd2adf-c990-43c5-b0b0-887c84725dac
+			defaultHierarchy: LocalDateTable_9e72cb67-9527-4eec-818c-787224a1870f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'gold facility' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "sadinhub"),
+				    gold_facility = Source{[Schema="gold",Item="facility"]}[Data]
+				in
+				    gold_facility
+

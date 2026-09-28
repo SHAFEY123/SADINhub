@@ -1,0 +1,239 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 1557.5564528254915,
+        "y": 6400.2956673019653
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 336.05954791088055,
+            "y": 6953.099330840294
+          },
+          "nodeIndex": "gold billing_account",
+          "nodeLineageTag": "46dad421-c5c3-4454-9c1d-d36489fbfb26",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 1142.3069229320342,
+            "y": 7179.17389761971
+          },
+          "nodeIndex": "gold date",
+          "nodeLineageTag": "304bd5af-8e0d-4d06-809c-ec5ac08bbe62",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 1062.0085973293976,
+            "y": 6706.1489511674772
+          },
+          "nodeIndex": "gold energy_bill",
+          "nodeLineageTag": "61ff025b-21c6-40e5-a501-cea80b21526a",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 6953.1739077651418
+          },
+          "nodeIndex": "gold facility",
+          "nodeLineageTag": "6ff1c30f-fa95-428c-ba37-bfe76cfa3ae6",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 908.30692293203424,
+            "y": 7347.4771662522853
+          },
+          "nodeIndex": "gold mapping_audit",
+          "nodeLineageTag": "afc4deb4-815c-41f4-b07d-dba45e124b8b",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 428.1901060785807,
+            "y": 7306.0956109599429
+          },
+          "nodeIndex": "gold meter",
+          "nodeLineageTag": "5338c737-3f97-4b4e-9d4b-1aa7c4ae89b5",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 9
+        },
+        {
+          "location": {
+            "x": 621.19341894285924,
+            "y": 7658.8887960719439
+          },
+          "nodeIndex": "gold quality_summary",
+          "nodeLineageTag": "bca77b20-02e2-4150-a8c4-761df6ca7fb3",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 622.37084239182286,
+            "y": 6942.3705434580261
+          },
+          "nodeIndex": "gold zone",
+          "nodeLineageTag": "6dc41f50-5b03-4799-a6c1-5a09c92d8575",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1557.0061449320333,
+            "y": 7131.3417506197111
+          },
+          "nodeIndex": "gold energy_raw",
+          "nodeLineageTag": "84ee2afb-3f08-4b9c-aea8-87a89a5db854",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 2338.4184939320303,
+            "y": 6830.3745266197129
+          },
+          "nodeIndex": "Negative Power Selector",
+          "nodeLineageTag": "7883f430-d13b-4adb-af2c-cd1270a1947a",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2025.0061449320333,
+            "y": 7147.4839456197114
+          },
+          "nodeIndex": "PF Phase Selector",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2259.0061449320333,
+            "y": 7104.966481619711
+          },
+          "nodeIndex": "PF Status Selector",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2493.0061449320333,
+            "y": 7041.1902856197121
+          },
+          "nodeIndex": "Voltage Frequency Metric Selector",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2052.0414039320372,
+            "y": 7464.0245846197085
+          },
+          "nodeIndex": "gold energy_reading_gaps",
+          "nodeLineageTag": "b365c8d9-3f0a-4cc9-bf20-b6bdb4322b91",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1709.9297451065402,
+            "y": 6775.0598436197124
+          },
+          "nodeIndex": "gold energy_consumption_validated",
+          "nodeLineageTag": "19f54046-c899-423a-9efb-2cf015d981bf",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2727.0061449320333,
+            "y": 5202.3717534919251
+          },
+          "nodeIndex": "Mismatch Severity",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2961.0061449320333,
+            "y": 2988.3824391206513
+          },
+          "nodeIndex": "Zone13 Decrement Events",
+          "nodeLineageTag": "fc36fd19-92c7-4e4f-a8fd-4df8d0d39cf6",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 56.447393005378068,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

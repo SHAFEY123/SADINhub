@@ -1,0 +1,188 @@
+table 'gold billing_account'
+	lineageTag: 46dad421-c5c3-4454-9c1d-d36489fbfb26
+
+	column grid_billing_account_key
+		dataType: string
+		lineageTag: e46d45e4-b622-482b-a723-78d5df5056b2
+		summarizeBy: none
+		sourceColumn: grid_billing_account_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_key
+		dataType: string
+		lineageTag: 8e35969a-adc2-4544-9c27-82c603555287
+		summarizeBy: none
+		sourceColumn: facility_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_key
+		dataType: string
+		lineageTag: 3ed442eb-5d28-4508-ade5-ec7fb5844965
+		summarizeBy: none
+		sourceColumn: zone_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_label
+		dataType: string
+		lineageTag: 6f8486cc-8d87-4d93-ad46-fc0f69812baf
+		summarizeBy: none
+		sourceColumn: account_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_number
+		dataType: string
+		lineageTag: 37361b14-500b-4286-8db2-39354e101c3b
+		summarizeBy: none
+		sourceColumn: account_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column meter_serial_number
+		dataType: string
+		lineageTag: 5ff8ac05-1602-4d25-85ad-62187d51f371
+		summarizeBy: none
+		sourceColumn: meter_serial_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_type_key
+		dataType: string
+		lineageTag: c1f5365d-3540-434e-b200-e22c3da5dd8f
+		summarizeBy: none
+		sourceColumn: account_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_type_name
+		dataType: string
+		lineageTag: 7cdf9c80-fa1c-42f0-9e61-96244a23f017
+		summarizeBy: none
+		sourceColumn: account_type_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column service_class_key
+		dataType: string
+		lineageTag: de8db1cf-7df6-4093-bbb5-c48746f52576
+		summarizeBy: none
+		sourceColumn: service_class_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column service_class_name
+		dataType: string
+		lineageTag: 9e9a69d3-3a9d-4cdf-8fcc-7e55c3194353
+		summarizeBy: none
+		sourceColumn: service_class_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column breaker_capacity
+		dataType: int64
+		formatString: 0
+		lineageTag: 12e89bab-1ec8-4a19-aa31-1622fb4671f6
+		summarizeBy: sum
+		sourceColumn: breaker_capacity
+
+		annotation SummarizationSetBy = Automatic
+
+	column minimal_breaker_capacity
+		dataType: int64
+		formatString: 0
+		lineageTag: cac39485-66de-4682-9960-c5094081bbab
+		summarizeBy: sum
+		sourceColumn: minimal_breaker_capacity
+
+		annotation SummarizationSetBy = Automatic
+
+	column maximum_breaker_capacity
+		dataType: int64
+		formatString: 0
+		lineageTag: 16ca0346-5d0c-4aa3-a8a1-12c6e271b95f
+		summarizeBy: sum
+		sourceColumn: maximum_breaker_capacity
+
+		annotation SummarizationSetBy = Automatic
+
+	column service_class_fee
+		dataType: int64
+		formatString: 0
+		lineageTag: cdc721cb-8b52-4a95-8631-e1bd4cffa0d8
+		summarizeBy: sum
+		sourceColumn: service_class_fee
+
+		annotation SummarizationSetBy = Automatic
+
+	column multiplication_factor
+		dataType: int64
+		formatString: 0
+		lineageTag: 7c00d00f-dd1d-44d7-ab8d-0c3527ae5b68
+		summarizeBy: sum
+		sourceColumn: multiplication_factor
+
+		annotation SummarizationSetBy = Automatic
+
+	column start_period
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 110bd9bf-1928-44dc-8841-c6aa81974187
+		summarizeBy: none
+		sourceColumn: start_period
+
+		variation Variation
+			isDefault
+			relationship: 4cf09a8d-32cd-4c2d-a5c2-bc45675d107f
+			defaultHierarchy: LocalDateTable_d60c5609-3d99-4b28-b461-55e37c054b87.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column end_period
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 54ccc220-733d-48a3-ae50-bf72c5ca9af0
+		summarizeBy: none
+		sourceColumn: end_period
+
+		variation Variation
+			isDefault
+			relationship: 7edd0d63-1255-4938-b142-a9862da98df9
+			defaultHierarchy: LocalDateTable_fdc3eb3f-4d81-4365-aa7c-2d69065abd8f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column configured_billing_days
+		dataType: int64
+		formatString: 0
+		lineageTag: 53d16dcb-9ece-40ce-a164-e4021a5093b3
+		summarizeBy: sum
+		sourceColumn: configured_billing_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_created_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 06ec63f8-f936-4f73-8b05-9dbda8edae90
+		summarizeBy: none
+		sourceColumn: source_created_at
+
+		variation Variation
+			isDefault
+			relationship: dcb57c22-5190-4e30-9ea4-0ef2af0141ee
+			defaultHierarchy: LocalDateTable_b86927cc-23ad-42bc-87a7-36b4a45e1f55.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'gold billing_account' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "sadinhub"),
+				    gold_billing_account = Source{[Schema="gold",Item="billing_account"]}[Data]
+				in
+				    gold_billing_account
+

@@ -1,0 +1,1187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SADINhub Energy Intelligence — live</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F4F6F8; --surf:#FFFFFF; --surf2:#F8F9FA; --surf3:#EEF2F6;
+  --edge:#DEE2E6; --edge2:#E9ECEF;
+  --ink:#071C2F; --ink2:#495057; --ink3:#626F7E;
+  --navy:#002B59; --brand:#1274E7; --brand-s:#E4EFFC; --on-brand:#FFFFFF;
+  --p1:#C77C00; --p2:#1274E7; --p3:#7B4FD0;
+  --crit:#C4392B; --warn:#B57A00; --ok:#1E7F55; --rev:#6C757D; --inv:#7B4FD0;
+  --crit-s:#FAE3E0; --warn-s:#FCF1D8; --ok-s:#DDEFE6;
+  --grid:#E4E9EE;
+  --sh:0 1px 2px rgba(7,28,47,.06),0 6px 18px -10px rgba(7,28,47,.18);
+  --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+  --sans:'Tajawal',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#061119; --surf:#0C1C29; --surf2:#112533; --surf3:#16303F;
+  --edge:#22404F; --edge2:#1A3442;
+  --ink:#E8EFF5; --ink2:#9FB2C0; --ink3:#8FA5B4;
+  --navy:#4A9BF5; --brand:#5AA6F8; --brand-s:#0F2B44; --on-brand:#04121D;
+  --p1:#E5A93A; --p2:#5AA6F8; --p3:#B49AE6;
+  --crit:#F08A78; --warn:#E8B457; --ok:#5CC993; --rev:#9FB2C0; --inv:#B49AE6;
+  --crit-s:#33170F; --warn-s:#2E2409; --ok-s:#0E2C1F;
+  --grid:#1D3846;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 8px 24px -12px rgba(0,0,0,.7);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#061119; --surf:#0C1C29; --surf2:#112533; --surf3:#16303F;
+  --edge:#22404F; --edge2:#1A3442;
+  --ink:#E8EFF5; --ink2:#9FB2C0; --ink3:#8FA5B4;
+  --navy:#4A9BF5; --brand:#5AA6F8; --brand-s:#0F2B44; --on-brand:#04121D;
+  --p1:#E5A93A; --p2:#5AA6F8; --p3:#B49AE6;
+  --crit:#F08A78; --warn:#E8B457; --ok:#5CC993; --rev:#9FB2C0; --inv:#B49AE6;
+  --crit-s:#33170F; --warn-s:#2E2409; --ok-s:#0E2C1F;
+  --grid:#1D3846;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 8px 24px -12px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.shell{max-width:1720px;margin:0 auto;padding:0 18px 64px}
+
+header.top{display:flex;flex-wrap:wrap;align-items:center;gap:18px;padding:14px 0 12px}
+.brand{display:flex;align-items:center;gap:10px;padding-right:18px;border-right:1px solid var(--edge)}
+.mark{width:34px;height:34px;border-radius:7px;background:#002B59;display:grid;place-items:center;flex:none}
+.mark svg{width:20px;height:20px;display:block}
+.bn{font-size:18px;font-weight:800;letter-spacing:-.01em;line-height:1.02}
+.bn em{font-style:normal;font-weight:400;color:var(--ink3)}
+.bt{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.15em;color:var(--ink3);margin-top:2px}
+.htitle h1{margin:0;font-size:21px;font-weight:700;letter-spacing:-.02em;line-height:1.08}
+.htitle p{margin:1px 0 0;font-size:12px;color:var(--ink3);font-family:var(--mono)}
+.hspace{flex:1}
+.stamp{font-family:var(--mono);font-size:10px;color:var(--ink3);text-align:right;line-height:1.7}
+.stamp b{color:var(--ink);font-weight:600;display:block;font-size:11px}
+.live{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9.5px;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--ok);border:1px solid var(--ok);
+  padding:2px 7px;border-radius:11px}
+.live i{width:6px;height:6px;border-radius:50%;background:var(--ok);display:block}
+.live.busy{color:var(--warn);border-color:var(--warn)}
+.live.busy i{background:var(--warn)}
+.tgl{background:var(--surf);border:1px solid var(--edge);color:var(--ink2);border-radius:5px;
+  width:34px;height:34px;cursor:pointer;display:grid;place-items:center;flex:none;font-size:15px}
+.tgl:hover{border-color:var(--brand);color:var(--brand)}
+
+nav.tabs{display:flex;gap:1px;overflow-x:auto;border-bottom:2px solid var(--edge)}
+nav.tabs button{appearance:none;background:none;border:0;border-bottom:2px solid transparent;
+  margin-bottom:-2px;padding:9px 15px;font-family:var(--sans);font-size:13.5px;font-weight:700;
+  color:var(--ink3);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:7px}
+nav.tabs button:hover{color:var(--ink)}
+nav.tabs button[aria-selected="true"]{color:var(--brand);border-bottom-color:var(--brand)}
+nav.tabs .tn{font-family:var(--mono);font-size:9.5px;font-weight:500;opacity:.6}
+
+.filters{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;padding:13px 0 14px;
+  border-bottom:1px solid var(--edge);margin-bottom:16px}
+.fg{display:flex;flex-direction:column;gap:5px;min-width:0}
+.fg>label{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.13em;
+  color:var(--ink3);font-weight:600}
+.fg>label em{font-style:normal;opacity:.65;letter-spacing:.05em}
+.chips{display:flex;flex-wrap:wrap;gap:4px;max-width:780px}
+.chip{appearance:none;font-family:var(--mono);font-size:10.5px;padding:4px 8px;border-radius:3px;
+  cursor:pointer;background:var(--surf);border:1px solid var(--edge);color:var(--ink2);line-height:1.3}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:600}
+select,input[type=date],input[type=time],input[type=number],input[type=search]{
+  font-family:var(--mono);font-size:11.5px;padding:6px 8px;border-radius:3px;
+  background:var(--surf);border:1px solid var(--edge);color:var(--ink);min-width:140px}
+:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.dates{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.sel-sum{font-family:var(--mono);font-size:10.5px;color:var(--ink3);padding-bottom:7px}
+.sel-sum b{color:var(--brand);font-weight:600}
+
+.page{display:none}.page.on{display:block}
+.grid{display:grid;gap:13px;grid-template-columns:repeat(12,1fr)}
+.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}
+.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
+@media (max-width:1220px){.c3,.c4,.c5{grid-column:span 6}.c7,.c8{grid-column:span 12}}
+@media (max-width:760px){.c3,.c4,.c5,.c6,.c7,.c8{grid-column:span 12}}
+
+.kpi{background:var(--surf);border:1px solid var(--edge);border-radius:5px;padding:11px 13px;
+  position:relative;overflow:hidden;box-shadow:var(--sh)}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--navy)}
+.kpi.k-warn::before{background:var(--warn)}.kpi.k-crit::before{background:var(--crit)}
+.kpi.k-ok::before{background:var(--ok)}
+.kl{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink3)}
+.kv{font-family:var(--mono);font-size:23px;font-weight:600;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;margin-top:6px;line-height:1.04}
+.kv u{text-decoration:none;font-size:11px;font-weight:500;color:var(--ink3);margin-left:4px}
+.ks{font-family:var(--mono);font-size:10px;color:var(--ink2);margin-top:4px;line-height:1.5}
+
+.panel{background:var(--surf);border:1px solid var(--edge);border-radius:5px;padding:12px 14px 14px;
+  box-shadow:var(--sh);display:flex;flex-direction:column;min-width:0}
+.ph{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.ph h3{margin:0;font-size:14px;font-weight:700;letter-spacing:-.01em}
+.pm{font-family:var(--mono);font-size:9.5px;color:var(--ink3);text-transform:uppercase;
+  letter-spacing:.08em;white-space:nowrap}
+.psub{font-size:12px;color:var(--ink3);margin:3px 0 10px;line-height:1.45;max-width:96ch}
+.cw{position:relative;width:100%;overflow:hidden}
+.cw canvas{display:block;width:100%!important;height:100%!important}
+.h180{height:180px}.h220{height:220px}.h260{height:260px}.h300{height:300px}.h340{height:340px}
+
+.tw{overflow:auto;max-height:520px;border:1px solid var(--edge2);border-radius:3px}
+.tw.tall{max-height:640px}
+table{border-collapse:collapse;width:100%;font-size:11.5px}
+thead th{position:sticky;top:0;background:var(--surf2);text-align:right;padding:7px 8px;
+  font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--ink3);font-weight:600;border-bottom:1px solid var(--edge);white-space:nowrap;z-index:1}
+thead th.l{text-align:left}
+thead th[data-k]{cursor:pointer;user-select:none}
+thead th[data-k]:hover{color:var(--brand)}
+thead th[data-dir="a"]::after{content:"\0020\25B2"}
+thead th[data-dir="d"]::after{content:"\0020\25BC"}
+tbody td{padding:5px 8px;border-bottom:1px solid var(--edge2);text-align:right;
+  font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody td.l{text-align:left;font-family:var(--sans);font-size:12px;font-weight:500}
+tbody tr:hover{background:var(--surf3)}
+.tag{font-family:var(--mono);font-size:8.5px;font-weight:600;padding:1.5px 4px;border-radius:2px}
+.t-ok{background:var(--ok-s);color:var(--ok)}.t-warn{background:var(--warn-s);color:var(--warn)}
+.t-crit{background:var(--crit-s);color:var(--crit)}
+.t-rev{background:var(--surf3);color:var(--rev)}.t-inv{background:var(--surf3);color:var(--inv)}
+.neg{color:var(--crit)}
+
+.notes{display:flex;flex-direction:column;gap:8px}
+.note{padding:9px 11px;background:var(--surf2);border:1px solid var(--edge2);border-radius:3px;
+  border-left:3px solid var(--ink3)}
+.note.n-crit{border-left-color:var(--crit)}.note.n-warn{border-left-color:var(--warn)}
+.note.n-ok{border-left-color:var(--ok)}.note.n-info{border-left-color:var(--brand)}
+.nt{font-size:12.5px;font-weight:700;margin-bottom:2px}
+.nb{font-size:12px;color:var(--ink2);line-height:1.5}
+.nb b{color:var(--ink);font-family:var(--mono);font-size:11px}
+.bars{display:flex;flex-direction:column;gap:5px}
+.bar{display:grid;grid-template-columns:74px 1fr 78px;gap:8px;align-items:center}
+.bl{font-family:var(--mono);font-size:10.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bt2{height:14px;background:var(--surf3);border:1px solid var(--edge2);border-radius:2px;overflow:hidden}
+.bf{display:block;height:100%}
+.bv{font-family:var(--mono);font-size:10.5px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.ledger{display:flex;flex-direction:column;font-family:var(--mono);font-size:11.5px}
+.lr{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--edge2)}
+.lr.tot{border-bottom:0;border-top:1.5px solid var(--edge);font-weight:600;margin-top:2px}
+.ln s{display:block;text-decoration:none;font-size:10px;color:var(--ink3);margin-top:2px;
+  font-family:var(--sans);max-width:46ch;line-height:1.4}
+.lv{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.empty{padding:26px 12px;text-align:center;font-family:var(--mono);font-size:11.5px;
+  color:var(--ink3);line-height:1.7}
+.pager{display:flex;gap:7px;align-items:center;margin-top:9px;font-family:var(--mono);font-size:10.5px;color:var(--ink3)}
+.pager button{font-family:var(--mono);font-size:10.5px;padding:4px 9px;border-radius:3px;
+  background:var(--surf);border:1px solid var(--edge);color:var(--ink2);cursor:pointer}
+.pager button:hover:not(:disabled){border-color:var(--brand);color:var(--brand)}
+.pager button:disabled{opacity:.4;cursor:default}
+footer{margin-top:32px;padding-top:15px;border-top:1px solid var(--edge);
+  font-family:var(--mono);font-size:10.5px;color:var(--ink3);line-height:1.85}
+footer b{color:var(--ink2)}
+.err{padding:11px 13px;border:1px solid var(--crit);border-left-width:3px;border-radius:3px;
+  background:var(--crit-s);font-size:12.5px;color:var(--ink);margin-bottom:13px}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top">
+  <div class="brand">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"></path></svg>
+    </div>
+    <div><div class="bn">SADIN<em>hub</em></div><div class="bt">Energy Intelligence</div></div>
+  </div>
+  <div class="htitle"><h1 id="pgTitle">Overview</h1><p id="pgSub">live from the gold layer</p></div>
+  <div class="hspace"></div>
+  <div class="stamp">
+    <b id="stTop">—</b>
+    <span id="stRange">—</span><br>
+    <span class="live" id="liveBadge"><i></i><span id="liveTxt">live</span></span>
+  </div>
+  <button class="tgl" id="themeBtn" aria-pressed="false" title="Switch theme">&#9681;</button>
+</header>
+
+<nav class="tabs" role="tablist" id="tabs"></nav>
+
+<div class="filters">
+  <div class="fg" style="flex:1 1 430px">
+    <label>Zone <em>&mdash; click to filter</em></label>
+    <div class="chips" id="zoneChips"></div>
+  </div>
+  <div class="fg">
+    <label for="meterSel">Meter</label>
+    <select id="meterSel"></select>
+  </div>
+  <div class="fg">
+    <label>Period</label>
+    <div class="chips" id="rangeChips"></div>
+  </div>
+  <div class="fg">
+    <label for="dFrom">Date range</label>
+    <div class="dates">
+      <input type="date" id="dFrom"><span style="color:var(--ink3)">&rarr;</span><input type="date" id="dTo">
+      <button class="chip" id="dReset" title="Reset to the full available range">reset</button>
+    </div>
+  </div>
+  <div class="fg">
+    <label for="tFrom">Time of day <em>&mdash; per reading</em></label>
+    <div class="dates">
+      <input type="time" id="tFrom" style="min-width:104px"><span style="color:var(--ink3)">&rarr;</span>
+      <input type="time" id="tTo" style="min-width:104px">
+      <button class="chip" id="tReset" title="Clear the time-of-day filter">reset</button>
+    </div>
+  </div>
+  <div class="fg">
+    <label>&nbsp;</label>
+    <div class="dates">
+      <button class="chip" id="allReset" title="Clear zone, meter, date and time filters">reset all</button>
+    </div>
+  </div>
+  <div class="sel-sum" id="selSum"></div>
+</div>
+
+<div id="errBox"></div>
+<main id="pages"></main>
+
+<footer>
+  Live from <b>PostgreSQL</b>, read-only. Consumption is <b>gold.energy_consumption_validated.validated_kwh_consumption</b> &mdash;
+  the same column your Power BI report sums, so the totals match by construction, not by coincidence.
+  Electrical signals come from <b>gold.energy_raw</b> at the raw meter cadence &mdash; measured median 244 s, about 4.07 min, so roughly 354 readings per meter-day &mdash; joined to
+  <b>gold.meter</b>, <b>gold.zone</b> and <b>gold.facility</b>.<br>
+  Status bands are your own <b>silver.classify_*_v2</b> functions: Vn 215&ndash;245 acceptable, VL 380&ndash;420,
+  PF 0.80&ndash;1.00, Hz 59.3&ndash;60.5, current against each meter's CB rating. <b>overall_status</b> is
+  <b>worst_status</b> across Vn1-3, VL1-3, Hz, PF1-3, PFa and kWh &mdash; it deliberately excludes the three
+  current channels, so per-phase current status is shown separately.
+</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/2.0.1/chartjs-plugin-zoom.min.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* ---------------------------------------------------------------- state --- */
+var META=null, PAGES=[
+  {id:'ov',n:'01',t:'Overview',           s:'Consumption exactly as your gold layer computes it'},
+  {id:'en',n:'02',t:'Energy & Demand',    s:'Consumption, and power at the raw reading cadence'},
+  {id:'cu',n:'03',t:'Current',            s:'Per-phase current, per reading'},
+  {id:'vf',n:'04',t:'Voltage & Frequency',s:'Phase-neutral and line-line, per reading'},
+  {id:'pf',n:'05',t:'Power Factor',       s:'Per-phase PF including negative values'},
+  {id:'rd',n:'06',t:'Readings',           s:'Every individual reading, every column'},
+  {id:'dq',n:'07',t:'Data & Status',      s:'Per-phase status, signal availability, gaps'},
+  {id:'bl',n:'08',t:'Bill Check',         s:'Grid invoice against metered consumption'}
+];
+var state={page:'ov',zones:new Set(),meter:'',from:'',to:'',t1:'',t2:'',
+           rdOffset:0,rdLimit:500,rdNonzero:false,rdStatus:''};
+var CH={}, inflight=0;
+
+/* ------------------------------------------------------------- helpers --- */
+function fmt(v,d){ if(v==null||v===''||!isFinite(v))return '—';
+  return Number(v).toLocaleString('en-US',{minimumFractionDigits:d||0,maximumFractionDigits:d||0}); }
+function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+function pct(v,mx){ if(!mx||!isFinite(mx)||!isFinite(v)||v<=0)return '0';
+  return Math.max(0,Math.min(100,v/mx*100)).toFixed(1); }
+/* Current unbalance, NEMA MG-1 / IEEE 141:
+     max deviation of any phase from the three-phase mean, divided by that mean.
+   The earlier (max - min) / max is a different quantity: capped at 100%, blind
+   to WHICH phase deviates, and inflated on lightly loaded boards. The NEMA form
+   is what switchgear and motor derating limits are written against, so it is
+   the one that can legitimately be compared to a threshold.
+   Returns null below 0.5 A mean, where the ratio is just noise. */
+function unbalance(a1,a2,a3){
+  var v=[Number(a1),Number(a2),Number(a3)];
+  if(v.some(function(x){return !isFinite(x);}))return null;
+  var mean=(v[0]+v[1]+v[2])/3;
+  if(mean<0.5)return null;
+  var dev=Math.max(Math.abs(v[0]-mean),Math.abs(v[1]-mean),Math.abs(v[2]-mean));
+  return dev/mean*100;
+}
+function el(id){return document.getElementById(id);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function statusTag(s){
+  if(!s)return '';
+  var c = s==='Acceptable'?'t-ok' : s==='Critical'?'t-crit' : s==='Problematic'?'t-warn'
+        : s==='Invalid'?'t-inv' : 't-rev';
+  return '<span class="tag '+c+'">'+esc(s)+'</span>';
+}
+function busy(on){
+  inflight += on?1:-1;
+  var b=el('liveBadge');
+  if(inflight>0){b.className='live busy';el('liveTxt').textContent='querying';}
+  else{b.className='live';el('liveTxt').textContent='live';}
+}
+function qsBuild(extra){
+  var p=new URLSearchParams();
+  if(state.from)p.set('from',state.from);
+  if(state.to)p.set('to',state.to);
+  state.zones.forEach(function(z){p.append('zone',z);});
+  if(state.meter)p.append('meter',state.meter);
+  if(state.t1)p.set('t1',state.t1);
+  if(state.t2)p.set('t2',state.t2);
+  for(var k in (extra||{})) if(extra[k]!=='' && extra[k]!=null) p.set(k,extra[k]);
+  return p.toString();
+}
+/* Staleness is per RENDER, not per request. A render fires several requests in
+   one Promise.all; if each incremented a shared counter, every request but the
+   last would mark itself stale and the whole render would bail. */
+var _renderSeq=0;
+function api(path,extra){
+  var mine=_renderSeq; busy(true);
+  return fetch(path+'?'+qsBuild(extra)).then(function(r){return r.json();})
+    .then(function(j){ busy(false);
+      if(j && j.error) throw new Error(j.error);
+      return {data:j, stale: mine!==_renderSeq}; })
+    .catch(function(e){ busy(false); showErr(e.message||String(e)); throw e; });
+}
+function showErr(m){
+  el('errBox').innerHTML='<div class="err"><b>Query failed.</b> '+esc(String(m).slice(0,400))+
+    '<br>Is <code>serve.py</code> still running, and is PostgreSQL up?</div>';
+}
+function clearErr(){el('errBox').innerHTML='';}
+
+/* --------------------------------------------------------------- charts --- */
+/* Axis tick text. Chart labels carry the FULL timestamp so the tooltip can
+   show it unambiguously; the axis shortens it here rather than the label being
+   truncated at source, which is what previously left the hover card showing a
+   bare "07-05" with no year. */
+function tickDate(v){
+  var s=this.getLabelForValue?this.getLabelForValue(v):String(v);
+  if(/^\d{4}-\d{2}-\d{2} /.test(s)) return s.slice(5,16);   /* MM-DD HH:MM */
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s.slice(5);       /* MM-DD */
+  return s;
+}
+/* Compact numeric ticks: 1.2M / 45k / 3.4 — long raw numbers crowd the axis
+   and push the plot area narrow. */
+function tickNum(v){
+  var a=Math.abs(v);
+  if(a>=1e6) return (v/1e6).toFixed(a>=1e7?0:1)+'M';
+  if(a>=1e3) return (v/1e3).toFixed(a>=1e4?0:1)+'k';
+  if(a>=10)  return v.toFixed(0);
+  if(a>0)    return v.toFixed(2).replace(/0$/,'');
+  return '0';
+}
+function baseOpts(extra){
+  var ink=cssv('--ink2'),ink3=cssv('--ink3'),grid=cssv('--grid'),surf=cssv('--surf'),edge=cssv('--edge');
+  var o={responsive:true,maintainAspectRatio:false,animation:{duration:160},
+    /* nearest+intersect false gives a bar its own hover instead of the whole
+       index, which is what made bar tooltips read the wrong value */
+    interaction:{mode:'index',intersect:false,axis:'x'},
+    plugins:{legend:{display:true,position:'top',align:'end',
+        labels:{boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'rectRounded',
+          color:ink,font:{family:'IBM Plex Mono',size:10},padding:11}},
+      tooltip:{backgroundColor:surf,titleColor:cssv('--ink'),bodyColor:ink,borderColor:edge,
+        borderWidth:1,padding:10,cornerRadius:3,boxWidth:8,boxHeight:8,usePointStyle:true,
+        titleFont:{family:'IBM Plex Mono',size:11,weight:'600'},
+        bodyFont:{family:'IBM Plex Mono',size:11.5},
+        callbacks:{
+          /* full, unambiguous label — never the abbreviated axis text */
+          title:function(items){return items.length?items[0].label:'';},
+          label:function(c){
+            var v=c.parsed.y!=null?c.parsed.y:c.parsed.x;
+            if(v==null||!isFinite(v))return c.dataset.label+': no reading';
+            var u=(c.chart.options.plugins&&c.chart.options.plugins.unit)||'';
+            var dp=Math.abs(v)>=100?1:Math.abs(v)>=1?2:3;
+            return ' '+c.dataset.label+': '+
+              Number(v).toLocaleString('en-US',{minimumFractionDigits:dp,maximumFractionDigits:dp})+
+              (u?' '+u:'');
+          }}},
+      zoom:{
+        pan:{enabled:true,mode:'x',modifierKey:null},
+        zoom:{wheel:{enabled:true,speed:0.08},pinch:{enabled:true},
+              drag:{enabled:true,backgroundColor:'rgba(18,116,231,.15)',
+                    borderColor:cssv('--brand'),borderWidth:1},
+              mode:'x'},
+        limits:{x:{minRange:3}}
+      }},
+    scales:{x:{grid:{color:grid,tickLength:0},border:{color:edge},
+        ticks:{color:ink3,font:{family:'IBM Plex Mono',size:9},maxRotation:0,
+               autoSkip:true,maxTicksLimit:12,callback:tickDate}},
+      y:{grid:{color:grid,tickLength:0},border:{display:false},
+        ticks:{color:ink3,font:{family:'IBM Plex Mono',size:9},padding:5,
+               maxTicksLimit:7,callback:tickNum}}}};
+  return merge(o,extra||{});
+}
+function merge(a,b){var o=Array.isArray(a)?a.slice():Object.assign({},a),k,v;
+  for(k in b){v=b[k];
+    o[k]=(v&&typeof v==='object'&&!Array.isArray(v)&&a&&typeof a[k]==='object'&&!Array.isArray(a[k]))?merge(a[k],v):v;}
+  return o;}
+function draw(id,type,data,opts){
+  var c=el(id); if(!c)return;
+  if(CH[id]){CH[id].destroy();delete CH[id];}
+  if(typeof Chart==='undefined'){ empty(id,'Chart.js is unreachable (served from cdnjs). Tables still work.'); return; }
+  if(!draw._zoomReady){
+    /* the zoom plugin ships as a UMD global; register it once if it loaded */
+    var zp=window.ChartZoom||(window['chartjs-plugin-zoom']);
+    if(zp){try{Chart.register(zp);}catch(e){}}
+    draw._zoomReady=true;
+  }
+  try{
+    CH[id]=new Chart(c,{type:type,data:data,options:baseOpts(opts)});
+    /* double-click anywhere on a chart clears its zoom */
+    c.ondblclick=function(){ if(CH[id]&&CH[id].resetZoom){CH[id].resetZoom();} };
+    c.title='Scroll to zoom · drag to select a range · double-click to reset';
+  }
+  catch(e){ empty(id,'Chart error: '+e.message); }
+}
+function empty(id,msg){
+  var c=el(id); if(!c)return false;
+  var w=c.parentElement, e=w.querySelector('.empty');
+  if(msg){ if(CH[id]){CH[id].destroy();delete CH[id];}
+    c.style.display='none';
+    if(!e){e=document.createElement('div');e.className='empty';w.appendChild(e);}
+    e.textContent=msg; return true; }
+  c.style.display=''; if(e)e.remove(); return false;
+}
+var L={borderWidth:1.5,pointRadius:0,pointHitRadius:8,tension:.15,fill:false};
+function AR(c){return{borderWidth:1.6,pointRadius:0,pointHitRadius:8,tension:.15,fill:true,backgroundColor:c};}
+function ax(t){return{title:{display:true,text:t,color:cssv('--ink3'),font:{family:'IBM Plex Mono',size:9}}};}
+/* tooltip unit suffix, read back by the shared label callback in baseOpts */
+function unit(u){return{plugins:{unit:u}};}
+function tsLabels(rows){return rows.map(function(r){return (r.ts||'').slice(0,19);});}
+
+/* ---------------------------------------------------------------- table --- */
+var SORT={};
+function table(id,rows,cols,defKey){
+  var t=el(id); if(!t)return;
+  if(!SORT[id])SORT[id]={k:defKey,dir:'d'};
+  var s=SORT[id];
+  var data=rows.slice();
+  if(s.k) data.sort(function(a,b){
+    var x=a[s.k],y=b[s.k];
+    if(typeof x==='string'||typeof y==='string')
+      return s.dir==='a'?String(x).localeCompare(String(y)):String(y).localeCompare(String(x));
+    var xv=(x==null||!isFinite(x))?-Infinity:x, yv=(y==null||!isFinite(y))?-Infinity:y;
+    return s.dir==='a'?xv-yv:yv-xv;});
+  t.innerHTML='<thead><tr>'+cols.map(function(c){
+      return '<th class="'+(c.l?'l':'')+'" data-k="'+c.k+'" tabindex="0"'+
+        (s.k===c.k?' data-dir="'+s.dir+'"':'')+'>'+esc(c.h)+'</th>';}).join('')+
+    '</tr></thead><tbody>'+
+    (data.length? data.map(function(r){return '<tr>'+cols.map(function(c){
+        return '<td class="'+(c.l?'l':'')+'">'+(c.f?c.f(r):esc(r[c.k]==null?'—':r[c.k]))+'</td>';
+      }).join('')+'</tr>';}).join('')
+      :'<tr><td colspan="'+cols.length+'"><div class="empty">No rows for this selection.</div></td></tr>')+
+    '</tbody>';
+  Array.prototype.forEach.call(t.querySelectorAll('th[data-k]'),function(th){
+    function go(){var k=th.dataset.k,kb=(document.activeElement===th);
+      SORT[id]=(s.k===k)?{k:k,dir:s.dir==='d'?'a':'d'}:{k:k,dir:'d'};
+      table(id,rows,cols,defKey);
+      if(kb){var f=t.querySelector('th[data-k="'+k+'"]'); if(f)f.focus();}}
+    th.onclick=go;
+    th.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
+}
+
+/* ------------------------------------------------------------ page shell --- */
+function kpi(id,label,cls){return '<div class="kpi '+(cls||'')+'" id="k-'+id+'"><div class="kl">'+
+  label+'</div><div class="kv" id="kv-'+id+'">—</div><div class="ks" id="ks-'+id+'"></div></div>';}
+function panel(cls,title,meta,sub,body){return '<section class="panel '+cls+'"><div class="ph"><h3>'+
+  title+'</h3>'+(meta?'<span class="pm">'+meta+'</span>':'')+'</div>'+
+  (sub?'<p class="psub">'+sub+'</p>':'')+body+'</section>';}
+function cv(id,h){return '<div class="cw '+h+'"><canvas id="'+id+'"></canvas></div>';}
+function tb(id,tall){return '<div class="tw'+(tall?' tall':'')+'"><table id="'+id+'"></table></div>';}
+function set(id,v,s,cls){
+  var a=el('kv-'+id),b=el('ks-'+id),c=el('k-'+id);
+  if(a)a.innerHTML=v; if(b)b.innerHTML=s||'';
+  if(c&&cls!==undefined)c.className='kpi '+(cls||'');
+}
+
+function buildPages(){
+el('pages').innerHTML=
+'<div class="page" id="pg-ov"><div class="grid">'+
+  '<div class="c3">'+kpi('kwh','Energy consumed')+'</div>'+
+  '<div class="c3">'+kpi('meters','Meters reporting')+'</div>'+
+  '<div class="c3">'+kpi('pf','Mean power factor')+'</div>'+
+  '<div class="c3">'+kpi('peak','Peak single-meter kW')+'</div>'+
+  panel('c8','Daily consumption','validated kWh',
+    'Straight from <code>validated_kwh_consumption</code>. Normal intervals and long-gap intervals are stacked so you can see both, and the total is what your Power BI reports.',cv('ovDaily','h300'))+
+  panel('c4','How the total is composed','interval_quality',
+    'Your gold layer keeps long-gap energy in the total. Both parts shown.',"<div class='ledger' id='ovLedger'></div>")+
+  panel('c6','Every zone by consumption','all zones, none hidden','',"<div class='bars' id='ovZones'></div>")+
+  panel('c6','What stands out','from this selection','',"<div class='notes' id='ovNotes'></div>")+
+  panel('c12','Monthly totals','validated kWh by calendar month','',cv('ovMonth','h220'))+
+'</div></div>'+
+
+'<div class="page" id="pg-en"><div class="grid">'+
+  '<div class="c3">'+kpi('en_kwh','Energy consumed')+'</div>'+
+  '<div class="c3">'+kpi('en_kw','Mean active power')+'</div>'+
+  '<div class="c3">'+kpi('en_kvar','Mean reactive power')+'</div>'+
+  '<div class="c3">'+kpi('en_cum','Highest cumulative register')+'</div>'+
+  panel('c12','Power at the raw reading cadence','per reading, not bucketed',
+    'One point per meter reading — measured median cadence 244 s (~4.07 min). With a single meter selected these are that meter’s own readings; with several, active and reactive power are summed across them at each shared timestamp. Scroll to zoom, drag to select a range, double-click to reset.',cv('enSeries','h340'))+
+  panel('c12','Cumulative energy registers','active and reactive, per reading',
+    'The raw counters the consumption figure is derived from. A vertical drop is a register fault, not a load change.',cv('enCum','h260'))+
+  panel('c12','Consumption by meter','click any heading to sort','',tb('enTable'))+
+'</div></div>'+
+
+'<div class="page" id="pg-cu"><div class="grid">'+
+  '<div class="c3">'+kpi('cu_a1','Mean L1')+'</div>'+
+  '<div class="c3">'+kpi('cu_a2','Mean L2')+'</div>'+
+  '<div class="c3">'+kpi('cu_a3','Mean L3')+'</div>'+
+  '<div class="c3">'+kpi('cu_imb','Phase unbalance (NEMA)')+'</div>'+
+  panel('c12','Three-phase current','per reading',
+    'L1, L2 and L3 exactly as recorded. With one meter selected these are individual readings; with several they are the mean across the selection at each timestamp — the table below states which.',cv('cuSeries','h340'))+
+  panel('c12','Per-phase current by meter','mean of individual readings, with CB rating',
+    'L1/L2/L3 are the arithmetic mean of every raw reading for that phase in the window — not a mean of daily means. '+
+    '<b>Unbalance</b> now uses the NEMA MG-1 / IEEE 141 definition: the largest deviation of any phase from the three-phase mean, divided by that mean. '+
+    'The previous (max − min) ÷ max figure was a different quantity — capped at 100%, blind to which phase deviates, and inflated on lightly loaded boards. '+
+    'NEMA derates motors above 1% and 2% is the usual operating limit, so the bands are 2% and 10%. '+
+    'It is left blank where mean current is under 0.5 A, because a ratio on a near-idle board is noise. '+
+    'The CB column is the breaker rating from <code>silver.dim_meter_cb_rating</code>, which is what your <code>classify_current_v2</code> grades against.',tb('cuTable'))+
+'</div></div>'+
+
+'<div class="page" id="pg-vf"><div class="grid">'+
+  '<div class="c3">'+kpi('v_vn','Mean phase-neutral')+'</div>'+
+  '<div class="c3">'+kpi('v_vl','Mean line-line')+'</div>'+
+  '<div class="c3">'+kpi('v_hz','Mean frequency')+'</div>'+
+  '<div class="c3">'+kpi('v_band','Vn acceptable band')+'</div>'+
+  panel('c6','Phase-neutral voltage','per reading',
+    'Vn1, Vn2, Vn3. Shaded band is your acceptable range, 215–245 V.',cv('vfVn','h300'))+
+  panel('c6','Line-to-line voltage','per reading',
+    'VL1, VL2, VL3 — present in the data and now shown. Acceptable band 380–420 V.',cv('vfVl','h300'))+
+  panel('c12','Frequency','per reading, not daily',
+    'Nominal 60 Hz. Your acceptable band is 59.3–60.5 Hz.',cv('vfHz','h260'))+
+  panel('c12','Voltage and frequency by meter','','',tb('vfTable'))+
+'</div></div>'+
+
+'<div class="page" id="pg-pf"><div class="grid">'+
+  '<div class="c3">'+kpi('pf_a','Mean PF average')+'</div>'+
+  '<div class="c3">'+kpi('pf_min','Lowest PF')+'</div>'+
+  '<div class="c3">'+kpi('pf_neg','Negative PF readings','k-warn')+'</div>'+
+  '<div class="c3">'+kpi('pf_negkw','Negative power readings','k-warn')+'</div>'+
+  panel('c12','Power factor per phase','per reading, negatives included',
+    'PF1, PF2, PF3 and the average, exactly as recorded — negative values are plotted, not hidden. Dashed line is your 0.80 acceptable threshold from <code>classify_power_factor_v2</code>.',cv('pfSeries','h340'))+
+  panel('c6','Distribution of PF average','every reading binned',
+    'Includes the negative tail. Bands follow your own classifier: below 0.6 Critical, 0.6–0.78 Problematic, 0.78–0.80 Review, 0.80–1.00 Acceptable.',cv('pfDist','h260'))+
+  panel('c6','Per-phase PF status','from your classify_power_factor_v2','',cv('pfStatus','h260'))+
+  panel('c12','Power factor by meter','per-phase values','',tb('pfTable'))+
+'</div></div>'+
+
+'<div class="page" id="pg-rd"><div class="grid">'+
+  '<div class="c12">'+
+    '<section class="panel"><div class="ph"><h3>Individual readings</h3>'+
+    '<span class="pm" id="rdCount">—</span></div>'+
+    '<p class="psub">Every column of every reading, queried live from <code>gold.energy_raw</code>. '+
+    'Narrow with the zone, meter, date and time-of-day filters above. This is the raw record — '+
+    'no averaging anywhere.</p>'+
+    '<div class="dates" style="margin-bottom:10px">'+
+      '<label style="font-family:var(--mono);font-size:10px;color:var(--ink3)">'+
+        '<input type="checkbox" id="rdNonzero"> non-zero load only</label>'+
+      '<select id="rdStatus" style="min-width:150px"><option value="">any overall_status</option></select>'+
+      '<select id="rdLimit" style="min-width:110px">'+
+        '<option value="200">200 rows</option><option value="500" selected>500 rows</option>'+
+        '<option value="2000">2,000 rows</option><option value="10000">10,000 rows</option></select>'+
+    '</div>'+
+    tb('rdTable',true)+
+    '<div class="pager"><button id="rdPrev">&larr; previous</button>'+
+    '<button id="rdNext">next &rarr;</button><span id="rdPage"></span></div>'+
+    '</section></div>'+
+'</div></div>'+
+
+'<div class="page" id="pg-dq"><div class="grid">'+
+  '<div class="c3">'+kpi('dq_rows','Readings in selection')+'</div>'+
+  '<div class="c3">'+kpi('dq_gap','Long-gap intervals','k-warn')+'</div>'+
+  '<div class="c3">'+kpi('dq_excl','Excluded by cleaning','k-warn')+'</div>'+
+  '<div class="c3">'+kpi('dq_maxgap','Longest gap','k-warn')+'</div>'+
+  panel('c12','Status by signal','every status_* column, not just overall',
+    'Your <code>overall_status</code> is the worst of Vn1-3, VL1-3, Hz, PF1-3, PFa and kWh. It excludes the three current channels by design, so those are shown here on their own row.',cv('dqStatus','h340'))+
+  panel('c12','Signal availability','alphabetical by signal',
+    '<b>Transmitted</b> is how often the meter sent a value at all (NOT NULL). <b>Non-zero</b> is how often that value carried information. '+
+    'They are different questions and the earlier single "Availability" column conflated them: every column except the kVA family is 100% transmitted, '+
+    'yet <code>reactive_energy_cumulative_kvarh</code> is exactly 0 on well over half its rows — so 100% means "always sent", never "always meaningful". '+
+    'The five kVA columns are 0% transmitted: they were never ingested, which is not the same as being zero.',tb('dqNZ'))+
+  panel('c12','Coverage by meter','readings against each meter’s measured cadence',
+    'The old <b>Intervals</b> column has been removed: <code>gold.energy_consumption_validated</code> holds exactly one interval per raw reading, '+
+    'so it was always identical to <b>Readings</b> and told you nothing. Verified over any window — the two agree row for row for all 29 mapped meters. '+
+    '<b>Expected</b> is derived from each meter’s <em>own measured</em> median inter-reading gap, not an assumed rate: '+
+    'the cadence looks nominally like 5 minutes but is actually 244 s (~4.07 min), so a hardcoded 288/day understated the denominator by 23% '+
+    'and produced coverage above 100%. <b>Coverage</b> is therefore the genuinely different number. '+
+    'The last column marks Zone 13’s two meters, which your business rule excludes from the consumption view — they have readings but no consumption rows, '+
+    'and they are the entire 275,069-row difference between 4,535,918 raw and 4,260,849 validated.',tb('dqTable'))+
+'</div></div>'+
+
+'<div class="page" id="pg-bl"><div class="grid">'+
+  panel('c12','Grid invoice against metered consumption','gold.energy_bill',
+    'The reconciliation you asked for: what the grid billed against what the meters recorded, for the one billing period the warehouse holds (2025-05-14 to 2025-06-12). '+
+    'Note that <code>billed_cost</code> is unreliable in this source — 18 of 28 invoices imply about 0.0002 SAR/kWh against a plausible 0.25 — so judge these on the kWh columns, not the cost columns.',
+    tb('blTable',true))+
+'</div></div>';
+}
+
+/* ------------------------------------------------------------- renderers --- */
+function renderOverview(){
+  Promise.all([api('/api/kpi'),api('/api/daily'),api('/api/monthly'),api('/api/zones')])
+  .then(function(res){
+    if(res.some(function(r){return r.stale;}))return;
+    clearErr();
+    var k=res[0].data, daily=res[1].data, monthly=res[2].data, zones=res[3].data;
+    var c=k.consumption, e=k.electrical;
+    set('kwh',fmt(c.kwh,1)+'<u>kWh</u>',
+      'validated_kwh_consumption · '+fmt(c.intervals)+' intervals');
+    set('meters',fmt(c.meters)+'<u>of '+(META?META.meters.length:31)+'</u>',
+      fmt(c.zones)+' zones · '+fmt(c.days)+' days with data');
+    set('pf',e.pf_avg==null?'—':Number(e.pf_avg).toFixed(4),
+      'arithmetic mean of power_factor_average',
+      (e.pf_avg!=null&&e.pf_avg<0.8)?'k-crit':'k-ok');
+    set('peak',fmt(e.kw_max_single,2)+'<u>kW</u>','largest single-meter reading');
+
+    if(!empty('ovDaily',daily.length?'':'No data in this selection.')){
+      draw('ovDaily','bar',{labels:daily.map(function(r){return r.d;}),datasets:[
+        {label:'Normal intervals',data:daily.map(function(r){return r.kwh_normal;}),
+         backgroundColor:cssv('--brand'),stack:'s'},
+        {label:'Long-gap intervals',data:daily.map(function(r){return r.kwh_longgap;}),
+         backgroundColor:cssv('--warn'),stack:'s'}
+      ]},merge(unit('kWh'),{scales:{x:{stacked:true},y:merge({stacked:true},ax('kWh'))}}));
+    }
+    var tot=Number(c.kwh)||0, nrm=Number(c.kwh_normal)||0, lg=Number(c.kwh_longgap)||0;
+    el('ovLedger').innerHTML=
+      lrow('NORMAL_INTERVAL','a reading followed its predecessor within the expected cadence',nrm,'--brand')+
+      lrow('LONG_GAP','the meter was away; the register still moved',lg,'--warn')+
+      '<div class="lr tot"><span class="ln">Total validated consumption</span><span class="lv">'+
+      fmt(tot,1)+' kWh</span></div>'+
+      '<div class="psub" style="margin:9px 0 0">This is the figure your Power BI measure '+
+      '<code>Total Validated Consumption kWh</code> produces, because it is the same column, unfiltered.</div>';
+
+    var mx=zones.reduce(function(m,z){return Math.max(m,Number(z.kwh)||0);},0);
+    el('ovZones').innerHTML=zones.length?zones.map(function(z){
+      return '<div class="bar"><span class="bl">'+esc(z.zone)+'</span><span class="bt2">'+
+        '<span class="bf" style="width:'+pct(Number(z.kwh),mx)+'%;background:var(--brand)"></span></span>'+
+        '<span class="bv">'+fmt(z.kwh)+'</span></div>';}).join('')
+      :'<div class="empty">No data.</div>';
+
+    if(!empty('ovMonth',monthly.length?'':'No data.')){
+      draw('ovMonth','bar',{labels:monthly.map(function(r){return r.ym;}),
+        datasets:[{label:'kWh',data:monthly.map(function(r){return r.kwh;}),
+          backgroundColor:cssv('--navy'),borderRadius:2}]},
+        merge(unit('kWh'),{plugins:{legend:{display:false}},scales:{y:ax('kWh')}}));
+    }
+    var n=[];
+    n.push(['n-info','Consumption source',
+      'Every kWh here is <b>validated_kwh_consumption</b> from <b>gold.energy_consumption_validated</b>, '+
+      'summed unfiltered — the same thing your Power BI does. Nothing is recomputed.']);
+    if(lg>0) n.push(['n-warn','Long-gap energy is included',
+      '<b>'+fmt(lg,1)+'</b> kWh (<b>'+(tot?(lg/tot*100).toFixed(1):'0')+'%</b>) arrived after a gap in reporting, across <b>'+
+      fmt(c.n_longgap)+'</b> intervals. Your gold layer keeps it, so this dashboard keeps it. '+
+      'The stacked bars above show which days it lands on.']);
+    if(c.n_excluded>0) n.push(['n-info','Readings excluded by your cleaning rules',
+      '<b>'+fmt(c.n_excluded)+'</b> intervals carry a consumption_cleaning_status other than KEEP '+
+      '(startup baselines and isolated spikes) and contribute no energy.']);
+    if(e.n_kw_neg>0) n.push(['n-warn','Reverse power flow',
+      '<b>'+fmt(e.n_kw_neg)+'</b> readings record negative active power and <b>'+fmt(e.n_pf_neg)+
+      '</b> record negative power factor. Both are shown as-is on the Power Factor page.']);
+    var top=zones[0];
+    if(top&&tot) n.push(['n-info','Largest zone',
+      '<b>'+esc(top.zone)+'</b> is <b>'+(Number(top.kwh)/tot*100).toFixed(1)+'%</b> of consumption here.']);
+    el('ovNotes').innerHTML=n.map(function(x){return '<div class="note '+x[0]+'"><div class="nt">'+
+      x[1]+'</div><div class="nb">'+x[2]+'</div></div>';}).join('');
+  }).catch(function(){});
+}
+function lrow(name,sub,val,col){
+  return '<div class="lr"><span class="ln">'+name+'<s>'+sub+'</s></span>'+
+    '<span class="lv" style="color:var('+col+')">'+fmt(val,1)+' kWh</span></div>';
+}
+
+function renderEnergy(){
+  Promise.all([api('/api/kpi'),api('/api/series',{limit:6000}),api('/api/meters')])
+  .then(function(res){
+    if(res.some(function(r){return r.stale;}))return;
+    clearErr();
+    var k=res[0].data, s=res[1].data, m=res[2].data;
+    var c=k.consumption,e=k.electrical;
+    set('en_kwh',fmt(c.kwh,1)+'<u>kWh</u>','validated_kwh_consumption');
+    set('en_kw',fmt(e.kw_avg,3)+'<u>kW</u>','mean of active_power_total_kw');
+    set('en_kvar',fmt(e.kvar_avg,3)+'<u>kVAr</u>','mean of reactive_power_total_kvar');
+    set('en_cum',fmt(e.cum_kwh_max,1)+'<u>kWh</u>','highest active register in selection');
+
+    var rows=s.rows, lab=tsLabels(rows);
+    var note=s.single_meter?'individual readings':'summed across selected meters';
+    if(!empty('enSeries',rows.length?'':'No readings — narrow the window or pick a meter.')){
+      draw('enSeries','line',{labels:lab,datasets:[
+        {label:'Active power kW ('+note+')',data:rows.map(function(r){return r.kw;}),
+         borderColor:cssv('--brand'),...AR(cssv('--brand-s'))},
+        {label:'Reactive power kVAr',data:rows.map(function(r){return r.kvar;}),
+         borderColor:cssv('--p3'),...L}
+      ]},merge(unit('kW'),{scales:{y:ax('kW / kVAr')}}));
+    }
+    if(s.single_meter){
+      if(!empty('enCum',rows.length?'':'Select one meter to see its registers.')){
+        draw('enCum','line',{labels:lab,datasets:[
+          {label:'Active energy cumulative kWh',data:rows.map(function(r){return r.cum_kwh;}),
+           borderColor:cssv('--brand'),...L,yAxisID:'y'},
+          {label:'Reactive energy cumulative kVArh',data:rows.map(function(r){return r.cum_kvarh;}),
+           borderColor:cssv('--p1'),...L,yAxisID:'y1'}
+        ]},{scales:{y:merge({position:'left'},ax('kWh')),
+          y1:merge({position:'right',grid:{drawOnChartArea:false},
+            ticks:{color:cssv('--ink3'),font:{family:'IBM Plex Mono',size:9}}},ax('kVArh'))}});
+      }
+    } else {
+      empty('enCum','Cumulative registers are per meter — select a single meter to see them.');
+    }
+    table('enTable',m,[
+      {k:'meter',h:'Meter',l:1},{k:'zone',h:'Zone',l:1},
+      {k:'kwh',h:'kWh',f:function(r){return fmt(r.kwh,1);}},
+      {k:'normal_intervals',h:'Normal intervals',f:function(r){return fmt(r.normal_intervals);}},
+      {k:'days',h:'Days',f:function(r){return fmt(r.days);}},
+      {k:'long_gaps',h:'Long gaps',f:function(r){return fmt(r.long_gaps);}},
+      {k:'excluded',h:'Excluded',f:function(r){return fmt(r.excluded);}},
+      {k:'kw',h:'Mean kW',f:function(r){return fmt(r.kw,3);}},
+      {k:'kw_max',h:'Peak kW',f:function(r){return fmt(r.kw_max,3);}},
+      {k:'kvar',h:'Mean kVAr',f:function(r){return fmt(r.kvar,3);}},
+      {k:'cum_kwh',h:'Cum kWh',f:function(r){return fmt(r.cum_kwh,1);}},
+      {k:'cum_kvarh',h:'Cum kVArh',f:function(r){return fmt(r.cum_kvarh,1);}},
+      {k:'readings',h:'Readings',f:function(r){return fmt(r.readings);}}
+    ],'kwh');
+  }).catch(function(){});
+}
+
+function renderCurrent(){
+  Promise.all([api('/api/kpi'),api('/api/series',{limit:6000}),api('/api/meters')])
+  .then(function(res){
+    if(res.some(function(r){return r.stale;}))return;
+    clearErr();
+    var e=res[0].data.electrical, s=res[1].data, m=res[2].data;
+    set('cu_a1',fmt(e.a1,2)+'<u>A</u>','mean of current_phase_1_a');
+    set('cu_a2',fmt(e.a2,2)+'<u>A</u>','mean of current_phase_2_a');
+    set('cu_a3',fmt(e.a3,2)+'<u>A</u>','mean of current_phase_3_a');
+    var imb=unbalance(e.a1,e.a2,e.a3);
+    set('cu_imb',imb==null?'—':imb.toFixed(1)+'<u>%</u>',
+      'NEMA: max deviation from mean ÷ mean',
+      imb==null?'':(imb>10?'k-crit':imb>2?'k-warn':'k-ok'));
+
+    var rows=s.rows,lab=tsLabels(rows);
+    var note=s.single_meter?'individual readings':'mean across selected meters';
+    if(!empty('cuSeries',rows.length?'':'No readings in this selection.')){
+      draw('cuSeries','line',{labels:lab,datasets:[
+        {label:'L1 ('+note+')',data:rows.map(function(r){return r.a1;}),borderColor:cssv('--p1'),...L},
+        {label:'L2',data:rows.map(function(r){return r.a2;}),borderColor:cssv('--p2'),...L},
+        {label:'L3',data:rows.map(function(r){return r.a3;}),borderColor:cssv('--p3'),...L}
+      ]},merge(unit('A'),{scales:{y:ax('Amps')}}));
+    }
+    var cb={}; if(META)META.meters.forEach(function(x){cb[x.meter_label]=x.cb_max_rating_a;});
+    m.forEach(function(r){
+      r.imb=unbalance(r.a1,r.a2,r.a3);
+      if(r.cb==null)r.cb=(cb[r.meter]==null?null:cb[r.meter]);
+    });
+    table('cuTable',m,[
+      {k:'meter',h:'Meter',l:1},{k:'zone',h:'Zone',l:1},
+      {k:'a1',h:'L1 mean A',f:function(r){return fmt(r.a1,2);}},
+      {k:'a2',h:'L2 mean A',f:function(r){return fmt(r.a2,2);}},
+      {k:'a3',h:'L3 mean A',f:function(r){return fmt(r.a3,2);}},
+      {k:'a_max',h:'Peak A',f:function(r){return fmt(r.a_max,2);}},
+      {k:'imb',h:'Unbalance',f:function(r){ if(r.imb==null)return '—';
+        var c=r.imb>10?'t-crit':r.imb>2?'t-warn':'t-ok';
+        return '<span class="tag '+c+'">'+r.imb.toFixed(1)+'%</span>';}},
+      {k:'cb',h:'CB amps',f:function(r){return fmt(r.cb);}},
+      {k:'readings',h:'Readings',f:function(r){return fmt(r.readings);}}
+    ],'imb');
+  }).catch(function(){});
+}
+
+function renderVolt(){
+  Promise.all([api('/api/kpi'),api('/api/series',{limit:6000}),api('/api/meters')])
+  .then(function(res){
+    if(res.some(function(r){return r.stale;}))return;
+    clearErr();
+    var e=res[0].data.electrical, s=res[1].data, m=res[2].data;
+    var vn=(Number(e.vn1)+Number(e.vn2)+Number(e.vn3))/3;
+    var vl=(Number(e.vl1)+Number(e.vl2)+Number(e.vl3))/3;
+    set('v_vn',fmt(vn,1)+'<u>V</u>','mean of Vn1, Vn2, Vn3');
+    set('v_vl',fmt(vl,1)+'<u>V</u>','mean of VL1, VL2, VL3');
+    set('v_hz',fmt(e.hz,4)+'<u>Hz</u>','nominal 60 Hz');
+    set('v_band','215 – 245<u>V</u>','your classify_voltage_neutral_v2 acceptable range','k-ok');
+
+    var rows=s.rows,lab=tsLabels(rows);
+    function band(lo,hi,n){return {label:'acceptable '+lo+'–'+hi,
+      data:rows.map(function(){return hi;}),borderColor:'transparent',
+      backgroundColor:cssv('--ok-s'),pointRadius:0,fill:{value:lo},order:9};}
+    if(!empty('vfVn',rows.length?'':'No readings.')){
+      draw('vfVn','line',{labels:lab,datasets:[band(215,245),
+        {label:'Vn1',data:rows.map(function(r){return r.vn1;}),borderColor:cssv('--p1'),...L},
+        {label:'Vn2',data:rows.map(function(r){return r.vn2;}),borderColor:cssv('--p2'),...L},
+        {label:'Vn3',data:rows.map(function(r){return r.vn3;}),borderColor:cssv('--p3'),...L}
+      ]},merge(unit('V'),{scales:{y:ax('Volts')}}));
+    }
+    if(!empty('vfVl',rows.length?'':'No readings.')){
+      draw('vfVl','line',{labels:lab,datasets:[band(380,420),
+        {label:'VL1',data:rows.map(function(r){return r.vl1;}),borderColor:cssv('--p1'),...L},
+        {label:'VL2',data:rows.map(function(r){return r.vl2;}),borderColor:cssv('--p2'),...L},
+        {label:'VL3',data:rows.map(function(r){return r.vl3;}),borderColor:cssv('--p3'),...L}
+      ]},merge(unit('V'),{scales:{y:ax('Volts')}}));
+    }
+    if(!empty('vfHz',rows.length?'':'No readings.')){
+      draw('vfHz','line',{labels:lab,datasets:[
+        {label:'acceptable 59.3–60.5',data:rows.map(function(){return 60.5;}),
+         borderColor:'transparent',backgroundColor:cssv('--ok-s'),pointRadius:0,fill:{value:59.3},order:9},
+        {label:'Frequency',data:rows.map(function(r){return r.hz;}),borderColor:cssv('--ok'),...L}
+      ]},merge(unit('Hz'),{scales:{y:ax('Hz')}}));
+    }
+    table('vfTable',m,[
+      {k:'meter',h:'Meter',l:1},{k:'zone',h:'Zone',l:1},
+      {k:'vn1',h:'Vn1',f:function(r){return fmt(r.vn1,1);}},
+      {k:'vn2',h:'Vn2',f:function(r){return fmt(r.vn2,1);}},
+      {k:'vn3',h:'Vn3',f:function(r){return fmt(r.vn3,1);}},
+      {k:'vl1',h:'VL1',f:function(r){return fmt(r.vl1,1);}},
+      {k:'vl2',h:'VL2',f:function(r){return fmt(r.vl2,1);}},
+      {k:'vl3',h:'VL3',f:function(r){return fmt(r.vl3,1);}},
+      {k:'hz',h:'Hz',f:function(r){return fmt(r.hz,3);}},
+      {k:'readings',h:'Readings',f:function(r){return fmt(r.readings);}}
+    ],'vn1');
+  }).catch(function(){});
+}
+
+function renderPF(){
+  Promise.all([api('/api/kpi'),api('/api/series',{limit:6000}),api('/api/meters'),
+               api('/api/pfdist'),api('/api/status')])
+  .then(function(res){
+    if(res.some(function(r){return r.stale;}))return;
+    clearErr();
+    var e=res[0].data.electrical, s=res[1].data, m=res[2].data, dist=res[3].data, st=res[4].data;
+    set('pf_a',e.pf_avg==null?'—':Number(e.pf_avg).toFixed(4),'mean of power_factor_average',
+      (e.pf_avg!=null&&e.pf_avg<0.8)?'k-crit':'k-ok');
+    set('pf_min',e.pf_min==null?'—':Number(e.pf_min).toFixed(3),
+      'lowest single reading, negatives included','k-crit');
+    var pfPhase=(e.n_pf1_neg||0)+(e.n_pf2_neg||0)+(e.n_pf3_neg||0);
+    var kwPhase=(e.n_kw1_neg||0)+(e.n_kw2_neg||0)+(e.n_kw3_neg||0);
+    set('pf_neg',fmt(e.n_pf_neg),
+      'on power_factor_average · per phase: L1 '+fmt(e.n_pf1_neg)+' L2 '+fmt(e.n_pf2_neg)+
+      ' L3 '+fmt(e.n_pf3_neg)+' (sum '+fmt(pfPhase)+', the Power BI figure)');
+    set('pf_negkw',fmt(e.n_kw_neg),
+      'on active_power_total_kw · per phase: L1 '+fmt(e.n_kw1_neg)+' L2 '+fmt(e.n_kw2_neg)+
+      ' L3 '+fmt(e.n_kw3_neg)+' (sum '+fmt(kwPhase)+', the Power BI figure)');
+
+    var rows=s.rows,lab=tsLabels(rows);
+    if(!empty('pfSeries',rows.length?'':'No readings.')){
+      draw('pfSeries','line',{labels:lab,datasets:[
+        {label:'PF1',data:rows.map(function(r){return r.pf1;}),borderColor:cssv('--p1'),...L},
+        {label:'PF2',data:rows.map(function(r){return r.pf2;}),borderColor:cssv('--p2'),...L},
+        {label:'PF3',data:rows.map(function(r){return r.pf3;}),borderColor:cssv('--p3'),...L},
+        {label:'PF average',data:rows.map(function(r){return r.pfa;}),borderColor:cssv('--ink'),
+         borderWidth:2,pointRadius:0,pointHitRadius:8,tension:.15,fill:false},
+        {label:'0.80 threshold',data:rows.map(function(){return 0.8;}),borderColor:cssv('--crit'),
+         borderWidth:1.3,borderDash:[5,4],pointRadius:0,fill:false}
+      ]},{scales:{y:ax('Power factor')}});
+    }
+    var d=dist.pfa||[];
+    if(!empty('pfDist',d.length?'':'No readings.')){
+      draw('pfDist','bar',{labels:d.map(function(b){return Number(b.lo).toFixed(2);}),
+        datasets:[{label:'Readings',data:d.map(function(b){return b.n;}),
+          backgroundColor:d.map(function(b){var v=Number(b.lo);
+            return v<0?cssv('--inv'):v<0.6?cssv('--crit'):v<0.78?cssv('--warn'):
+                   v<0.8?cssv('--rev'):cssv('--ok');})}]},
+        {plugins:{legend:{display:false}},scales:{y:ax('Readings'),x:ax('PF bucket')}});
+    }
+    var pfCols=['status_pf1','status_pf2','status_pf3','status_pfa'];
+    var cats=['Acceptable','Review Required','Problematic','Critical','Invalid'];
+    var colr={'Acceptable':'--ok','Review Required':'--rev','Problematic':'--warn',
+              'Critical':'--crit','Invalid':'--inv'};
+    var byCol={}; st.forEach(function(r){ (byCol[r.signal]=byCol[r.signal]||{})[r.status]=r.n; });
+    if(!empty('pfStatus',st.length?'':'No readings.')){
+      draw('pfStatus','bar',{labels:pfCols.map(function(c){return c.replace('status_','').toUpperCase();}),
+        datasets:cats.map(function(cat){return {label:cat,
+          data:pfCols.map(function(c){return (byCol[c]||{})[cat]||0;}),
+          backgroundColor:cssv(colr[cat]),stack:'s'};})},
+        {scales:{x:{stacked:true},y:merge({stacked:true},ax('Readings'))}});
+    }
+    table('pfTable',m,[
+      {k:'meter',h:'Meter',l:1},{k:'zone',h:'Zone',l:1},
+      {k:'pf1',h:'PF1',f:function(r){return fmt(r.pf1,3);}},
+      {k:'pf2',h:'PF2',f:function(r){return fmt(r.pf2,3);}},
+      {k:'pf3',h:'PF3',f:function(r){return fmt(r.pf3,3);}},
+      {k:'pfa',h:'PF avg',f:function(r){ if(r.pfa==null)return '—';
+        var c=r.pfa<0.6?'t-crit':r.pfa<0.78?'t-warn':r.pfa<0.8?'t-rev':'t-ok';
+        return '<span class="tag '+c+'">'+Number(r.pfa).toFixed(3)+'</span>';}},
+      {k:'pf_min',h:'Min PF',f:function(r){return '<span class="'+((r.pf_min<0)?'neg':'')+'">'+fmt(r.pf_min,3)+'</span>';}},
+      {k:'pf_neg',h:'PF < 0',f:function(r){return fmt(r.pf_neg);}},
+      {k:'kw_neg',h:'kW < 0',f:function(r){return fmt(r.kw_neg);}},
+      {k:'kvar',h:'Mean kVAr',f:function(r){return fmt(r.kvar,3);}}
+    ],'pfa');
+  }).catch(function(){});
+}
+
+function renderReadings(){
+  _renderSeq++;
+  api('/api/readings',{limit:state.rdLimit,offset:state.rdOffset,
+      nonzero:state.rdNonzero?'1':'', status:state.rdStatus})
+  .then(function(r){
+    if(r.stale)return; clearErr();
+    var d=r.data;
+    el('rdCount').textContent=fmt(d.total)+' readings match';
+    el('rdPage').textContent='rows '+fmt(d.offset+1)+'–'+fmt(Math.min(d.offset+d.limit,d.total))+
+      ' of '+fmt(d.total);
+    el('rdPrev').disabled=d.offset<=0;
+    el('rdNext').disabled=d.offset+d.limit>=d.total;
+    var num=function(k,p){return function(r){return fmt(r[k],p);};};
+    table('rdTable',d.rows,[
+      {k:'ts_saudi',h:'Timestamp (Saudi)',l:1},
+      {k:'meter',h:'Meter',l:1},
+      {k:'a1',h:'A1',f:num('a1',2)},{k:'a2',h:'A2',f:num('a2',2)},{k:'a3',h:'A3',f:num('a3',2)},
+      {k:'vn1',h:'Vn1',f:num('vn1',1)},{k:'vn2',h:'Vn2',f:num('vn2',1)},{k:'vn3',h:'Vn3',f:num('vn3',1)},
+      {k:'vl1',h:'VL1',f:num('vl1',1)},{k:'vl2',h:'VL2',f:num('vl2',1)},{k:'vl3',h:'VL3',f:num('vl3',1)},
+      {k:'hz',h:'Hz',f:num('hz',3)},
+      {k:'pf1',h:'PF1',f:num('pf1',3)},{k:'pf2',h:'PF2',f:num('pf2',3)},{k:'pf3',h:'PF3',f:num('pf3',3)},
+      {k:'pfa',h:'PFa',f:num('pfa',3)},
+      {k:'kw1',h:'kW1',f:num('kw1',3)},{k:'kw2',h:'kW2',f:num('kw2',3)},{k:'kw3',h:'kW3',f:num('kw3',3)},
+      {k:'kw',h:'kW total',f:num('kw',3)},
+      {k:'kvar',h:'kVAr total',f:num('kvar',3)},
+      {k:'cum_kwh',h:'Cum kWh',f:num('cum_kwh',1)},
+      {k:'cum_kvarh',h:'Cum kVArh',f:num('cum_kvarh',1)},
+      {k:'status_amp1',h:'Amp1',f:function(r){return statusTag(r.status_amp1);}},
+      {k:'status_pfa',h:'PFa st',f:function(r){return statusTag(r.status_pfa);}},
+      {k:'overall_status',h:'Overall',f:function(r){return statusTag(r.overall_status);}}
+    ],'ts_saudi');
+  }).catch(function(){});
+}
+
+function renderDQ(){
+  Promise.all([api('/api/kpi'),api('/api/status'),api('/api/nonzero'),api('/api/meters')])
+  .then(function(res){
+    if(res.some(function(r){return r.stale;}))return;
+    clearErr();
+    var c=res[0].data.consumption, e=res[0].data.electrical;
+    var st=res[1].data, nz=res[2].data, m=res[3].data;
+    /* ascending by signal name on first paint; table() only applies a default
+       on first call, so it has to be seeded before that call, not after */
+    if(!SORT['dqNZ'])SORT['dqNZ']={k:'signal',dir:'a'};
+    if(!SORT['dqTable'])SORT['dqTable']={k:'coverage',dir:'a'};
+    set('dq_rows',fmt(e.readings),'from gold.energy_raw');
+    set('dq_gap',fmt(c.n_longgap),'interval_quality = LONG_GAP');
+    set('dq_excl',fmt(c.n_excluded),'consumption_cleaning_status ≠ KEEP');
+    set('dq_maxgap',fmt(c.max_gap_min,1)+'<u>min</u>','longest gap between readings');
+
+    var order=['status_vn1','status_vn2','status_vn3','status_v1','status_v2','status_v3',
+      'status_amp1','status_amp2','status_amp3','status_hz',
+      'status_pf1','status_pf2','status_pf3','status_pfa','status_kwh','overall_status'];
+    var cats=['Acceptable','Review Required','Problematic','Critical','Invalid'];
+    var colr={'Acceptable':'--ok','Review Required':'--rev','Problematic':'--warn',
+              'Critical':'--crit','Invalid':'--inv'};
+    var byCol={}; st.forEach(function(r){(byCol[r.signal]=byCol[r.signal]||{})[r.status]=r.n;});
+    if(!empty('dqStatus',st.length?'':'No readings.')){
+      draw('dqStatus','bar',{labels:order.map(function(c){return c.replace('status_','');}),
+        datasets:cats.map(function(cat){return {label:cat,
+          data:order.map(function(c){return (byCol[c]||{})[cat]||0;}),
+          backgroundColor:cssv(colr[cat]),stack:'s'};})},
+        {indexAxis:'y',scales:{x:merge({stacked:true},ax('Readings')),y:{stacked:true,grid:{display:false}}}});
+    }
+    table('dqNZ',nz,[
+      {k:'signal',h:'Signal',l:1},
+      {k:'col',h:'Column',l:1},
+      {k:'total',h:'Readings',f:function(r){return fmt(r.total);}},
+      {k:'present',h:'Transmitted',f:function(r){return fmt(r.present);}},
+      {k:'present_pct',h:'Transmitted %',f:function(r){
+        var c=r.present_pct>99?'t-ok':r.present_pct>0?'t-warn':'t-crit';
+        return '<span class="tag '+c+'">'+Number(r.present_pct).toFixed(1)+'%</span>';}},
+      {k:'nonzero',h:'Non-zero',f:function(r){return fmt(r.nonzero);}},
+      {k:'nonzero_pct',h:'Non-zero %',f:function(r){
+        var c=r.nonzero_pct>80?'t-ok':r.nonzero_pct>0?'t-warn':'t-crit';
+        return '<span class="tag '+c+'">'+Number(r.nonzero_pct).toFixed(1)+'%</span>';}},
+      {k:'zero',h:'Exactly zero',f:function(r){return fmt(r.zero);}},
+      {k:'negative',h:'Negative',f:function(r){return '<span class="'+(r.negative>0?'neg':'')+'">'+fmt(r.negative)+'</span>';}}
+    ],'signal');
+    table('dqTable',m,[
+      {k:'meter',h:'Meter',l:1},{k:'zone',h:'Zone',l:1},
+      {k:'readings',h:'Readings',f:function(r){return fmt(r.readings);}},
+      {k:'cadence_s',h:'Cadence s',f:function(r){return fmt(r.cadence_s,1);}},
+      {k:'expected',h:'Expected',f:function(r){return fmt(r.expected);}},
+      {k:'coverage',h:'Coverage',f:function(r){ if(r.coverage==null)return '—';
+        var c=r.coverage>=97?'t-ok':r.coverage>=85?'t-warn':'t-crit';
+        return '<span class="tag '+c+'">'+Number(r.coverage).toFixed(1)+'%</span>';}},
+      {k:'days',h:'Days',f:function(r){return fmt(r.days);}},
+      {k:'long_gaps',h:'Long gaps',f:function(r){return fmt(r.long_gaps);}},
+      {k:'excluded',h:'Excluded',f:function(r){return fmt(r.excluded);}},
+      {k:'max_gap',h:'Max gap min',f:function(r){return fmt(r.max_gap,1);}},
+      {k:'no_consumption',h:'In consumption view',f:function(r){
+        return r.no_consumption?'<span class="tag t-crit">excluded</span>'
+                               :'<span class="tag t-ok">yes</span>';}}
+    ],'coverage');
+  }).catch(function(){});
+}
+
+function renderBill(){
+  api('/api/bill').then(function(r){
+    if(r.stale)return; clearErr();
+    table('blTable',r.data,[
+      {k:'invoice_number',h:'Invoice',l:1},{k:'zone',h:'Zone',l:1},
+      {k:'start_period',h:'From',l:1},{k:'end_period',h:'To',l:1},
+      {k:'calculated_billing_days',h:'Days',f:function(r){return fmt(r.calculated_billing_days);}},
+      {k:'billed_consumption_kwh',h:'Billed kWh',f:function(r){return fmt(r.billed_consumption_kwh,1);}},
+      {k:'system_consumption_kwh',h:'Metered kWh',f:function(r){return fmt(r.system_consumption_kwh,1);}},
+      {k:'consumption_variance_kwh',h:'Variance kWh',f:function(r){return fmt(r.consumption_variance_kwh,1);}},
+      {k:'consumption_variance_percent',h:'Variance %',f:function(r){
+        var v=Number(r.consumption_variance_percent);
+        if(!isFinite(v))return '—';
+        var c=Math.abs(v)<=2?'t-ok':Math.abs(v)<=20?'t-warn':'t-crit';
+        return '<span class="tag '+c+'">'+v.toFixed(1)+'%</span>';}},
+      {k:'billed_cost',h:'Billed cost',f:function(r){
+        var kwh=Number(r.billed_consumption_kwh),cost=Number(r.billed_cost);
+        var t=kwh?cost/kwh:null;
+        var bad=(t!=null&&t<0.05);
+        return (bad?'<span class="tag t-crit">':'')+fmt(r.billed_cost,2)+(bad?' unreliable</span>':'');}}
+    ],'consumption_variance_percent');
+  }).catch(function(){});
+}
+
+var RENDER={ov:renderOverview,en:renderEnergy,cu:renderCurrent,vf:renderVolt,
+             pf:renderPF,rd:renderReadings,dq:renderDQ,bl:renderBill};
+
+/* ------------------------------------------------------------------ ui --- */
+function buildTabs(){
+  var n=el('tabs');
+  n.innerHTML=PAGES.map(function(p){return '<button role="tab" data-p="'+p.id+
+    '" aria-selected="'+(p.id===state.page)+'"><span class="tn">'+p.n+'</span>'+p.t+'</button>';}).join('');
+  Array.prototype.forEach.call(n.querySelectorAll('button'),function(b){
+    b.onclick=function(){state.page=b.dataset.p;syncTabs();render();};});
+}
+function syncTabs(){
+  Array.prototype.forEach.call(document.querySelectorAll('#tabs button'),function(b){
+    b.setAttribute('aria-selected',b.dataset.p===state.page);});
+  Array.prototype.forEach.call(document.querySelectorAll('.page'),function(s){
+    s.classList.toggle('on',s.id==='pg-'+state.page);});
+  var p=PAGES.filter(function(x){return x.id===state.page;})[0];
+  el('pgTitle').textContent=p.t; el('pgSub').textContent=p.s;
+}
+function buildZones(){
+  var zs=[]; META.meters.forEach(function(m){if(zs.indexOf(m.zone_name)<0)zs.push(m.zone_name);});
+  zs.sort();
+  var c=el('zoneChips');
+  c.innerHTML='<button class="chip" data-z="" aria-pressed="true">All '+zs.length+' zones</button>'+
+    zs.map(function(z){return '<button class="chip" data-z="'+esc(z)+'" aria-pressed="false">'+
+      esc(z)+'</button>';}).join('');
+  Array.prototype.forEach.call(c.querySelectorAll('.chip'),function(b){
+    b.onclick=function(){var z=b.dataset.z;
+      if(z==='')state.zones.clear();
+      else if(state.zones.has(z))state.zones.delete(z); else state.zones.add(z);
+      state.meter=''; state.rdOffset=0; syncZones(); buildMeterSel(); render();};});
+}
+function syncZones(){
+  Array.prototype.forEach.call(document.querySelectorAll('#zoneChips .chip'),function(b){
+    var z=b.dataset.z, on=(z===''?state.zones.size===0:state.zones.has(z));
+    b.setAttribute('aria-pressed',on?'true':'false');});
+}
+function buildMeterSel(){
+  var s=el('meterSel');
+  var list=META.meters.filter(function(m){return !state.zones.size||state.zones.has(m.zone_name);});
+  s.innerHTML='<option value="">All meters in selection ('+list.length+')</option>'+
+    list.map(function(m){return '<option value="'+esc(m.meter_label)+'">'+
+      esc(m.meter_label.replace('_child__1_ch3pm',''))+' — '+esc(m.zone_name)+'</option>';}).join('');
+  s.value=state.meter;
+}
+function shiftDate(iso,days){
+  var d=new Date(iso+'T00:00:00Z'); d.setUTCDate(d.getUTCDate()+days);
+  return d.toISOString().slice(0,10);
+}
+function buildRanges(){
+  var R=[['1','1 day'],['7','7 d'],['30','30 d'],['90','90 d'],['365','1 yr'],['all','All']];
+  var c=el('rangeChips');
+  c.innerHTML=R.map(function(x){return '<button class="chip" data-r="'+x[0]+
+    '" aria-pressed="false">'+x[1]+'</button>';}).join('');
+  Array.prototype.forEach.call(c.querySelectorAll('.chip'),function(b){
+    b.onclick=function(){
+      var r=b.dataset.r, last=META.bounds.d2;
+      state.to=last;
+      state.from = r==='all' ? META.bounds.d1 : shiftDate(last,-(Number(r)-1));
+      state.rdOffset=0;
+      Array.prototype.forEach.call(c.querySelectorAll('.chip'),function(x){
+        x.setAttribute('aria-pressed', x===b?'true':'false');});
+      el('dFrom').value=state.from; el('dTo').value=state.to;
+      render();};});
+}
+function bindInputs(){
+  var f=el('dFrom'),t=el('dTo');
+  f.min=t.min=META.bounds.d1; f.max=t.max=META.bounds.d2;
+  function dchg(){
+    if(!f.value||!t.value)return;
+    state.from = f.value<t.value?f.value:t.value;
+    state.to   = f.value<t.value?t.value:f.value;
+    state.rdOffset=0;
+    Array.prototype.forEach.call(document.querySelectorAll('#rangeChips .chip'),
+      function(x){x.setAttribute('aria-pressed','false');});
+    render();
+  }
+  f.onchange=dchg; t.onchange=dchg;
+  el('tFrom').onchange=function(){state.t1=this.value;state.rdOffset=0;render();};
+  el('tTo').onchange=function(){state.t2=this.value;state.rdOffset=0;render();};
+  el('dReset').onclick=function(){
+    state.from=META.bounds.d1; state.to=META.bounds.d2;
+    f.value=state.from; t.value=state.to;
+    Array.prototype.forEach.call(document.querySelectorAll('#rangeChips .chip'),function(x){
+      x.setAttribute('aria-pressed', x.dataset.r==='all'?'true':'false');});
+    state.rdOffset=0; render();};
+  el('tReset').onclick=function(){
+    state.t1=''; state.t2=''; el('tFrom').value=''; el('tTo').value='';
+    state.rdOffset=0; render();};
+  el('allReset').onclick=function(){
+    state.zones.clear(); state.meter=''; state.t1=''; state.t2='';
+    el('tFrom').value=''; el('tTo').value='';
+    state.to=META.bounds.d2; state.from=shiftDate(META.bounds.d2,-6);
+    f.value=state.from; t.value=state.to;
+    Array.prototype.forEach.call(document.querySelectorAll('#rangeChips .chip'),function(x){
+      x.setAttribute('aria-pressed', x.dataset.r==='7'?'true':'false');});
+    state.rdOffset=0; syncZones(); buildMeterSel(); render();};
+  el('meterSel').onchange=function(){state.meter=this.value;state.rdOffset=0;render();};
+
+  el('rdNonzero').onchange=function(){state.rdNonzero=this.checked;state.rdOffset=0;renderReadings();};
+  el('rdLimit').onchange=function(){state.rdLimit=Number(this.value);state.rdOffset=0;renderReadings();};
+  el('rdStatus').onchange=function(){state.rdStatus=this.value;state.rdOffset=0;renderReadings();};
+  el('rdPrev').onclick=function(){state.rdOffset=Math.max(0,state.rdOffset-state.rdLimit);renderReadings();};
+  el('rdNext').onclick=function(){state.rdOffset+=state.rdLimit;renderReadings();};
+  var ss=el('rdStatus');
+  (META.enums.overall_status||[]).forEach(function(v){
+    var o=document.createElement('option'); o.value=v; o.textContent=v; ss.appendChild(o);});
+}
+function themeNow(){
+  var c=document.documentElement.getAttribute('data-theme');
+  if(c)return c;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+}
+function syncTheme(){
+  var b=el('themeBtn'),d=themeNow()==='dark';
+  b.setAttribute('aria-pressed',d?'true':'false');
+  b.title=d?'Switch to the light theme':'Switch to the dark theme';
+  b.setAttribute('aria-label',b.title);
+  b.innerHTML=d?'&#9728;':'&#9681;';
+}
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  for(var k in CH){if(CH[k]){CH[k].destroy();delete CH[k];}}
+  syncTheme(); render();
+}
+
+function render(){
+  _renderSeq++;                       /* invalidate anything still in flight */
+  var ms=state.meter?1:(META?META.meters.filter(function(m){
+    return !state.zones.size||state.zones.has(m.zone_name);}).length:0);
+  var nz=state.zones.size|| (META?new Set(META.meters.map(function(m){return m.zone_name;})).size:0);
+  el('selSum').innerHTML='<b>'+ms+'</b> meter'+(ms===1?'':'s')+' · <b>'+nz+'</b> zone'+(nz===1?'':'s')+
+    (state.t1||state.t2?' · <b>'+(state.t1||'00:00')+'–'+(state.t2||'23:59')+'</b>':'');
+  el('stRange').textContent=state.from+' → '+state.to;
+  (RENDER[state.page]||function(){})();
+}
+
+/* ---------------------------------------------------------------- boot --- */
+fetch('/api/meta').then(function(r){return r.json();}).then(function(m){
+  if(m.error) throw new Error(m.error);
+  META=m;
+  el('stTop').textContent=m.meters.length+' meters · '+
+    new Set(m.meters.map(function(x){return x.zone_name;})).size+' zones · '+
+    Number(m.raw_rows).toLocaleString('en-US')+' readings';
+  // open on the last 7 days: fast, and it shows per-reading detail immediately
+  state.to=m.bounds.d2; state.from=shiftDate(m.bounds.d2,-6);
+  buildTabs(); buildPages(); buildZones(); buildMeterSel(); buildRanges(); bindInputs();
+  el('dFrom').value=state.from; el('dTo').value=state.to;
+  var d7=document.querySelector('#rangeChips .chip[data-r="7"]');
+  if(d7)d7.setAttribute('aria-pressed','true');
+  el('themeBtn').onclick=function(){applyTheme(themeNow()==='dark'?'light':'dark');};
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){
+    if(!document.documentElement.getAttribute('data-theme')){syncTheme();render();}});
+  syncTheme(); syncTabs(); render();
+}).catch(function(e){
+  document.getElementById('errBox').innerHTML='<div class="err"><b>Cannot reach the API.</b> '+
+    esc(e.message)+'<br>Start the server first:<br><code>python serve.py</code> '+
+    '(or the project venv’s python), then reload this page.</div>';
+});
+})();
+</script>
+</body>
+</html>

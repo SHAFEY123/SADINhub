@@ -1,0 +1,201 @@
+# Model 1 - raw-grain anomaly detection.
+#
+# EVERY threshold lives in this file. No detector hard-codes one.
+# Signed off 2026-09-20; see src/model1_anomaly_raw/model1_design_spec.md sections 1-10.
+#
+# This file changes nothing in Bronze, Silver, Gold or Power BI. It governs only whether
+# Model 1 raises an anomaly event inside ML_WORK.
+
+scope:
+  # Zone 13 is excluded from validated consumption for cumulative-kWh integrity reasons.
+  # That is a REGISTER concern, not an electrical-measurement one, so the electrical
+  # families run on all 31 meters and only the register family drops to 29. (Decision 1.)
+  zone13_prefix: "ZN.13-"
+  electrical:
+    meters: 31
+    readings: 4535918
+  register:
+    meters: 29
+    readings: 4260849
+
+commissioning:
+  # ASSUMED boundary derived from the observed data: every Tier-D transient ends in the
+  # last week of December 2024 and none recurs. NOT engineering-confirmed. (Decision 6.)
+  assumed_boundary_date: "2024-12-31"
+  status: "assumed_commissioning_boundary_pending_engineering_confirmation"
+  label: "COMMISSIONING"
+  severity_cap: "Review Required"
+
+episodes:
+  # Consecutive flagged readings collapse into one episode. A short recovery inside a
+  # chronic fault must not shatter it into thousands of events.
+  merge_gap_minutes: 360
+  min_episode_readings: 1
+  # Per-family overrides, chosen by "how long a quiet period means this is a genuinely
+  # different episode", not by how many events they produce.
+  #   T1/T2  an intermittent electrical fault that recurs the next day is one finding
+  #   T3     the load gate closes overnight, so a daily gap is expected; 48h merges
+  #          across nights and weekends rather than raising one event per working day
+  merge_gap_minutes_by_family:
+    T1: 1440          # 24 hours
+    T2: 1440          # 24 hours
+    T3: 2880          # 48 hours
+
+severity:
+  # Persistence bands, in hours.
+  transient_max_hours: 24
+  sustained_max_hours: 168          # 7 days
+  # Magnitude tertiles are fixed once from history, per family, at run time.
+  magnitude_quantiles: [0.3333, 0.6667]
+  # T1 reverse power is graded rather than Critical at any duration. A sustained reversal
+  # is a fault; a single reading at two watts with nothing corroborating it is not the same
+  # claim. The DETECTOR is unchanged - these events are still raised and still appear in
+  # the review output - only their severity classification differs.
+  t1_reverse_power:
+    # "Isolated" means a handful of readings inside a single day.
+    isolated_max_readings: 3
+    # An isolated reading reaches Critical only with real reverse power, real load AND a
+    # concurrent production classifier agreeing. The load threshold reuses the same 5% of
+    # breaker rating as the power-factor gate rather than inventing a new constant.
+    critical_min_magnitude_kw: 0.5
+    critical_min_load_pct_cb: 5.0
+    # Below this, with nothing corroborating it, an isolated reading is capped at
+    # Review Required. It stays visible; it is simply not asserted as a fault.
+    small_magnitude_kw: 0.1
+
+t1_polarity:
+  # A sign test. Needs no baseline, which is the whole point: a self-referential baseline
+  # cannot see a fault that spans its own history.
+  min_current_a: 0.0                # strictly greater than
+  flag_negative_power_factor: true
+
+t2_current_power:
+  # The production classifier only operates below 15% of breaker rating. Model 1 evaluates
+  # everywhere and records whether each event lies inside or outside that reach.
+  existing_rule_gate_pct_cb: 15.0
+  # Literal zero comparisons, matching the production rule. No epsilon.
+
+t3_power_factor:
+  # Minimum-load gate = 5% of breaker rating. This is the measured knee in the PF/load
+  # distribution AND the production classifier's existing `third = margin / 3` constant.
+  # (Decision 2.)
+  min_load_pct_cb: 5.0
+  require_forward_power: true
+  bands:
+    critical: 0.6
+    problematic: 0.78
+    review_required: 0.8
+  cusum_target: 0.8
+  cusum_k_sigma: 0.5
+  cusum_h_sigma: 5.0
+  cusum_min_points: 30
+
+t4_change:
+  # Day grain: the two acceptance criteria are both day-scale events and a reading-grain
+  # EWMA over 4.5M rows is both slower and noisier for no gain.
+  # lambda 0.3 sits in the standard 0.2-0.4 range for EWMA charts. At 0.2 the chart lags
+  # a step change by roughly 1/lambda = 5 days, which is slower than the transition this
+  # model has to resolve.
+  ewma_lambda: 0.3
+  ewma_k: 3.0
+  baseline_window_days: 30
+  min_baseline_days: 14
+  # Hold the baseline back from the point under test. Without it a step change walks into
+  # its own reference window and inflates the control limit faster than the deviation
+  # grows, so the change is never flagged. See ewma_flags().
+  baseline_gap_days: 7
+  # Data-availability sub-detector. A day with almost no readings is a telemetry outage,
+  # not an electrical fault, and is classified as such even though T4 finds the transition.
+  min_readings_per_day: 50
+  availability_event_class: "DATA_AVAILABILITY"
+  electrical_event_class: "ELECTRICAL_CHANGE"
+
+t5_register:
+  # Must run at DAY grain. At reading grain "no advance since the previous reading" is true
+  # on 49-96% of intervals for healthy meters, because the register ticks in coarse steps
+  # (the commonest positive increments are 0.4 and 0.5 kWh).
+  min_readings_full_day: 200
+  # Two independent load-evidence rules, both evaluated, both recorded. The absolute rule
+  # is preserved because it reproduces ZN.16's known evidence exactly; the breaker
+  # normalised rule generalises it across meters with 80-250 A breakers.
+  min_amps_a: 5.0                   # mean summed current across the three phases
+  min_load_pct_cb: 1.0              # mean per-phase current as % of breaker rating
+  trigger: "either"                 # either | legacy_amps | normalized
+
+# Windows in which a meter's own history must NOT be used as a baseline, because the
+# fault is present throughout them.
+known_fault_windows:
+  ZN.16-PB:
+    - ["2024-12-15", "2026-06-26"]
+
+# Known, facility-wide data-availability event. Classified, never treated as electrical.
+known_availability_windows:
+  - name: "facility_wide_telemetry_outage_feb_2026"
+    start: "2026-02-03"
+    end: "2026-02-18"
+    scope: "all_meters"
+
+# The acceptance set: meter/phase findings a working Model 1 must detect (section 3).
+acceptance_set:
+  tier_a_engineering_confirmed:
+    ZN.16-PB: [1, 2, 3]
+  tier_b_strong_empirical:
+    ZN.8-PB.2: [1]
+    ZN.5-PB: [1]
+    ZN.10-PB.1: [2]
+    ZN.12-PB: [3]
+    ZN.11-PB.2: [2]
+  tier_c_current_power:
+    ZN.20-PB.1: [1, 3]
+    ZN.10-PB.2: [3]
+  # Demoted from acceptance to monitor: 68 negative-PF rows does not support a polarity
+  # claim against phase 1's 147,296. (Decision 4.)
+  monitor_only:
+    ZN.5-PB: [3]
+  # Known isolated reverse-power blips, both a couple of watts with no corroboration.
+  # They must REMAIN VISIBLE in the review output but must not be Critical solely because
+  # kW < 0. Regression-tested on every run.
+  isolated_blips:
+    - meter: "ZN.1-PB.2"
+      phase: 1
+      date: "2025-05-17"
+    - meter: "ZN.5-PB"
+      phase: 1
+      date: "2026-07-05"
+  # Meters with no negative active power on any phase. T1 must be silent on all of them.
+  clean_meters:
+    - ZN.1-PB.1
+    - ZN.11-PB.1
+    - ZN.14-PB
+    - ZN.15-PB.1
+    - ZN.18-PB
+    - ZN.19-PB.1
+    - ZN.19-PB.2
+    - ZN.2-PB
+    - ZN.20-PB.1
+    - ZN.20-PB.2
+    - ZN.21-PB
+    - ZN.3-PB.1
+    - ZN.3-PB.2
+    - ZN.4-PB.1
+    - ZN.4-PB.2
+    - ZN.6-PB
+    - ZN.7-PB
+    - ZN.9-PB
+
+# Measured reference values every run reconciles against (section 9).
+reconciliation:
+  negative_total_power_readings: 281484
+  negative_total_power_meters: 11
+  current_gt0_power_eq0: 45343
+  current_eq0_power_ne0: 34041
+  register_decreases_29_meters: 25
+  zn16_stuck_days_legacy_rule: 493
+  zn16_fault_end_date: "2026-06-26"
+  # An EWMA lags a step change by construction. This tolerance is what
+  # lambda=0.3 / k=3 honestly delivers, NOT a value tuned to make a test pass.
+  zn16_repair_detection_tolerance_days: 3
+  # The lag observed on the accepted historical run, preserved as a regression reference.
+  zn16_repair_observed_lag_days: 2
+  feb_outage_start: "2026-02-03"
+  feb_outage_end: "2026-02-18"

@@ -1,0 +1,261 @@
+table 'gold energy_bill'
+	lineageTag: 61ff025b-21c6-40e5-a501-cea80b21526a
+
+	column energy_bill_key
+		dataType: string
+		lineageTag: 791ea373-4fba-4ba8-8a2d-91454f85c734
+		summarizeBy: none
+		sourceColumn: energy_bill_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_key
+		dataType: string
+		lineageTag: 0f8ef9fd-da76-4c51-88e4-c4e5838b1b96
+		summarizeBy: none
+		sourceColumn: facility_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_key
+		dataType: string
+		lineageTag: 0664acac-d46e-4378-9423-4bd69d6b4d10
+		summarizeBy: none
+		sourceColumn: zone_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column grid_billing_account_key
+		dataType: string
+		lineageTag: 3543ff27-c6cd-4ab5-bae5-d3fa1f959be3
+		summarizeBy: none
+		sourceColumn: grid_billing_account_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column start_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 8206a20d-210b-4704-8a03-09debe27dc40
+		summarizeBy: sum
+		sourceColumn: start_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column end_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: f77373f7-84f1-4eed-ae01-25c61d1bd095
+		summarizeBy: sum
+		sourceColumn: end_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column start_period
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5417391d-3fbb-4b8d-839c-975b949cd58b
+		summarizeBy: none
+		sourceColumn: start_period
+
+		variation Variation
+			isDefault
+			relationship: d21c780d-ff43-46e0-b2f9-e655904feb78
+			defaultHierarchy: LocalDateTable_5235b20b-c8d3-4b80-98ab-92676b2d59df.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column end_period
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 26b27b59-9c1d-42df-a6c7-f3bb8839a9ce
+		summarizeBy: none
+		sourceColumn: end_period
+
+		variation Variation
+			isDefault
+			relationship: 26233788-64ce-4ab4-900b-3fc48e357fa6
+			defaultHierarchy: LocalDateTable_82561c94-7986-4b9b-a522-9a982dbef40b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column calculated_billing_days
+		dataType: int64
+		formatString: 0
+		lineageTag: f3f48db4-9089-411e-9b79-9a2aea9a8cca
+		summarizeBy: sum
+		sourceColumn: calculated_billing_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column invoice_number
+		dataType: string
+		lineageTag: 74eb0626-0c2f-45ac-a38d-8a8b548ab7ab
+		summarizeBy: none
+		sourceColumn: invoice_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column beginning_reading
+		dataType: double
+		lineageTag: 9286639d-af55-4cf1-b796-f8ca3987ae0b
+		summarizeBy: sum
+		sourceColumn: beginning_reading
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ending_reading
+		dataType: double
+		lineageTag: 65278193-8689-440c-b29c-a57e588a06bf
+		summarizeBy: sum
+		sourceColumn: ending_reading
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column billed_consumption_kwh
+		dataType: double
+		lineageTag: f1e5ae58-c82a-4562-a187-34bec742bad9
+		summarizeBy: sum
+		sourceColumn: billed_consumption_kwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column billed_cost
+		dataType: double
+		lineageTag: 0b22ccda-9be8-4378-8d7a-0d97addbe885
+		summarizeBy: sum
+		sourceColumn: billed_cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column system_beginning_reading
+		dataType: double
+		lineageTag: 19e89c21-c4d4-480c-81ba-a7d6f7df59b3
+		summarizeBy: sum
+		sourceColumn: system_beginning_reading
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column system_ending_reading
+		dataType: double
+		lineageTag: 3de22285-92ce-4494-866b-1e2a99e8ef92
+		summarizeBy: sum
+		sourceColumn: system_ending_reading
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column system_consumption_kwh
+		dataType: double
+		lineageTag: 3299aaf2-8e75-44a1-ae3d-2b996546c92b
+		summarizeBy: sum
+		sourceColumn: system_consumption_kwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column system_estimated_cost
+		dataType: double
+		lineageTag: 33bbd832-e902-42bc-8df1-59c4f48b7318
+		summarizeBy: sum
+		sourceColumn: system_estimated_cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column consumption_variance_kwh
+		dataType: double
+		lineageTag: 30fe6b15-37eb-4be0-9c5d-cb5ef8d6a641
+		summarizeBy: sum
+		sourceColumn: consumption_variance_kwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column cost_variance
+		dataType: double
+		lineageTag: f9508675-f7fd-4278-b213-52d542412149
+		summarizeBy: sum
+		sourceColumn: cost_variance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column consumption_variance_percent
+		dataType: double
+		lineageTag: 144880ee-57b6-4807-adb6-57f04c285e51
+		summarizeBy: sum
+		sourceColumn: consumption_variance_percent
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column comparing_with_last_bill
+		dataType: string
+		lineageTag: 3be0b7f0-54ad-4d01-87f4-6dd7547509c4
+		summarizeBy: none
+		sourceColumn: comparing_with_last_bill
+
+		annotation SummarizationSetBy = Automatic
+
+	column comparing_with_grid_bill
+		dataType: string
+		lineageTag: 83d41a81-d057-4b4d-8cce-e78f7c62e3e4
+		summarizeBy: none
+		sourceColumn: comparing_with_grid_bill
+
+		annotation SummarizationSetBy = Automatic
+
+	column system_reading_timestamp_utc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 13e722f3-528a-48a1-9b0f-ae3864d8f01d
+		summarizeBy: none
+		sourceColumn: system_reading_timestamp_utc
+
+		variation Variation
+			isDefault
+			relationship: 5bfe285c-3a88-478b-b16e-9da0a021a01c
+			defaultHierarchy: LocalDateTable_6f6a2349-74ec-497f-b01b-2fb5b337e1fa.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_created_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0e4e2612-b9ab-4e8e-815b-7914a1836511
+		summarizeBy: none
+		sourceColumn: source_created_at
+
+		variation Variation
+			isDefault
+			relationship: 646d6f17-e481-404d-bc08-53d6e33a3a71
+			defaultHierarchy: LocalDateTable_91358f2a-5ef3-4f7d-a90b-7cfcb81e467b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'gold energy_bill' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "sadinhub"),
+				    gold_energy_bill = Source{[Schema="gold",Item="energy_bill"]}[Data]
+				in
+				    gold_energy_bill
+

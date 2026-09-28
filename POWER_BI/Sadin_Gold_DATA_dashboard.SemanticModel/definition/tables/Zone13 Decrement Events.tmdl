@@ -1,0 +1,85 @@
+table 'Zone13 Decrement Events'
+	lineageTag: fc36fd19-92c7-4e4f-a8fd-4df8d0d39cf6
+
+	column meter
+		dataType: string
+		lineageTag: 748ecd0e-e704-4045-8bab-329d69cb9ec0
+		summarizeBy: none
+		sourceColumn: meter
+
+		annotation SummarizationSetBy = Automatic
+
+	column decrement_timestamp_saudi
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: d31393ed-7c57-48ad-b270-19e29a55c4cf
+		summarizeBy: none
+		sourceColumn: decrement_timestamp_saudi
+
+		variation Variation
+			isDefault
+			relationship: 96d943a6-90b5-4497-a2c6-ea629ef28fc6
+			defaultHierarchy: LocalDateTable_7d8ce9de-6e20-4799-82b4-142a134fa114.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column previous_kwh
+		dataType: double
+		lineageTag: b548db91-f83e-46f5-bf0a-bb4d80ef7bdd
+		summarizeBy: sum
+		sourceColumn: previous_kwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column current_kwh
+		dataType: double
+		lineageTag: 43e883e0-9c96-4e07-a2f7-15ac39a78986
+		summarizeBy: sum
+		sourceColumn: current_kwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column decrement_size_kwh
+		dataType: double
+		lineageTag: 18e81d0a-0636-4651-b159-8de89c109f6c
+		summarizeBy: sum
+		sourceColumn: decrement_size_kwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column next_kwh
+		dataType: double
+		lineageTag: 5c566a4b-4117-4569-abe0-182fdfc062f3
+		summarizeBy: sum
+		sourceColumn: next_kwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column problem_type
+		dataType: string
+		lineageTag: c845f089-068e-4e72-953b-85904bba9a46
+		summarizeBy: none
+		sourceColumn: problem_type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Zone13 Decrement Events' = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("localhost:5432", "sadinhub", [CommandTimeout = #duration(0, 0, 5, 0), Query = "WITH readings AS (#(lf)    SELECT#(lf)        energy_meter_key,#(lf)        reading_timestamp_utc,#(lf)        active_energy_cumulative_kwh,#(lf)#(lf)        LAG(active_energy_cumulative_kwh, 1) OVER (#(lf)            PARTITION BY energy_meter_key#(lf)            ORDER BY reading_timestamp_utc#(lf)        ) AS previous_kwh,#(lf)#(lf)        LAG(active_energy_cumulative_kwh, 2) OVER (#(lf)            PARTITION BY energy_meter_key#(lf)            ORDER BY reading_timestamp_utc#(lf)        ) AS two_back_kwh,#(lf)#(lf)        LAG(reading_timestamp_utc, 1) OVER (#(lf)            PARTITION BY energy_meter_key#(lf)            ORDER BY reading_timestamp_utc#(lf)        ) AS previous_timestamp_utc,#(lf)#(lf)        LAG(reading_timestamp_utc, 2) OVER (#(lf)            PARTITION BY energy_meter_key#(lf)            ORDER BY reading_timestamp_utc#(lf)        ) AS two_back_timestamp_utc,#(lf)#(lf)        LEAD(active_energy_cumulative_kwh, 1) OVER (#(lf)            PARTITION BY energy_meter_key#(lf)            ORDER BY reading_timestamp_utc#(lf)        ) AS next_kwh,#(lf)#(lf)        LEAD(reading_timestamp_utc, 1) OVER (#(lf)            PARTITION BY energy_meter_key#(lf)            ORDER BY reading_timestamp_utc#(lf)        ) AS next_timestamp_utc#(lf)#(lf)    FROM silver.fact_energy_readings_snapshot#(lf)#(lf)    WHERE energy_meter_key IN (#(lf)        'ab6a3ed9-55ef-4e7a-ae8c-718e3f25fdf2',#(lf)        '9fc6d98a-5c79-48df-abd5-c0a21e61f40c'#(lf)    )#(lf)#(lf)    AND active_energy_cumulative_kwh IS NOT NULL#(lf)),#(lf)#(lf)stats AS (#(lf)    SELECT#(lf)        energy_meter_key,#(lf)#(lf)        PERCENTILE_CONT(0.99)#(lf)        WITHIN GROUP (#(lf)            ORDER BY active_energy_cumulative_kwh - previous_kwh#(lf)        ) FILTER (#(lf)            WHERE active_energy_cumulative_kwh > previous_kwh#(lf)        ) AS p99_positive_change#(lf)#(lf)    FROM readings#(lf)    GROUP BY energy_meter_key#(lf)),#(lf)#(lf)drops AS (#(lf)    SELECT#(lf)        r.*,#(lf)        s.p99_positive_change,#(lf)#(lf)        previous_kwh - active_energy_cumulative_kwh#(lf)            AS decrement_size_kwh#(lf)#(lf)    FROM readings r#(lf)#(lf)    JOIN stats s#(lf)        ON s.energy_meter_key = r.energy_meter_key#(lf)#(lf)    WHERE active_energy_cumulative_kwh < previous_kwh#(lf)),#(lf)#(lf)classified AS (#(lf)    SELECT#(lf)        d.*,#(lf)#(lf)        recovery.return_timestamp_utc,#(lf)        recovery.return_from_kwh,#(lf)        recovery.return_to_kwh#(lf)#(lf)    FROM drops d#(lf)#(lf)    LEFT JOIN LATERAL (#(lf)        SELECT#(lf)            r2.reading_timestamp_utc AS return_timestamp_utc,#(lf)            r2.previous_kwh AS return_from_kwh,#(lf)            r2.active_energy_cumulative_kwh AS return_to_kwh#(lf)#(lf)        FROM readings r2#(lf)#(lf)        WHERE r2.energy_meter_key = d.energy_meter_key#(lf)#(lf)          AND r2.reading_timestamp_utc >#(lf)              d.reading_timestamp_utc#(lf)#(lf)          AND r2.active_energy_cumulative_kwh >=#(lf)              d.previous_kwh#(lf)#(lf)          AND (#(lf)              r2.active_energy_cumulative_kwh -#(lf)              r2.previous_kwh#(lf)          ) > (10 * d.p99_positive_change)#(lf)#(lf)          AND EXTRACT(#(lf)              EPOCH FROM (#(lf)                  r2.reading_timestamp_utc -#(lf)                  r2.previous_timestamp_utc#(lf)              )#(lf)          ) / 60.0 <= 30#(lf)#(lf)        ORDER BY r2.reading_timestamp_utc#(lf)        LIMIT 1#(lf)#(lf)    ) recovery ON TRUE#(lf))#(lf)#(lf)SELECT#(lf)    CASE#(lf)        WHEN c.energy_meter_key =#(lf)            'ab6a3ed9-55ef-4e7a-ae8c-718e3f25fdf2'#(lf)            THEN 'PB1'#(lf)        ELSE 'PB2'#(lf)    END AS meter,#(lf)#(lf)    c.reading_timestamp_utc + INTERVAL '3 hours'#(lf)        AS decrement_timestamp_saudi,#(lf)#(lf)    c.previous_kwh,#(lf)#(lf)    c.active_energy_cumulative_kwh#(lf)        AS current_kwh,#(lf)#(lf)    c.decrement_size_kwh,#(lf)#(lf)    c.next_kwh,#(lf)#(lf)    CASE#(lf)        WHEN c.decrement_size_kwh#(lf)            <= 10 * c.p99_positive_change#(lf)        THEN 'Minor Decrement'#(lf)#(lf)        WHEN c.next_kwh >= c.previous_kwh#(lf)         AND EXTRACT(#(lf)             EPOCH FROM (#(lf)                 c.next_timestamp_utc -#(lf)                 c.reading_timestamp_utc#(lf)             )#(lf)         ) / 60.0 <= 30#(lf)         AND (#(lf)             c.next_kwh -#(lf)             c.active_energy_cumulative_kwh#(lf)         ) > 10 * c.p99_positive_change#(lf)        THEN 'Isolated Low Sample'#(lf)#(lf)        WHEN c.two_back_kwh IS NOT NULL#(lf)         AND (#(lf)             c.previous_kwh -#(lf)             c.two_back_kwh#(lf)         ) > 10 * c.p99_positive_change#(lf)         AND EXTRACT(#(lf)             EPOCH FROM (#(lf)                 c.previous_timestamp_utc -#(lf)                 c.two_back_timestamp_utc#(lf)             )#(lf)         ) / 60.0 <= 30#(lf)         AND ABS(#(lf)             c.active_energy_cumulative_kwh -#(lf)             c.two_back_kwh#(lf)         ) <= 10 * c.p99_positive_change#(lf)        THEN 'Return to Low After Upward Spike'#(lf)#(lf)        WHEN c.return_timestamp_utc IS NOT NULL#(lf)        THEN 'Temporary Downward Switch'#(lf)#(lf)        ELSE 'Unresolved Downward Shift'#(lf)#(lf)    END AS problem_type#(lf)#(lf)FROM classified c#(lf)#(lf)ORDER BY#(lf)    c.energy_meter_key,#(lf)    c.reading_timestamp_utc;"])
+				in
+				  Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

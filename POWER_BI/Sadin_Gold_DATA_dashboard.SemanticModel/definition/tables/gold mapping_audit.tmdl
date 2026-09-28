@@ -1,0 +1,158 @@
+table 'gold mapping_audit'
+	lineageTag: afc4deb4-815c-41f4-b07d-dba45e124b8b
+
+	column source_energy_meter_id
+		dataType: string
+		lineageTag: 4b3c587e-29e5-46b8-b8fa-5cfac034abd2
+		summarizeBy: none
+		sourceColumn: source_energy_meter_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column device_id
+		dataType: string
+		lineageTag: 76d14269-f685-4f6a-be03-2a0087460b71
+		summarizeBy: none
+		sourceColumn: device_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_id
+		dataType: string
+		lineageTag: 3554bd52-c1ba-4739-a2cd-9f2b2740c80f
+		summarizeBy: none
+		sourceColumn: facility_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_key
+		dataType: string
+		lineageTag: 74357a01-b5c4-4fa8-9695-3d26b39536f9
+		summarizeBy: none
+		sourceColumn: zone_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_name
+		dataType: string
+		lineageTag: 14675e63-fd31-4ac2-b7dc-d1c88bd562a0
+		summarizeBy: none
+		sourceColumn: zone_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_device_name
+		dataType: string
+		lineageTag: ceac36db-c7e3-46d1-834b-b1ef5d3af0f1
+		summarizeBy: none
+		sourceColumn: source_device_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_meter_label
+		dataType: string
+		lineageTag: d20b3039-f673-43fa-8cd9-deaf34bdf5de
+		summarizeBy: none
+		sourceColumn: source_meter_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column canonical_device_name
+		dataType: string
+		lineageTag: f71318ae-3474-45ad-b3bf-704bd5d4e9f8
+		summarizeBy: none
+		sourceColumn: canonical_device_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column canonical_meter_label
+		dataType: string
+		lineageTag: bd30e7a3-a3ad-4d0f-b94d-3d5b2c340944
+		summarizeBy: none
+		sourceColumn: canonical_meter_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_meter_records_for_device
+		dataType: int64
+		formatString: 0
+		lineageTag: c86bc7f6-3e37-462b-8bf5-6c7760d02908
+		summarizeBy: sum
+		sourceColumn: source_meter_records_for_device
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_records_for_meter_label
+		dataType: int64
+		formatString: 0
+		lineageTag: 923127c5-e6e3-4fa2-bdc6-c59a760355da
+		summarizeBy: sum
+		sourceColumn: source_records_for_meter_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column business_rule_code
+		dataType: string
+		lineageTag: 8a33b08b-da6d-4bc5-a9fb-03cfe610ff9e
+		summarizeBy: none
+		sourceColumn: business_rule_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column canonical_mapping_rank
+		dataType: int64
+		formatString: 0
+		lineageTag: 0fb33775-ac7b-429d-8d57-9f280e9999dc
+		summarizeBy: sum
+		sourceColumn: canonical_mapping_rank
+
+		annotation SummarizationSetBy = Automatic
+
+	column mapping_decision
+		dataType: string
+		lineageTag: 8ef2541c-527c-439c-8d43-02a1ad502521
+		summarizeBy: none
+		sourceColumn: mapping_decision
+
+		annotation SummarizationSetBy = Automatic
+
+	column mapping_status
+		dataType: string
+		lineageTag: 7b256f2a-c821-445d-9684-34ae2323b3ab
+		summarizeBy: none
+		sourceColumn: mapping_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_meter_active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f0e98d70-63f2-49aa-8755-5a70054502bc
+		summarizeBy: none
+		sourceColumn: is_meter_active
+
+		annotation SummarizationSetBy = Automatic
+
+	column meter_source_created_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 54523af4-3ba3-4941-9d9b-2bb19c889cd4
+		summarizeBy: none
+		sourceColumn: meter_source_created_at
+
+		variation Variation
+			isDefault
+			relationship: eace37e1-d0a5-40fc-9e2b-be99f66d0430
+			defaultHierarchy: LocalDateTable_ae099f39-1f4b-4f1f-9127-ba271f51e8a5.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'gold mapping_audit' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "sadinhub"),
+				    gold_mapping_audit = Source{[Schema="gold",Item="mapping_audit"]}[Data]
+				in
+				    gold_mapping_audit
+

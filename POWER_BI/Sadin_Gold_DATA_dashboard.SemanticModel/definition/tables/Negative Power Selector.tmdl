@@ -1,0 +1,73 @@
+table 'Negative Power Selector'
+	lineageTag: 7883f430-d13b-4adb-af2c-cd1270a1947a
+
+	measure 'Selected active power Negative Power Row' =
+			
+			VAR Choice =
+			    SELECTEDVALUE(
+			        'Negative Power Selector'[Selection],
+			        "Any Negative"
+			    )
+			
+			VAR P1 =
+			    SELECTEDVALUE('gold energy_raw'[active_power_phase_1_kw])
+			
+			VAR P2 =
+			    SELECTEDVALUE('gold energy_raw'[active_power_phase_2_kw])
+			
+			VAR P3 =
+			    SELECTEDVALUE('gold energy_raw'[active_power_phase_3_kw])
+			
+			VAR PT =
+			    SELECTEDVALUE('gold energy_raw'[active_power_total_kw])
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    Choice = "Phase 1" && P1 < 0, 1,
+			
+			    Choice = "Phase 2" && P2 < 0, 1,
+			
+			    Choice = "Phase 3" && P3 < 0, 1,
+			
+			    Choice = "Total Power" && PT < 0, 1,
+			
+			    Choice = "Any Negative"
+			        && (
+			            P1 < 0
+			            || P2 < 0
+			            || P3 < 0
+			            || PT < 0
+			        ), 1,
+			
+			    0
+			)
+		formatString: 0
+		lineageTag: a32a97a8-e48b-4794-8d29-539ba23ad7e7
+
+	column Selection
+		lineageTag: 4eb8f482-81ea-4d4a-bc70-e481fccc8594
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Selection]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Negative Power Selector' = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "Selection", STRING,
+				    {
+				        {"Any Negative"},
+				        {"Phase 1"},
+				        {"Phase 2"},
+				        {"Phase 3"},
+				        {"Total Power"}
+				    }
+				)
+
+	annotation PBI_Id = 18699a93c1944619bf397e306951ce3b
+

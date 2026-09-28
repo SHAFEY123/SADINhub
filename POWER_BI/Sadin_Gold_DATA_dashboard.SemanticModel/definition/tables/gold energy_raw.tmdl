@@ -1,0 +1,1329 @@
+table 'gold energy_raw'
+	lineageTag: 84ee2afb-3f08-4b9c-aea8-87a89a5db854
+
+	measure 'Reading Count' = COUNTROWS('gold energy_raw')
+		formatString: 0.00
+		lineageTag: c4bd3ea1-467a-48de-8e5c-2c11168c783f
+
+		changedProperty = IsHidden
+
+	measure 'Negative active power TkW Readings' = CALCULATE([Reading Count], 'gold energy_raw'[active_power_total_kw] < 0)
+		formatString: 0.000
+		lineageTag: bebb18e9-475f-46e1-b397-bb170d313bee
+
+		changedProperty = IsHidden
+
+	measure 'Min TkW' = MIN('gold energy_raw'[active_power_total_kw])
+		lineageTag: f0dc70ee-92bf-4972-a024-e3bc4b3ba50d
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Meters' =
+			
+			DISTINCTCOUNT('gold energy_raw'[energy_meter_key])
+		formatString: 0
+		lineageTag: 4ceb754d-aaf2-4b08-b14a-62319a190837
+
+		changedProperty = IsHidden
+
+	measure 'Amp1 Mismatch Readings' =
+			
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[status_amp1] IN {"Major Issue", "Major Problem"}
+			)
+		formatString: 0
+		lineageTag: e2715dce-da78-4534-801e-8e7af8c74b20
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Amp2 Mismatch Readings' =
+			
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[status_amp2] IN {"Major Issue", "Major Problem"}
+			)
+		formatString: 0
+		lineageTag: 299b8db5-1a66-40dd-bcb2-e0b028c5a177
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Amp3 Mismatch Readings' =
+			
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[status_amp3] IN {"Major Issue", "Major Problem"}
+			)
+		formatString: 0
+		lineageTag: d6ef2144-4dd5-40cc-af66-6c5c360fe390
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Max Current Mismatch' =
+			
+			MAX(
+			    [Amp1 Mismatch Readings],
+			    MAX(
+			        [Amp2 Mismatch Readings],
+			        [Amp3 Mismatch Readings]
+			    )
+			)
+		formatString: 0
+		lineageTag: e579d492-b0d9-4bbe-a769-c0b60ecf0208
+
+		changedProperty = IsHidden
+
+	measure 'Meters Above Current Threshold' =
+			
+			COUNTROWS(
+			    FILTER(
+			        VALUES('gold energy_raw'[energy_meter_key]),
+			        [Max Current Mismatch] > 100
+			    )
+			)
+		formatString: 0
+		lineageTag: 705c48bf-eb02-4f43-ba76-79cd39a7b403
+
+		changedProperty = IsHidden
+
+	measure 'Total Phase Mismatch Events' =
+			
+			[Amp1 Mismatch Readings]
+			+ [Amp2 Mismatch Readings]
+			+ [Amp3 Mismatch Readings]
+		formatString: 0
+		lineageTag: d3f980ea-65e1-44d1-acb6-4b3899493ecf
+
+		changedProperty = IsHidden
+
+	measure 'Any-Phase Mismatch Readings' =
+			
+			CALCULATE(
+			    [Reading Count],
+			    FILTER(
+			        'gold energy_raw',
+			        'gold energy_raw'[status_amp1] IN {"Major Issue", "Major Problem"}
+			        ||
+			        'gold energy_raw'[status_amp2] IN {"Major Issue", "Major Problem"}
+			        ||
+			        'gold energy_raw'[status_amp3] IN {"Major Issue", "Major Problem"}
+			    )
+			)
+		formatString: 0
+		lineageTag: 9d3db21b-6c20-4b03-aff7-c32d1e347698
+
+		changedProperty = IsHidden
+
+	measure 'PF1 Critical %' =
+			
+			DIVIDE(
+			    CALCULATE(
+			        [Reading Count],
+			        'gold energy_raw'[status_pf1] = "Critical"
+			    ),
+			    [Reading Count],
+			    0
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: ce83438f-a52d-4dc0-a436-5b7747cf3d30
+
+		changedProperty = IsHidden
+
+	measure 'PF2 Critical %' =
+			
+			DIVIDE(
+			    CALCULATE(
+			        [Reading Count],
+			        'gold energy_raw'[status_pf2] = "Critical"
+			    ),
+			    [Reading Count],
+			    0
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 2a35b747-c34c-464c-87e6-6a80a3f2b814
+
+		changedProperty = IsHidden
+
+	measure 'PF3 Critical %' =
+			
+			DIVIDE(
+			    CALCULATE(
+			        [Reading Count],
+			        'gold energy_raw'[status_pf3] = "Critical"
+			    ),
+			    [Reading Count],
+			    0
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 8c2b5f43-2727-446a-8ebe-543631357bb2
+
+		changedProperty = IsHidden
+
+	measure 'PF Critical Spread' =
+			
+			VAR P1 = [PF1 Critical %]
+			VAR P2 = [PF2 Critical %]
+			VAR P3 = [PF3 Critical %]
+			VAR Highest =
+			    MAX(P1, MAX(P2, P3))
+			VAR Lowest =
+			    MIN(P1, MIN(P2, P3))
+			RETURN
+			    Highest - Lowest
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: c0317a42-057d-43e1-8a17-29f93313ae56
+
+		changedProperty = IsHidden
+
+	measure 'PF Asymmetric Meters' =
+			
+			COUNTROWS(
+			    FILTER(
+			        VALUES('gold energy_raw'[energy_meter_key]),
+			        [PF Critical Spread] > 0.65
+			    )
+			)
+		formatString: 0
+		lineageTag: 5a2f53cf-d411-47b8-8b0c-55e533711105
+
+		changedProperty = IsHidden
+
+	measure 'Voltage Frequency Exceptions' =
+			
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[status_hz] IN {"Invalid","Critical","Review Required","Problematic"}
+			)
+			+
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[status_v1] IN {"Invalid","Critical","Review Required","Problematic"}
+			)
+			+
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[status_v2] IN {"Invalid","Critical","Review Required","Problematic"}
+			)
+			+
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[status_v3] IN {"Invalid","Critical","Review Required","Problematic"}
+			)
+			+
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[status_vn1] IN {"Invalid","Critical","Review Required","Problematic"}
+			)
+			+
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[status_vn2] IN {"Invalid","Critical","Review Required","Problematic"}
+			)
+			+
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[status_vn3] IN {"Invalid","Critical","Review Required","Problematic"}
+			)
+		formatString: 0
+		lineageTag: 98b4a6c5-4b4b-411b-abfa-d88fdeeaf7d8
+
+		changedProperty = IsHidden
+
+	measure 'Any Phase Mismatch Row' =
+			
+			VAR P1 =
+			    SELECTEDVALUE('gold energy_raw'[status_amp1])
+			VAR P2 =
+			    SELECTEDVALUE('gold energy_raw'[status_amp2])
+			VAR P3 =
+			    SELECTEDVALUE('gold energy_raw'[status_amp3])
+			
+			RETURN
+			IF(
+			    P1 IN {"Major Issue", "Major Problem"}
+			        || P2 IN {"Major Issue", "Major Problem"}
+			        || P3 IN {"Major Issue", "Major Problem"},
+			    1,
+			    0
+			)
+		formatString: 0
+		lineageTag: fde758c9-aa81-4a24-a93f-8aa965ba140c
+
+		changedProperty = IsHidden
+
+	measure 'Negative active power P1 Readings' =
+			
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[active_power_phase_1_kw] < 0
+			)
+		formatString: 0
+		lineageTag: b215128d-f22d-45bd-807c-ad50f1491783
+
+		changedProperty = IsHidden
+
+	measure 'Negative active power P2 Readings' =
+			
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[active_power_phase_2_kw] < 0
+			)
+		formatString: 0
+		lineageTag: d96007e6-954d-40ef-a666-dc6e48c00e14
+
+		changedProperty = IsHidden
+
+	measure 'Negative active power P3 Readings' =
+			
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[active_power_phase_3_kw] < 0
+			)
+		formatString: 0
+		lineageTag: 1b588d79-0887-4f66-9952-a1296d656fc3
+
+		changedProperty = IsHidden
+
+	measure 'Any Negative Power Row' =
+			
+			VAR P1 =
+			    SELECTEDVALUE('gold energy_raw'[active_power_phase_1_kw])
+			VAR P2 =
+			    SELECTEDVALUE('gold energy_raw'[active_power_phase_2_kw])
+			VAR P3 =
+			    SELECTEDVALUE('gold energy_raw'[active_power_phase_3_kw])
+			VAR PT =
+			    SELECTEDVALUE('gold energy_raw'[active_power_total_kw])
+			RETURN
+			IF(
+			    P1 < 0
+			        || P2 < 0
+			        || P3 < 0
+			        || PT < 0,
+			    1,
+			    0
+			)
+		formatString: 0
+		lineageTag: fbdbcb87-8da8-4861-a7cd-db62e41ad8b8
+
+		changedProperty = IsHidden
+
+	measure 'Voltage Frequency Flag Count' =
+			
+			VAR Metric =
+			    SELECTEDVALUE(
+			        'Voltage Frequency Metric Selector'[Measurement]
+			    )
+			
+			RETURN
+			SWITCH(
+			    Metric,
+			
+			    "Frequency",
+			        CALCULATE(
+			            [Reading Count],
+			            'gold energy_raw'[status_hz]
+			                IN {"Invalid", "Critical", "Review Required", "Problematic"}
+			        ),
+			
+			    "V1",
+			        CALCULATE(
+			            [Reading Count],
+			            'gold energy_raw'[status_v1]
+			                IN {"Invalid", "Critical", "Review Required", "Problematic"}
+			        ),
+			
+			    "V2",
+			        CALCULATE(
+			            [Reading Count],
+			            'gold energy_raw'[status_v2]
+			                IN {"Invalid", "Critical", "Review Required", "Problematic"}
+			        ),
+			
+			    "V3",
+			        CALCULATE(
+			            [Reading Count],
+			            'gold energy_raw'[status_v3]
+			                IN {"Invalid", "Critical", "Review Required", "Problematic"}
+			        ),
+			
+			    "VN1",
+			        CALCULATE(
+			            [Reading Count],
+			            'gold energy_raw'[status_vn1]
+			                IN {"Invalid", "Critical", "Review Required", "Problematic"}
+			        ),
+			
+			    "VN2",
+			        CALCULATE(
+			            [Reading Count],
+			            'gold energy_raw'[status_vn2]
+			                IN {"Invalid", "Critical", "Review Required", "Problematic"}
+			        ),
+			
+			    "VN3",
+			        CALCULATE(
+			            [Reading Count],
+			            'gold energy_raw'[status_vn3]
+			                IN {"Invalid", "Critical", "Review Required", "Problematic"}
+			        )
+			)
+		formatString: 0
+		lineageTag: dc1e162a-3cf1-4b7f-8a10-34887964db3b
+
+		changedProperty = IsHidden
+
+	measure 'Selected Voltage Frequency Flag Row' =
+			
+			VAR Metric =
+			    SELECTEDVALUE(
+			        'Voltage Frequency Metric Selector'[Measurement]
+			    )
+			
+			VAR SHz = SELECTEDVALUE('gold energy_raw'[status_hz])
+			VAR SV1 = SELECTEDVALUE('gold energy_raw'[status_v1])
+			VAR SV2 = SELECTEDVALUE('gold energy_raw'[status_v2])
+			VAR SV3 = SELECTEDVALUE('gold energy_raw'[status_v3])
+			VAR SVN1 = SELECTEDVALUE('gold energy_raw'[status_vn1])
+			VAR SVN2 = SELECTEDVALUE('gold energy_raw'[status_vn2])
+			VAR SVN3 = SELECTEDVALUE('gold energy_raw'[status_vn3])
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    Metric = "Frequency"
+			        && SHz IN {"Invalid","Critical","Review Required","Problematic"}, 1,
+			
+			    Metric = "V1"
+			        && SV1 IN {"Invalid","Critical","Review Required","Problematic"}, 1,
+			
+			    Metric = "V2"
+			        && SV2 IN {"Invalid","Critical","Review Required","Problematic"}, 1,
+			
+			    Metric = "V3"
+			        && SV3 IN {"Invalid","Critical","Review Required","Problematic"}, 1,
+			
+			    Metric = "VN1"
+			        && SVN1 IN {"Invalid","Critical","Review Required","Problematic"}, 1,
+			
+			    Metric = "VN2"
+			        && SVN2 IN {"Invalid","Critical","Review Required","Problematic"}, 1,
+			
+			    Metric = "VN3"
+			        && SVN3 IN {"Invalid","Critical","Review Required","Problematic"}, 1,
+			
+			    0
+			)
+		formatString: 0
+		lineageTag: 613cd22d-e2e7-4af5-994c-a4ecb2462b25
+
+		changedProperty = IsHidden
+
+	measure 'Previous kWh' =
+			
+			VAR CurrentMeter =
+			    SELECTEDVALUE('gold energy_raw'[energy_meter_key])
+			
+			VAR CurrentTime =
+			    SELECTEDVALUE('gold energy_raw'[reading_timestamp_utc])
+			
+			RETURN
+			MAXX(
+			    TOPN(
+			        1,
+			        FILTER(
+			            ALL('gold energy_raw'),
+			            'gold energy_raw'[energy_meter_key] = CurrentMeter
+			                && 'gold energy_raw'[reading_timestamp_utc] < CurrentTime
+			                && NOT ISBLANK(
+			                    'gold energy_raw'[active_energy_cumulative_kwh]
+			                )
+			        ),
+			        'gold energy_raw'[reading_timestamp_utc],
+			        DESC
+			    ),
+			    'gold energy_raw'[active_energy_cumulative_kwh]
+			)
+		lineageTag: cad3086a-39b7-444a-ad9f-42ad2fb7ae62
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Previous kWh Timestamp' =
+			
+			VAR CurrentMeter =
+			    SELECTEDVALUE('gold energy_raw'[energy_meter_key])
+			
+			VAR CurrentTime =
+			    SELECTEDVALUE('gold energy_raw'[reading_timestamp_utc])
+			
+			RETURN
+			MAXX(
+			    TOPN(
+			        1,
+			        FILTER(
+			            ALL('gold energy_raw'),
+			            'gold energy_raw'[energy_meter_key] = CurrentMeter
+			                && 'gold energy_raw'[reading_timestamp_utc] < CurrentTime
+			                && NOT ISBLANK(
+			                    'gold energy_raw'[active_energy_cumulative_kwh]
+			                )
+			        ),
+			        'gold energy_raw'[reading_timestamp_utc],
+			        DESC
+			    ),
+			    'gold energy_raw'[reading_timestamp_utc]
+			)
+		formatString: General Date
+		lineageTag: c2ac8157-3bd9-4ce8-98ae-945ab5a8e894
+
+		changedProperty = IsHidden
+
+	measure 'Previous Reading Timestamp' =
+			
+			VAR CurrentMeter =
+			    SELECTEDVALUE('gold energy_raw'[energy_meter_key])
+			
+			VAR CurrentTime =
+			    SELECTEDVALUE('gold energy_raw'[reading_timestamp_utc])
+			
+			RETURN
+			MAXX(
+			    TOPN(
+			        1,
+			        FILTER(
+			            ALL('gold energy_raw'),
+			            'gold energy_raw'[energy_meter_key] = CurrentMeter
+			                && 'gold energy_raw'[reading_timestamp_utc] < CurrentTime
+			        ),
+			        'gold energy_raw'[reading_timestamp_utc],
+			        DESC
+			    ),
+			    'gold energy_raw'[reading_timestamp_utc]
+			)
+		formatString: General Date
+		lineageTag: 0a89f302-c246-425e-bbf1-d68d3b02fb33
+
+		changedProperty = IsHidden
+
+	measure 'Reading Gap Minutes' =
+			
+			VAR CurrentTime =
+			    SELECTEDVALUE('gold energy_raw'[reading_timestamp_utc])
+			
+			VAR PreviousTime =
+			    [Previous Reading Timestamp]
+			
+			RETURN
+			IF(
+			    NOT ISBLANK(CurrentTime)
+			        && NOT ISBLANK(PreviousTime),
+			    DIVIDE(
+			        DATEDIFF(PreviousTime, CurrentTime, SECOND),
+			        60.0
+			    )
+			)
+		lineageTag: 6a9ad3c6-ada1-40ee-9db9-a6107bd5eb00
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Max Reading Gap Minutes' =
+			
+			MAXX(
+			    VALUES('gold energy_raw'[reading_timestamp_utc]),
+			    [Reading Gap Minutes]
+			)
+		lineageTag: e37667db-86d1-41da-970d-232f022a92cd
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Selected Meter Max Gap Days' =
+			
+			VAR SelectedMeter =
+			    SELECTEDVALUE('gold energy_raw'[meter_label])
+			
+			RETURN
+			CALCULATE(
+			    MAX('gold energy_reading_gaps'[gap_days]),
+			    TREATAS(
+			        {SelectedMeter},
+			        'gold energy_reading_gaps'[meter_label]
+			    )
+			)
+		lineageTag: 9fc097e5-6e97-415f-a214-00cd95fd30f3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Peak Active Power kW' =
+			
+			MAX(
+			    'gold energy_raw'[active_power_total_kw]
+			)
+		lineageTag: 252ab3f6-adb8-490a-bc84-1aec0786d02e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Active Power kW' =
+			
+			AVERAGE(
+			    'gold energy_raw'[active_power_total_kw]
+			)
+		lineageTag: 5753f8bb-5183-4d68-9838-e405be402a94
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Selected Meter Consumption kWh' =
+			
+			VAR SelectedMeter =
+			    SELECTEDVALUE('gold energy_raw'[meter_label])
+			
+			RETURN
+			CALCULATE(
+			    [Total Validated Consumption kWh],
+			    TREATAS(
+			        {SelectedMeter},
+			        'gold energy_consumption_validated'[meter_label]
+			    )
+			)
+		lineageTag: c8b726ad-fd73-417b-9efa-664d22d6bffc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Selected Meter Consumption Display' =
+			
+			VAR SelectedMeter =
+			    SELECTEDVALUE('gold energy_raw'[meter_label])
+			
+			VAR Consumption =
+			    [Selected Meter Consumption kWh]
+			
+			RETURN
+			IF(
+			    CONTAINSSTRING(SelectedMeter, "ZN.13-"),
+			    "Excluded",
+			    FORMAT(Consumption, "#,##0.0") & " kWh"
+			)
+		lineageTag: be451314-570a-4a51-b671-b30843c60d7c
+
+	measure 'Active Meters' =
+			
+			DISTINCTCOUNT ( 'gold energy_raw'[meter_label] )
+		formatString: 0
+		lineageTag: e93de189-0768-4f7e-88d9-0906a02d4838
+
+	measure 'kWh Counter Decrements' =
+			
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[status_kwh] = "Invalid"
+			)
+		formatString: 0
+		lineageTag: fec0bc51-1480-434c-b890-2b403f12939c
+
+	measure 'Total active power Negative Readings' =
+			
+			COALESCE([Negative active power P1 Readings], 0)
+			+ COALESCE([Negative active power P2 Readings], 0)
+			+ COALESCE([Negative active power P3 Readings], 0)
+		formatString: 0
+		lineageTag: 574ef83b-4a9f-44a4-8385-c27a31aed00d
+
+	measure 'Negative PF P1 Readings' =
+			
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[power_factor_phase_1] < 0
+			)
+		formatString: 0
+		lineageTag: b17c6193-e452-4930-b0ff-eccb26544016
+
+	measure 'Negative PF P2 Readings' =
+			
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[power_factor_phase_2] < 0
+			)
+		formatString: 0
+		lineageTag: 4cde025d-a4b3-44d3-80cc-e91fa23bcdd0
+
+	measure 'Negative PF P3 Readings' =
+			
+			CALCULATE(
+			    [Reading Count],
+			    'gold energy_raw'[power_factor_phase_3] < 0
+			)
+		formatString: 0
+		lineageTag: fff6c93b-fba4-4cac-bc31-71e690ed10a8
+
+	measure 'Total Negative PF Readings' =
+			
+			COALESCE([Negative PF P1 Readings], 0)
+			+ COALESCE([Negative PF P2 Readings], 0)
+			+ COALESCE([Negative PF P3 Readings], 0)
+		formatString: 0
+		lineageTag: c9c40d93-4ddf-46f7-8a3d-d92a80f9982b
+
+	measure Measure
+		lineageTag: 578c30e7-120c-4494-bc32-5f5eff1793fa
+
+		annotation 43dbc3e8-3a1c-4b6f-9923-b49ff7d6691c = True
+
+	measure 'Selected PF Row' =
+			
+			VAR SelectedPhase =
+			    SELECTEDVALUE(
+			        'PF Phase Selector'[Selection],
+			        "Any Phase"
+			    )
+			
+			VAR PF1 =
+			    MAX('gold energy_raw'[power_factor_phase_1])
+			
+			VAR PF2 =
+			    MAX('gold energy_raw'[power_factor_phase_2])
+			
+			VAR PF3 =
+			    MAX('gold energy_raw'[power_factor_phase_3])
+			
+			RETURN
+			SWITCH(
+			    SelectedPhase,
+			
+			    "Phase 1",
+			        IF(PF1 < 0, 1, 0),
+			
+			    "Phase 2",
+			        IF(PF2 < 0, 1, 0),
+			
+			    "Phase 3",
+			        IF(PF3 < 0, 1, 0),
+			
+			    "Any Phase",
+			        IF(
+			            PF1 < 0
+			            || PF2 < 0
+			            || PF3 < 0,
+			            1,
+			            0
+			        ),
+			
+			    0
+			)
+		formatString: 0
+		lineageTag: ff42e122-0e6c-4b38-a370-3b548edee989
+
+	column energy_meter_key
+		dataType: string
+		lineageTag: 67eadd1b-151d-4ce1-bac8-803b233a0af4
+		summarizeBy: none
+		sourceColumn: energy_meter_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_key
+		dataType: string
+		lineageTag: 4292b41c-cb84-4de4-b6a7-a79b91f441d4
+		summarizeBy: none
+		sourceColumn: facility_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_key
+		dataType: string
+		lineageTag: ddc2413a-f53d-46c3-815f-6d36c6d4ef94
+		summarizeBy: none
+		sourceColumn: zone_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column grid_billing_account_key
+		dataType: string
+		lineageTag: d1042711-af1c-490b-953b-70cdfadbda91
+		summarizeBy: none
+		sourceColumn: grid_billing_account_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column reading_timestamp_utc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 10093ab2-b382-45b6-a045-102dd8a73de1
+		summarizeBy: none
+		sourceColumn: reading_timestamp_utc
+
+		variation Variation
+			isDefault
+			relationship: 16eaf170-e110-4966-bfa8-910f9d651802
+			defaultHierarchy: LocalDateTable_2f15c838-18e9-4fbc-8fad-bb560d92b3a7.'Date Hierarchy'
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_energy_cumulative_kwh
+		dataType: double
+		formatString: 0.00
+		lineageTag: a611de10-51e3-442e-af14-e1a736ee2617
+		summarizeBy: sum
+		sourceColumn: active_energy_cumulative_kwh
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column reactive_energy_cumulative_kvarh
+		dataType: double
+		lineageTag: 70e7afd3-400b-46d6-a01a-a5f2d51e09df
+		summarizeBy: sum
+		sourceColumn: reactive_energy_cumulative_kvarh
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column voltage_neutral_1_v
+		dataType: double
+		lineageTag: d1341b74-d79f-48a5-9bb9-bce66fc4594b
+		summarizeBy: sum
+		sourceColumn: voltage_neutral_1_v
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column voltage_neutral_2_v
+		dataType: double
+		lineageTag: 777f1dc7-e4d1-438c-91a5-e86adb17c2c2
+		summarizeBy: sum
+		sourceColumn: voltage_neutral_2_v
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column voltage_neutral_3_v
+		dataType: double
+		lineageTag: 33d30432-6629-405a-8cb2-a89851c30dc7
+		summarizeBy: sum
+		sourceColumn: voltage_neutral_3_v
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column voltage_line_1_v
+		dataType: double
+		lineageTag: 9bfac74e-e943-4c20-ba78-5f53c252e351
+		summarizeBy: sum
+		sourceColumn: voltage_line_1_v
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column voltage_line_2_v
+		dataType: double
+		lineageTag: e660a492-1bf1-4f1a-926f-a0f92fc3033d
+		summarizeBy: sum
+		sourceColumn: voltage_line_2_v
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column voltage_line_3_v
+		dataType: double
+		lineageTag: 8750fc71-20f2-498a-b49d-97989054185f
+		summarizeBy: sum
+		sourceColumn: voltage_line_3_v
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column current_phase_1_a
+		dataType: double
+		lineageTag: 0d73924e-ab06-45b1-a715-eab1a4d9c9a4
+		summarizeBy: sum
+		sourceColumn: current_phase_1_a
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column current_phase_2_a
+		dataType: double
+		lineageTag: 7895483f-c065-46ac-8e86-16b2da2d15b4
+		summarizeBy: sum
+		sourceColumn: current_phase_2_a
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column current_phase_3_a
+		dataType: double
+		lineageTag: f2a2ebb8-95a2-4c27-88f0-1ea78e44cdeb
+		summarizeBy: sum
+		sourceColumn: current_phase_3_a
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column frequency_hz
+		dataType: double
+		lineageTag: 9c01a3f9-5bba-45af-b117-69f13c06a14c
+		summarizeBy: sum
+		sourceColumn: frequency_hz
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column power_factor_phase_1
+		dataType: double
+		lineageTag: 7df2f7dd-fc5d-493e-8b82-8c871ae26cd9
+		summarizeBy: sum
+		sourceColumn: power_factor_phase_1
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column power_factor_phase_2
+		dataType: double
+		lineageTag: 1338d487-9d3d-4623-97da-4362ad11bada
+		summarizeBy: sum
+		sourceColumn: power_factor_phase_2
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column power_factor_phase_3
+		dataType: double
+		lineageTag: ea4afc87-7223-46d3-9845-5981ee5c319c
+		summarizeBy: sum
+		sourceColumn: power_factor_phase_3
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column power_factor_average
+		dataType: double
+		lineageTag: 24664a87-cfc3-4ba1-9ea8-48d02b9d4462
+		summarizeBy: sum
+		sourceColumn: power_factor_average
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column active_power_phase_1_kw
+		dataType: double
+		lineageTag: d88745ee-414e-4f32-99cf-247cedc2c892
+		summarizeBy: sum
+		sourceColumn: active_power_phase_1_kw
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column active_power_phase_2_kw
+		dataType: double
+		lineageTag: ba18d327-15d7-441a-95b1-357b03037d0c
+		summarizeBy: sum
+		sourceColumn: active_power_phase_2_kw
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column active_power_phase_3_kw
+		dataType: double
+		lineageTag: a28a7a8e-31f7-4a9e-ab6e-b71a72618bfd
+		summarizeBy: sum
+		sourceColumn: active_power_phase_3_kw
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column active_power_total_kw
+		dataType: double
+		lineageTag: 77fa3d91-a4f8-4d3a-8230-9c257fe807bb
+		summarizeBy: sum
+		sourceColumn: active_power_total_kw
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column reactive_power_phase_1_kvar
+		dataType: double
+		lineageTag: 831158aa-e012-48e9-b933-4901e9c5969f
+		summarizeBy: sum
+		sourceColumn: reactive_power_phase_1_kvar
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column reactive_power_phase_2_kvar
+		dataType: double
+		lineageTag: ccae316d-8290-4371-af4d-80d05a479b6f
+		summarizeBy: sum
+		sourceColumn: reactive_power_phase_2_kvar
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column reactive_power_phase_3_kvar
+		dataType: double
+		lineageTag: 59f13049-3dfa-4908-a576-6380e47c582f
+		summarizeBy: sum
+		sourceColumn: reactive_power_phase_3_kvar
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column reactive_power_total_kvar
+		dataType: double
+		lineageTag: 5a3fa079-e21c-470d-8a78-3cb4c6b8c7ec
+		summarizeBy: sum
+		sourceColumn: reactive_power_total_kvar
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column status_vn1
+		dataType: string
+		lineageTag: c1486ead-ef57-4f2a-9adb-b696dd4e93c4
+		summarizeBy: none
+		sourceColumn: status_vn1
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_vn2
+		dataType: string
+		lineageTag: b5ed4540-e5d3-41c9-8e53-53cc82e17037
+		summarizeBy: none
+		sourceColumn: status_vn2
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_vn3
+		dataType: string
+		lineageTag: c07f1ba3-e3b2-4262-bd37-78d0b24fae17
+		summarizeBy: none
+		sourceColumn: status_vn3
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_v1
+		dataType: string
+		lineageTag: 0c8828ed-91b0-4b2f-8ab8-f2c592d8bb4f
+		summarizeBy: none
+		sourceColumn: status_v1
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_v2
+		dataType: string
+		lineageTag: feb361ac-dc13-469d-96e4-ff68e143d714
+		summarizeBy: none
+		sourceColumn: status_v2
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_v3
+		dataType: string
+		lineageTag: 8400b739-62c8-42da-8e41-5a25164436ee
+		summarizeBy: none
+		sourceColumn: status_v3
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_amp1
+		dataType: string
+		lineageTag: 40f9a5e3-40e7-4a23-9d6e-6a60bf03c46e
+		summarizeBy: none
+		sourceColumn: status_amp1
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_amp2
+		dataType: string
+		lineageTag: 7bdaae6c-f2f5-4607-a36b-13b1af846919
+		summarizeBy: none
+		sourceColumn: status_amp2
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_amp3
+		dataType: string
+		lineageTag: d0a73627-f216-4177-92e9-afe9e903c2a6
+		summarizeBy: none
+		sourceColumn: status_amp3
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_hz
+		dataType: string
+		lineageTag: e69765cd-55b4-4e05-85a2-8aa64815cbf5
+		summarizeBy: none
+		sourceColumn: status_hz
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_pf1
+		dataType: string
+		lineageTag: 3f7a0a40-ea5f-4494-b46b-a13605a8231c
+		summarizeBy: none
+		sourceColumn: status_pf1
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_pf2
+		dataType: string
+		lineageTag: d4ce20b7-e3d6-4ff3-8f01-2fde891b02de
+		summarizeBy: none
+		sourceColumn: status_pf2
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_pf3
+		dataType: string
+		lineageTag: 3a390e3b-2ef5-435f-8bc1-82e2a49cc599
+		summarizeBy: none
+		sourceColumn: status_pf3
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_pfa
+		dataType: string
+		lineageTag: 3ab8ac98-3cc0-4878-8ff1-ab854c8e78f3
+		summarizeBy: none
+		sourceColumn: status_pfa
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_kwh
+		dataType: string
+		lineageTag: 15070233-1514-4fca-a7d2-5e904545e085
+		summarizeBy: none
+		sourceColumn: status_kwh
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column overall_status
+		dataType: string
+		lineageTag: 8e337c3c-6966-42c6-9eee-1118dcc4e528
+		summarizeBy: none
+		sourceColumn: overall_status
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column meter_label = RELATED('gold meter'[meter_label])
+		lineageTag: 02ed5033-23cb-4e8d-833e-c6e431de6104
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column reading_date = DATE(YEAR('gold energy_raw'[reading_timestamp_utc]), MONTH('gold energy_raw'[reading_timestamp_utc]), DAY('gold energy_raw'[reading_timestamp_utc]))
+		formatString: General Date
+		lineageTag: a203867d-1849-4612-929e-1ec00f67523f
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Reading Hour UTC' =
+			
+			HOUR(
+			    'gold energy_raw'[reading_timestamp_utc]
+			)
+		formatString: 0
+		lineageTag: d0123bd1-a5d6-4df6-a965-1ee839154382
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Quarter Label' =
+			
+			"Q" & QUARTER ( 'gold energy_raw'[reading_timestamp_utc] )
+		lineageTag: aedba4f1-aab7-44a5-8e3e-ce81f190d1fc
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Reading Timestamp Saudi' =
+			
+			'gold energy_raw'[reading_timestamp_utc] + TIME(3, 0, 0)
+		formatString: General Date
+		lineageTag: e3c31b2c-879b-4880-b3d0-dd3c95df8056
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: 6d8e8694-3d3d-4cf7-8bb0-1329ac9eb346
+			defaultHierarchy: LocalDateTable_5732de40-c744-4741-9234-6c16b2371938.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Operational Date' =
+			
+			VAR SaudiTimestamp =
+			    'gold energy_raw'[Reading Timestamp Saudi]
+			
+			VAR ReadingDate =
+			    DATE(
+			        YEAR(SaudiTimestamp),
+			        MONTH(SaudiTimestamp),
+			        DAY(SaudiTimestamp)
+			    )
+			
+			VAR ReadingTime =
+			    TIME(
+			        HOUR(SaudiTimestamp),
+			        MINUTE(SaudiTimestamp),
+			        SECOND(SaudiTimestamp)
+			    )
+			
+			RETURN
+			    IF(
+			        ReadingTime < TIME(4, 0, 0),
+			        ReadingDate - 1,
+			        ReadingDate
+			    )
+		formatString: General Date
+		lineageTag: 78025992-68ee-48f3-b765-85a02c94c108
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: 0d9f2587-5ea0-4aac-9ead-ca77310eaed4
+			defaultHierarchy: LocalDateTable_86cc33fe-bb6a-43e6-8413-a9727be2a777.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'gold energy_raw' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "sadinhub"),
+				    gold_energy_raw = Source{[Schema="gold",Item="energy_raw"]}[Data],
+				    #"Removed Columns" = Table.RemoveColumns(gold_energy_raw,{"apparent_energy_cumulative_kvah", "voltage_neutral_average_v", "voltage_line_average_v", "apparent_power_phase_1_kva", "apparent_power_phase_2_kva", "apparent_power_phase_3_kva", "apparent_power_total_kva"})
+				in
+				    #"Removed Columns"
+
+	changedProperty = IsHidden
+

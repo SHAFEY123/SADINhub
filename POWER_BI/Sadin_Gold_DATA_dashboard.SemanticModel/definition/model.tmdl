@@ -1,0 +1,66 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["gold zone","gold quality_summary","gold meter","gold mapping_audit","gold facility","gold energy_bill","gold date","gold billing_account","gold energy_raw","gold energy_reading_gaps","gold energy_consumption_validated","Zone13 Decrement Events"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table 'gold zone'
+ref table DateTableTemplate_dd3d7ca3-5e89-41b3-ad56-a2ac76d4982d
+ref table LocalDateTable_8e336d75-7956-48f2-9e96-4bc6015e7503
+ref table 'gold quality_summary'
+ref table LocalDateTable_ee7645b5-7a4b-4a9b-ada2-f72f0c365bdc
+ref table 'gold meter'
+ref table LocalDateTable_486f4f03-8aef-46fe-ac4a-23057c94bfec
+ref table LocalDateTable_6b2d9930-99c4-44ab-a9c9-0bb470bff386
+ref table 'gold mapping_audit'
+ref table LocalDateTable_ae099f39-1f4b-4f1f-9127-ba271f51e8a5
+ref table 'gold facility'
+ref table LocalDateTable_9e72cb67-9527-4eec-818c-787224a1870f
+ref table 'gold energy_bill'
+ref table LocalDateTable_5235b20b-c8d3-4b80-98ab-92676b2d59df
+ref table LocalDateTable_82561c94-7986-4b9b-a522-9a982dbef40b
+ref table LocalDateTable_6f6a2349-74ec-497f-b01b-2fb5b337e1fa
+ref table LocalDateTable_91358f2a-5ef3-4f7d-a90b-7cfcb81e467b
+ref table 'gold date'
+ref table LocalDateTable_522d441c-d5b7-42e4-bc43-00613291d530
+ref table LocalDateTable_6b994cec-9b64-4988-bdb9-d0254722f3f2
+ref table LocalDateTable_4ac83658-6bee-4660-8c86-caf2fd86a901
+ref table LocalDateTable_758770c8-e9df-4771-ae1e-f914169d20e2
+ref table LocalDateTable_5a85bbcb-f4b5-411f-a6e9-da377b1d5755
+ref table 'gold billing_account'
+ref table LocalDateTable_d60c5609-3d99-4b28-b461-55e37c054b87
+ref table LocalDateTable_fdc3eb3f-4d81-4365-aa7c-2d69065abd8f
+ref table LocalDateTable_b86927cc-23ad-42bc-87a7-36b4a45e1f55
+ref table 'gold energy_raw'
+ref table LocalDateTable_2f15c838-18e9-4fbc-8fad-bb560d92b3a7
+ref table 'Negative Power Selector'
+ref table 'PF Phase Selector'
+ref table 'PF Status Selector'
+ref table 'Voltage Frequency Metric Selector'
+ref table 'gold energy_reading_gaps'
+ref table LocalDateTable_18cf7141-5218-4eee-a797-e3e68ec5a0b1
+ref table LocalDateTable_17c34ee6-3d52-4db4-b2ef-54b180b37e6d
+ref table 'gold energy_consumption_validated'
+ref table LocalDateTable_82e41652-3b65-4d76-8d69-1daa5b618543
+ref table LocalDateTable_8a0dccc5-14b6-47c4-a065-74f3d37b9aac
+ref table LocalDateTable_aa7590bb-29f6-477f-820f-7e820bb9915c
+ref table LocalDateTable_64d239ec-b7b6-42ea-b48e-3d341ed72c7c
+ref table LocalDateTable_9881a707-29e7-4823-998f-a1eb299a65c1
+ref table LocalDateTable_5732de40-c744-4741-9234-6c16b2371938
+ref table LocalDateTable_86cc33fe-bb6a-43e6-8413-a9727be2a777
+ref table 'Mismatch Severity'
+ref table 'Zone13 Decrement Events'
+ref table LocalDateTable_7d8ce9de-6e20-4799-82b4-142a134fa114
+ref table LocalDateTable_1029b4f1-c65a-4fbd-b56f-eb9dc83fd6c6
+
+ref cultureInfo en-US
+

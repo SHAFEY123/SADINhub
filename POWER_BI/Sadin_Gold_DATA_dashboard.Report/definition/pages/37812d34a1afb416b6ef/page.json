@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "37812d34a1afb416b6ef",
+  "displayName": "Power Factor Investigation",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "objects": {
+    "outspacePane": [
+      {
+        "properties": {
+          "width": {
+            "expr": {
+              "Literal": {
+                "Value": "226L"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "c1aa454574d48646fdeb",
+      "target": "dae647b2738908035fb8",
+      "type": "DataFilter"
+    },
+    {
+      "source": "3c711ef151ab08897449",
+      "target": "c1aa454574d48646fdeb",
+      "type": "HighlightFilter"
+    },
+    {
+      "source": "0b22006c887917de5de1",
+      "target": "c1aa454574d48646fdeb",
+      "type": "HighlightFilter"
+    }
+  ]
+}

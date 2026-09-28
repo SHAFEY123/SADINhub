@@ -1,0 +1,28 @@
+table 'PF Status Selector'
+	lineageTag: bb79fdcd-2622-4db8-867f-9481c3b8fdb0
+
+	column Selection
+		lineageTag: 85d79af8-40c5-468b-9a0b-a0c07c339066
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Selection]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'PF Status Selector' = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "Selection", STRING,
+				    {
+				        {"Any Status"},
+				        {"Acceptable"},
+				        {"Review Required"},
+				        {"Problematic"},
+				        {"Critical"}
+				    }
+				)
+
+	annotation PBI_Id = ffc5234d934842e199b2fa9209bef922
+

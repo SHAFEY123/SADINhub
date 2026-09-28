@@ -1,0 +1,273 @@
+table 'gold meter'
+	lineageTag: 5338c737-3f97-4b4e-9d4b-1aa7c4ae89b5
+
+	column energy_meter_key
+		dataType: string
+		lineageTag: 931f01f9-3b91-484e-a8be-6a832e0cf033
+		summarizeBy: none
+		sourceColumn: energy_meter_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_energy_meter_id
+		dataType: string
+		lineageTag: d4c5558e-5e51-428f-a52a-55caaec4c03d
+		summarizeBy: none
+		sourceColumn: source_energy_meter_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_key
+		dataType: string
+		lineageTag: 8f8c512c-50cc-4a7d-aa08-402eb8ba524f
+		summarizeBy: none
+		sourceColumn: facility_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_key
+		dataType: string
+		lineageTag: 87afa960-7ce5-42f8-b527-f5bb52921355
+		summarizeBy: none
+		sourceColumn: zone_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column grid_billing_account_key
+		dataType: string
+		lineageTag: be1d6962-541c-4648-bdd4-d82409452672
+		summarizeBy: none
+		sourceColumn: grid_billing_account_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column parent_energy_meter_source_id
+		dataType: string
+		lineageTag: c5db12b1-ead3-49ab-8c57-400306d960dd
+		summarizeBy: none
+		sourceColumn: parent_energy_meter_source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column meter_label
+		dataType: string
+		lineageTag: de47b04b-a50a-487b-a904-da0bdc336810
+		summarizeBy: none
+		sourceColumn: meter_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column meter_serial_number
+		dataType: string
+		lineageTag: 8aa1bc78-b8c7-4ed8-9363-7c9ed0b202bf
+		summarizeBy: none
+		sourceColumn: meter_serial_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column phase_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 9be35bee-55dd-46d0-9558-890cf1b66fbe
+		summarizeBy: sum
+		sourceColumn: phase_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column maximum_kwh
+		dataType: int64
+		formatString: 0
+		lineageTag: fc8aac80-536a-410c-9393-bbdd90513a5d
+		summarizeBy: sum
+		sourceColumn: maximum_kwh
+
+		annotation SummarizationSetBy = Automatic
+
+	column energy_meter_type_key
+		dataType: string
+		lineageTag: f781143f-1b53-471c-9de9-fcbe87dbee46
+		summarizeBy: none
+		sourceColumn: energy_meter_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column energy_meter_type_name
+		dataType: string
+		lineageTag: 5cbf9e1a-bf1f-400a-80f0-4408c5d96dcd
+		summarizeBy: none
+		sourceColumn: energy_meter_type_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_meter_active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2d09a23c-1129-4b44-9a47-8d08d9873940
+		summarizeBy: none
+		sourceColumn: is_meter_active
+
+		annotation SummarizationSetBy = Automatic
+
+	column device_name
+		dataType: string
+		lineageTag: a4d96fd4-835b-4182-a177-90b60caa8814
+		summarizeBy: none
+		sourceColumn: device_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column device_label
+		dataType: string
+		lineageTag: c37f90b9-f0b7-4722-9154-1dd112ffbd42
+		summarizeBy: none
+		sourceColumn: device_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column device_serial_number
+		dataType: int64
+		formatString: 0
+		lineageTag: e0bb005e-6594-47e8-a64c-bb23655605ba
+		summarizeBy: sum
+		sourceColumn: device_serial_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column device_type_key
+		dataType: string
+		lineageTag: 46da011f-6951-413a-bdc3-9c3833a0fe04
+		summarizeBy: none
+		sourceColumn: device_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column device_type_name
+		dataType: string
+		lineageTag: 8af3ef01-f953-444a-af2c-a1df6c6a548b
+		summarizeBy: none
+		sourceColumn: device_type_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column device_category_key
+		dataType: string
+		lineageTag: 7220b86a-d9af-4333-95d1-0d7e75b3d9d7
+		summarizeBy: none
+		sourceColumn: device_category_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column device_category_name
+		dataType: string
+		lineageTag: 4f4aba5d-afcb-409e-94da-db9da18284b6
+		summarizeBy: none
+		sourceColumn: device_category_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column gateway_id
+		dataType: string
+		lineageTag: dea6ad81-0987-4e4b-950e-956c1d95b36a
+		summarizeBy: none
+		sourceColumn: gateway_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_device_active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d0b44102-c130-4320-891d-750ad81f796f
+		summarizeBy: none
+		sourceColumn: is_device_active
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_device_online
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 88c46742-e870-4496-9955-7d868d2201d4
+		summarizeBy: none
+		sourceColumn: is_device_online
+
+		annotation SummarizationSetBy = Automatic
+
+	column assembly_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 10b886df-52fa-40aa-b7c0-fee9fcf37037
+		summarizeBy: none
+		sourceColumn: assembly_date
+
+		variation Variation
+			isDefault
+			relationship: 96ff696e-6a29-4704-b6db-fd1eddc41ac5
+			defaultHierarchy: LocalDateTable_486f4f03-8aef-46fe-ac4a-23057c94bfec.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column device_properties
+		dataType: string
+		lineageTag: 1688b9e0-0584-49e7-85c0-cf74f866e670
+		summarizeBy: none
+		sourceColumn: device_properties
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_meter_records_for_device
+		dataType: int64
+		formatString: 0
+		lineageTag: bb7ca699-1d1c-4633-91b3-440c1fdd8678
+		summarizeBy: sum
+		sourceColumn: source_meter_records_for_device
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_records_for_meter_label
+		dataType: int64
+		formatString: 0
+		lineageTag: 3e5074c3-d324-4156-8cbd-e8525d4eda31
+		summarizeBy: sum
+		sourceColumn: source_records_for_meter_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column meter_label_matches_device_name
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 4f402209-5f83-425f-a58c-8e3b05e99213
+		summarizeBy: none
+		sourceColumn: meter_label_matches_device_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column mapping_status
+		dataType: string
+		lineageTag: c99737bc-b6a6-4adc-8a47-9bb19cb41c1e
+		summarizeBy: none
+		sourceColumn: mapping_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column meter_source_created_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 26c56562-8815-4875-a31b-ec9e07804ee9
+		summarizeBy: none
+		sourceColumn: meter_source_created_at
+
+		variation Variation
+			isDefault
+			relationship: f9620172-8b10-46c1-b740-70c396195097
+			defaultHierarchy: LocalDateTable_6b2d9930-99c4-44ab-a9c9-0bb470bff386.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'gold meter' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "sadinhub"),
+				    gold_meter = Source{[Schema="gold",Item="meter"]}[Data]
+				in
+				    gold_meter
+

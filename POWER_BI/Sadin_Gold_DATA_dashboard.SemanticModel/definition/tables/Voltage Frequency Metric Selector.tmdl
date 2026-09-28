@@ -1,0 +1,30 @@
+table 'Voltage Frequency Metric Selector'
+	lineageTag: 2983fda5-464e-4fc0-8634-bc8327adc2a5
+
+	column Measurement
+		lineageTag: 49b434d7-6585-457e-8e2d-a2def49113cc
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Measurement]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Voltage Frequency Metric Selector' = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "Measurement", STRING,
+				    {
+				        {"Frequency"},
+				        {"V1"},
+				        {"V2"},
+				        {"V3"},
+				        {"VN1"},
+				        {"VN2"},
+				        {"VN3"}
+				    }
+				)
+
+	annotation PBI_Id = bcb25e9aa5a646e1903cb58071f8cca4
+

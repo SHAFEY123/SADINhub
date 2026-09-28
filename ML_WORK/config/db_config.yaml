@@ -1,0 +1,15 @@
+# SADINhub ML branch - read-only database connection.
+#
+# NO PASSWORD HERE, EVER. src/db.py refuses to load this file if a `password` key exists.
+# Supply the password via the SADINHUB_PASSWORD environment variable, or let the tooling
+# prompt for it interactively.
+#
+# The read-only and REPEATABLE READ guarantees are applied as libpq connect options in
+# src/db.py so they hold from the first transaction, and are verified before any query runs.
+
+host: localhost
+port: 5432
+dbname: sadinhub
+user: postgres
+connect_timeout: 10
+statement_timeout_ms: 600000

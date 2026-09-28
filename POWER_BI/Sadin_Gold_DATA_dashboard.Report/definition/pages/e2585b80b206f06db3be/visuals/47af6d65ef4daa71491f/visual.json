@@ -1,0 +1,159 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "47af6d65ef4daa71491f",
+  "position": {
+    "x": 726.60039385584878,
+    "y": 109.69988184324538,
+    "z": 3000,
+    "height": 317.48436392280428,
+    "width": 553.66175659708551,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Zone13 Decrement Events"
+                            }
+                          },
+                          "Name": "Variation",
+                          "Property": "decrement_timestamp_saudi"
+                        }
+                      },
+                      "Hierarchy": "Date Hierarchy"
+                    }
+                  },
+                  "Level": "Year"
+                }
+              },
+              "queryRef": "Zone13 Decrement Events.decrement_timestamp_saudi.Variation.Date Hierarchy.Year",
+              "nativeQueryRef": "decrement_timestamp_saudi Year",
+              "active": true
+            },
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Zone13 Decrement Events"
+                            }
+                          },
+                          "Name": "Variation",
+                          "Property": "decrement_timestamp_saudi"
+                        }
+                      },
+                      "Hierarchy": "Date Hierarchy"
+                    }
+                  },
+                  "Level": "Month"
+                }
+              },
+              "queryRef": "Zone13 Decrement Events.decrement_timestamp_saudi.Variation.Date Hierarchy.Month",
+              "nativeQueryRef": "decrement_timestamp_saudi Month",
+              "active": false
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Zone13 Decrement Events"
+                    }
+                  },
+                  "Property": "problem_type"
+                }
+              },
+              "queryRef": "Zone13 Decrement Events.problem_type",
+              "nativeQueryRef": "problem_type"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Zone13 Decrement Events"
+                        }
+                      },
+                      "Property": "problem_type"
+                    }
+                  },
+                  "Function": 5
+                }
+              },
+              "queryRef": "CountNonNull(Zone13 Decrement Events.problem_type)",
+              "nativeQueryRef": "Count of problem_type"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "axisType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Scalar'"
+                }
+              }
+            },
+            "logAxisScale": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "invertAxis": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

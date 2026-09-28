@@ -1,0 +1,8 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "bbcbd18864c6c97f7a5b",
+  "displayName": "Power Factor & Active Power",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280
+}

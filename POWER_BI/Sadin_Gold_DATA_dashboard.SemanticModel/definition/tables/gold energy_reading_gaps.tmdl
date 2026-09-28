@@ -1,0 +1,95 @@
+table 'gold energy_reading_gaps'
+	lineageTag: b365c8d9-3f0a-4cc9-bf20-b6bdb4322b91
+
+	column energy_meter_key
+		dataType: string
+		lineageTag: 520b52c5-bf2d-4aa9-8dae-4e1d6bb7b4ba
+		summarizeBy: none
+		sourceColumn: energy_meter_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column meter_label
+		dataType: string
+		lineageTag: 1a0a3393-fb7a-4891-9f52-3589c2f5935f
+		summarizeBy: none
+		sourceColumn: meter_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column previous_reading_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 94bdc22a-cb70-49bc-873f-11bd0556901a
+		summarizeBy: none
+		sourceColumn: previous_reading_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 7db4f0f0-c414-4ce8-9f22-3f6cb03d95b1
+			defaultHierarchy: LocalDateTable_18cf7141-5218-4eee-a797-e3e68ec5a0b1.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column current_reading_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9678b62c-affb-424c-9656-02ed11751592
+		summarizeBy: none
+		sourceColumn: current_reading_timestamp
+
+		variation Variation
+			isDefault
+			relationship: d14139a6-4ea3-4b04-864c-5c669f1b999f
+			defaultHierarchy: LocalDateTable_17c34ee6-3d52-4db4-b2ef-54b180b37e6d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column gap_seconds
+		dataType: double
+		lineageTag: e03db6ab-1f48-4759-a56c-722845d7d34b
+		summarizeBy: sum
+		sourceColumn: gap_seconds
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gap_minutes
+		dataType: double
+		lineageTag: c66c8c70-6b3e-42e9-8762-177bb6e88825
+		summarizeBy: sum
+		sourceColumn: gap_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gap_hours
+		dataType: double
+		lineageTag: 0ad260c9-e717-4a44-87e6-fe622885c38e
+		summarizeBy: sum
+		sourceColumn: gap_hours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gap_days
+		dataType: double
+		formatString: 0.00
+		lineageTag: 5bd1d603-7f2c-40c8-8493-1e90ea9b17e9
+		summarizeBy: sum
+		sourceColumn: gap_days
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'gold energy_reading_gaps' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "sadinhub"),
+				    gold_energy_reading_gaps = Source{[Schema="gold",Item="energy_reading_gaps"]}[Data]
+				in
+				    gold_energy_reading_gaps
+

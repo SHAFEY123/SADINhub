@@ -1,0 +1,616 @@
+<title>Energy Intelligence Internals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --ground:#FBFCFD; --panel:#FFFFFF; --sunk:#F2F6F8; --code:#F5F8FA;
+  --ink:#0F1922; --ink-2:#33454F; --ink-3:#63757F;
+  --rule:#DCE4EA; --rule-2:#EDF2F5;
+  --accent:#0B6F93; --accent-soft:#E3F1F7;
+  --ok:#1B7350; --ok-soft:#E2F2EB;
+  --warn:#96590A; --warn-soft:#F8EEDC;
+  --crit:#97302E; --crit-soft:#F8E8E7;
+  --serif:'Source Serif 4', Georgia, serif;
+  --sans:'Source Sans 3', -apple-system, 'Segoe UI', sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0C1319; --panel:#131D25; --sunk:#18242D; --code:#111B22;
+    --ink:#E6EDF2; --ink-2:#B2C2CC; --ink-3:#7D909C;
+    --rule:#26343E; --rule-2:#1C2831;
+    --accent:#3FBDE4; --accent-soft:#11313F;
+    --ok:#5BC79A; --ok-soft:#102C22;
+    --warn:#D9A64E; --warn-soft:#302512;
+    --crit:#E58480; --crit-soft:#331A19;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0C1319; --panel:#131D25; --sunk:#18242D; --code:#111B22;
+  --ink:#E6EDF2; --ink-2:#B2C2CC; --ink-3:#7D909C;
+  --rule:#26343E; --rule-2:#1C2831;
+  --accent:#3FBDE4; --accent-soft:#11313F;
+  --ok:#5BC79A; --ok-soft:#102C22;
+  --warn:#D9A64E; --warn-soft:#302512;
+  --crit:#E58480; --crit-soft:#331A19;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.6;margin:0;padding-block:0 5rem;padding-inline:20px;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:54rem;margin:0 auto}
+.prose{max-width:41rem}
+
+.mast{border-bottom:2px solid var(--ink);padding-block:3rem 1rem;margin-bottom:2.2rem}
+.mast .org{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 1.2rem}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,5vw,2.9rem);line-height:1.08;
+  letter-spacing:-.018em;margin:0 0 .5rem;text-wrap:balance}
+.mast .standfirst{font-family:var(--serif);font-size:clamp(1rem,2.2vw,1.15rem);line-height:1.5;
+  color:var(--ink-2);margin:0 0 1.4rem;max-width:39rem}
+.byline{display:flex;flex-wrap:wrap;gap:.3rem 2rem;font-family:var(--mono);font-size:.72rem;color:var(--ink-3)}
+.byline b{color:var(--ink-2);font-weight:500}
+
+section{margin-block:3rem}
+h2{font-family:var(--serif);font-size:1.55rem;font-weight:700;letter-spacing:-.012em;
+  line-height:1.2;margin:0 0 .3rem;text-wrap:balance}
+h2 .num{font-family:var(--mono);font-size:.7rem;font-weight:500;color:var(--accent);
+  letter-spacing:.1em;display:block;margin-bottom:.45rem}
+.deck{color:var(--ink-3);font-size:.94rem;margin:0 0 1.4rem;max-width:39rem}
+h3{font-size:1.02rem;font-weight:700;margin:1.9rem 0 .5rem;letter-spacing:.005em}
+h4{font-size:.93rem;font-weight:700;margin:1.3rem 0 .4rem;color:var(--ink);font-family:var(--mono);
+  letter-spacing:.01em}
+p{margin:0 0 1rem}
+a{color:var(--accent)}
+code{font-family:var(--mono);font-size:.845em;background:var(--sunk);border:1px solid var(--rule-2);
+  border-radius:3px;padding:.08em .34em;color:var(--ink-2);overflow-wrap:anywhere}
+ul{margin:0 0 1rem;padding-left:1.15rem}
+li{margin-bottom:.4rem}
+li::marker{color:var(--ink-3)}
+
+/* code block */
+pre{font-family:var(--mono);font-size:.795rem;line-height:1.62;background:var(--code);
+  border:1px solid var(--rule);border-left:3px solid var(--accent);border-radius:4px;
+  padding:.85rem 1rem;margin:1rem 0;overflow-x:auto;color:var(--ink-2);white-space:pre}
+pre b{color:var(--ink);font-weight:600}
+pre i{color:var(--ink-3);font-style:normal}
+.cap{font-size:.84rem;color:var(--ink-3);margin:-.5rem 0 1.2rem}
+
+/* why-box */
+.why{background:var(--accent-soft);border-radius:4px;padding:.95rem 1.15rem;margin:1rem 0}
+.why p{margin:0 0 .6rem;font-size:.92rem}
+.why p:last-child{margin-bottom:0}
+.why .lab{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);display:block;margin-bottom:.5rem;font-weight:500}
+
+/* tables */
+.tw{overflow-x:auto;margin:1.2rem 0;border:1px solid var(--rule);border-radius:4px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:.855rem;min-width:34rem}
+th{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  text-align:left;font-weight:500;padding:.65rem .8rem;border-bottom:1px solid var(--rule);
+  white-space:nowrap;background:var(--sunk)}
+td{padding:.6rem .8rem;border-bottom:1px solid var(--rule-2);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:none}
+td:first-child{color:var(--ink);font-weight:500}
+td code{font-size:.82em}
+.mono-col{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:.82em}
+
+.pill{font-family:var(--mono);font-size:.63rem;letter-spacing:.06em;padding:.16em .48em;border-radius:3px;
+  white-space:nowrap;font-weight:500}
+.p-ok{background:var(--ok-soft);color:var(--ok)}
+.p-warn{background:var(--warn-soft);color:var(--warn)}
+.p-crit{background:var(--crit-soft);color:var(--crit)}
+.p-info{background:var(--accent-soft);color:var(--accent)}
+
+.flow{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:1.2rem 1rem;
+  margin:1.2rem 0;overflow-x:auto}
+.flow svg{display:block;margin:0 auto;max-width:100%;height:auto;min-width:32rem}
+
+hr{border:none;border-top:1px solid var(--rule);margin:2.8rem 0}
+footer{border-top:2px solid var(--ink);margin-top:3rem;padding-top:1.2rem;font-size:.83rem;color:var(--ink-3)}
+
+@media (max-width:600px){body{font-size:15.5px;padding-inline:15px}pre{font-size:.72rem}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- print ---------- */
+@page{size:A4;margin:15mm 14mm}
+@media print{
+  :root,:root[data-theme="dark"],:root:not([data-theme="light"]){
+    --ground:#FFFFFF;--panel:#FFFFFF;--sunk:#F4F7F9;--code:#F6F8FA;
+    --ink:#0F1922;--ink-2:#33454F;--ink-3:#5E7078;
+    --rule:#C9D4DB;--rule-2:#E4EBEF;
+    --accent:#0B6F93;--accent-soft:#EDF5F9;
+    --ok:#1B7350;--ok-soft:#EAF4EF;--warn:#8A5209;--warn-soft:#FAF3E6;
+    --crit:#8C2B29;--crit-soft:#FAEDEC;
+  }
+  body{font-size:9.6pt;line-height:1.46;padding:0;background:#fff}
+  .wrap,.prose{max-width:none}
+  a{color:var(--ink);text-decoration:none}
+  pre{font-size:7.9pt;line-height:1.5;break-inside:avoid;page-break-inside:avoid}
+  .why,.flow,tr,th,td{break-inside:avoid;page-break-inside:avoid}
+  thead{display:table-header-group}
+  h2,h3,h4{break-after:avoid;page-break-after:avoid}
+  section{margin-block:1.3rem}
+  .mast{padding-block:0 .7rem;margin-bottom:1.2rem}
+  h1{font-size:24pt}h2{font-size:14pt}h3{font-size:10.8pt}h4{font-size:9.6pt}
+  hr{margin:1.2rem 0}
+  .pagebreak{break-before:page;page-break-before:always}
+}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="org">SADIN &middot; Energy Intelligence &middot; Engineering Reference</p>
+  <h1>How It Works Underneath</h1>
+  <p class="standfirst">The data path, the query logic, the architectural decisions and the reasoning behind each one &mdash; written so that any engineer can review, extend or challenge the system.</p>
+  <div class="byline">
+    <span><b>Companion to</b> the project record</span>
+    <span><b>Covers</b> serve.py 935 lines &middot; dashboard_updated.html 1,589 lines</span>
+    <span><b>Date</b> 15 September 2026</span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="num">00 &middot; Orientation</span>What this document is</h2>
+  <div class="prose">
+    <p>The project record explains <em>what</em> was delivered and why the numbers can be trusted. This document explains <em>how</em>: the schema the data passes through, the SQL each screen runs, the decisions taken in the server, and the reasoning that produced them.</p>
+    <p>Every claim here is traceable to code or to the database catalogue. Where a design choice has a cost as well as a benefit, both are stated.</p>
+  </div>
+
+  <div class="why">
+    <span class="lab">The one idea the whole system rests on</span>
+    <p>The dashboard <strong>never calculates consumption</strong>. It reads a column the warehouse already computed, because the business rules for what counts as valid consumption live in the warehouse, not in the presentation layer. Every other decision below follows from that.</p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2><span class="num">01 &middot; Lineage</span>The path a number takes</h2>
+  <p class="deck">Five hops from a meter register to a pixel. Each one is a real object in the database that can be queried independently.</p>
+
+  <div class="flow">
+    <svg viewBox="0 0 720 128" role="img" aria-label="Data lineage from bronze telemetries through silver staging and snapshot to gold views and the dashboard">
+      <defs><marker id="a2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+        <path d="M0,0 L7,3.5 L0,7 z" fill="var(--ink-3)"/></marker></defs>
+      <g font-family="IBM Plex Mono, monospace" font-size="8.5">
+        <rect x="2" y="34" width="118" height="52" rx="3" fill="var(--sunk)" stroke="var(--rule)"/>
+        <text x="61" y="52" text-anchor="middle" fill="var(--ink)" font-size="9" font-weight="600">bronze.telemetries</text>
+        <text x="61" y="65" text-anchor="middle" fill="var(--ink-3)">109,039,968 rows</text>
+        <text x="61" y="76" text-anchor="middle" fill="var(--ink-3)">one row per signal</text>
+
+        <rect x="146" y="34" width="132" height="52" rx="3" fill="var(--sunk)" stroke="var(--rule)"/>
+        <text x="212" y="49" text-anchor="middle" fill="var(--ink)" font-size="9" font-weight="600">telemetries_landing</text>
+        <text x="212" y="62" text-anchor="middle" fill="var(--ink-3)">typing + per-channel</text>
+        <text x="212" y="73" text-anchor="middle" fill="var(--ink-3)">rounding</text>
+
+        <rect x="304" y="34" width="128" height="52" rx="3" fill="var(--sunk)" stroke="var(--rule)"/>
+        <text x="368" y="49" text-anchor="middle" fill="var(--ink)" font-size="9" font-weight="600">..._staging</text>
+        <text x="368" y="62" text-anchor="middle" fill="var(--ink-3)">EAV &rarr; wide pivot</text>
+        <text x="368" y="73" text-anchor="middle" fill="var(--ink-3)">32 channels</text>
+
+        <rect x="458" y="34" width="124" height="52" rx="3" fill="var(--sunk)" stroke="var(--rule)"/>
+        <text x="520" y="49" text-anchor="middle" fill="var(--ink)" font-size="9" font-weight="600">..._snapshot</text>
+        <text x="520" y="62" text-anchor="middle" fill="var(--ink-3)">materialised table</text>
+        <text x="520" y="73" text-anchor="middle" fill="var(--ink-3)">4,535,918 rows</text>
+
+        <rect x="608" y="8" width="108" height="46" rx="3" fill="var(--accent-soft)" stroke="var(--accent)"/>
+        <text x="662" y="26" text-anchor="middle" fill="var(--accent)" font-size="8.5" font-weight="600">gold.energy_raw</text>
+        <text x="662" y="39" text-anchor="middle" fill="var(--ink-2)">4,535,918</text>
+
+        <rect x="608" y="66" width="108" height="46" rx="3" fill="var(--accent-soft)" stroke="var(--accent)"/>
+        <text x="662" y="84" text-anchor="middle" fill="var(--accent)" font-size="8.5" font-weight="600">..._validated</text>
+        <text x="662" y="97" text-anchor="middle" fill="var(--ink-2)">4,260,849</text>
+
+        <g stroke="var(--ink-3)" fill="none" marker-end="url(#a2)">
+          <path d="M122 60 H142"/><path d="M280 60 H300"/><path d="M434 60 H454"/>
+          <path d="M584 55 C596 55 596 34 604 32"/>
+          <path d="M584 65 C596 65 596 86 604 88"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <h3>Hop 1 &mdash; bronze.telemetries is not tabular</h3>
+  <p class="prose">The source is an EAV (entity&ndash;attribute&ndash;value) table. One row is <em>one measurement of one channel at one instant</em>, not one meter reading:</p>
+<pre>device_id  uuid     <i>-- equals energy_meter_key; no mapping table needed</i>
+key_id     bigint   <i>-- FK to bronze.telemetries_dictionaries (Amp1, V1, PF2, TkW...)</i>
+timestamp  bigint   <i>-- epoch MILLISECONDS, not a timestamp type</i>
+dbl        double   <i>-- the value; `long` is used for integer channels</i>
+PRIMARY KEY (device_id, key_id, timestamp)</pre>
+  <p class="prose">One meter reading is therefore ~24 rows. 4.5M readings &times; 24 channels &asymp; the 109M row count. The primary key ordering <code>(device_id, key_id, timestamp)</code> matters later: any verification query must lead with <code>device_id</code> to use the index.</p>
+
+  <h3>Hop 2 &mdash; landing applies per-channel rounding</h3>
+  <p class="prose"><code>silver.telemetries_landing</code> is a view, and it is <strong>not</strong> a passthrough. It quantises each channel to the precision that channel is meaningful at:</p>
+<pre>CASE
+  WHEN td.key IN ('V1','V2','V3','Vn1','Vn2','Vn3','Va','Vna')
+                                        THEN round(dbl::numeric, 1)
+  WHEN td.key IN ('Amp1','Amp2','Amp3','Ampa')  THEN round(dbl::numeric, 1)
+  WHEN td.key = 'Hz'                            THEN round(dbl::numeric, 2)
+  WHEN td.key IN ('PF1','PF2','PF3','PFa')      THEN round(dbl::numeric, 2)
+  WHEN td.key IN ('kW1','kW2','kW3','TkW')      THEN round(dbl::numeric, 3)
+  WHEN td.key IN ('kVAr1','kVAr2','kVAr3','TkVAr')  THEN round(dbl::numeric, 1)
+  WHEN td.key IN ('kWh','kVArh','kVAh')             THEN round(dbl::numeric, 1)
+  WHEN td.key IN ('kVA1','kVA2','kVA3','TkVA')      THEN round(dbl::numeric, 3)
+  ELSE round(dbl::numeric, 9)
+END</pre>
+  <p class="cap">Verified during validation: for the meters tested this rounding is a no-op &mdash; the devices already transmit at these precisions &mdash; so it constrains future sources rather than altering current data.</p>
+
+  <h3>Hop 3 &mdash; staging pivots EAV into a wide row</h3>
+  <p class="prose">The pivot is a conditional aggregate. Each of 32 channels becomes a column via <code>max() FILTER</code>, grouped by meter and instant:</p>
+<pre>max(numeric_reading_value) FILTER (WHERE telemetry_key = 'Amp1') AS current_phase_1_a,
+max(numeric_reading_value) FILTER (WHERE telemetry_key = 'TkW')  AS active_power_total_kw,
+...
+GROUP BY energy_meter_key, source_timestamp_ms, ...</pre>
+  <div class="why">
+    <span class="lab">Why max() and not, say, avg()</span>
+    <p>Within one <code>(meter, timestamp)</code> group each channel should appear exactly once, so the aggregate is only there to collapse the group &mdash; <code>max()</code> is the cheapest way to say "take the single value". The view also emits <code>duplicate_measurement_row_count</code> so a genuine duplicate is <em>counted</em> rather than silently averaged away. Averaging would have hidden the fault.</p>
+  </div>
+  <p class="prose">This is also where the Saudi time columns are derived, using a named zone rather than an offset: <code>to_timestamp(ms/1000.0) AT TIME ZONE 'Asia/Riyadh'</code>.</p>
+
+  <h3>Hop 4&ndash;5 &mdash; snapshot, then the gold views</h3>
+  <p class="prose"><code>silver.fact_energy_readings_snapshot</code> is a materialised <strong>table</strong>, not a view &mdash; the pivot is far too expensive to run per query. <code>gold.energy_raw</code> is then a thin view over it (same 4,535,918 rows), and <code>gold.energy_consumption_validated</code> is the consumption model described next.</p>
+</section>
+
+<hr>
+
+<section>
+  <h2><span class="num">02 &middot; Consumption</span>The model the dashboard reads</h2>
+  <p class="deck">This is the layer that encodes business judgement, and the reason the dashboard does no arithmetic of its own.</p>
+
+  <p class="prose">A cumulative register cannot simply be differenced. Meters reset, drop out, report implausible jumps, and are commissioned mid-window. The gold layer resolves each of those into two enumerated columns that travel with every interval:</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Column</th><th>Values</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>interval_quality</code></td><td class="mono-col">NORMAL_INTERVAL</td><td>Consecutive readings at the expected cadence</td></tr>
+        <tr><td></td><td class="mono-col">LONG_GAP</td><td>Energy accrued across a longer-than-normal interval &mdash; still real consumption</td></tr>
+        <tr><td></td><td class="mono-col">FIRST_VALID_READING</td><td>No predecessor to difference against</td></tr>
+        <tr><td></td><td class="mono-col">IGNORED_READING</td><td>Excluded by rule</td></tr>
+        <tr><td></td><td class="mono-col">UNRESOLVED_DECREMENT</td><td>Register went backwards and could not be explained</td></tr>
+        <tr><td><code>consumption_cleaning_status</code></td><td class="mono-col">KEEP</td><td>Counts toward the total</td></tr>
+        <tr><td></td><td class="mono-col">ISOLATED_LOW_BAD<br>ISOLATED_HIGH_BAD</td><td>Single-sample spikes in either direction</td></tr>
+        <tr><td></td><td class="mono-col">STARTUP_EXCLUDED</td><td>Commissioning period</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="prose">The resulting column, <code>validated_kwh_consumption</code>, is what both the dashboard and Power BI sum. Nothing downstream re-implements any of this:</p>
+<pre>SELECT sum(validated_kwh_consumption) FROM gold.energy_consumption_validated;
+<b>  2020697.5</b>
+   <i>= NORMAL_INTERVAL 1,666,455.0  +  LONG_GAP 354,242.5</i></pre>
+
+  <div class="why">
+    <span class="lab">Two facts that surprise people, and are correct</span>
+    <p><strong>LONG_GAP energy is included</strong> (17.5% of the total). A gap in <em>reporting</em> is not a gap in <em>consumption</em> &mdash; the register kept counting. Excluding it would understate the bill. This is a deliberate warehouse decision, not an oversight.</p>
+    <p><strong>The validated view has 4,260,849 rows and 29 meters, while raw has 4,535,918 and 31.</strong> Zone 13's two meters are excluded by business rule. Preserving that asymmetry is precisely what makes the dashboard total match Power BI; "fixing" it would break the reconciliation.</p>
+  </div>
+
+  <h3>The failure this replaced</h3>
+  <p class="prose">The first build differenced the register itself &mdash; <code>LAG()</code> over the cumulative column, a 15-minute gap cap, and a breaker-rating plausibility gate. It produced <strong>1,780,590 kWh</strong> against the warehouse's 2,020,697.5. The logic was defensible; it simply was not the company's. The gap was almost exactly the LONG_GAP mass the cap discarded.</p>
+</section>
+
+<hr>
+
+<section>
+  <h2><span class="num">03 &middot; Classification</span>Where the thresholds come from</h2>
+  <p class="deck">Every band the dashboard colours is read from the warehouse's own functions. None is a textbook value.</p>
+
+  <p class="prose">The <code>silver.classify_*_v2</code> family (19 functions) returns a text grade per reading. These are the actual definitions, taken from <code>pg_get_functiondef</code>:</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Function</th><th>Acceptable</th><th>Review Required</th><th>Problematic</th><th>Critical</th></tr></thead>
+      <tbody>
+        <tr><td><code>classify_power_factor_v2</code></td><td class="mono-col">0.80 &ndash; 1.00</td><td class="mono-col">0.78 &ndash; 0.80</td><td class="mono-col">0.60 &ndash; 0.78</td><td class="mono-col">&lt; 0.60 or &gt; 1</td></tr>
+        <tr><td><code>classify_voltage_neutral_v2</code></td><td class="mono-col">215 &ndash; 245 V</td><td class="mono-col">209.94&ndash;215<br>245&ndash;250.06</td><td class="mono-col">207&ndash;209.94<br>250.06&ndash;253</td><td class="mono-col">&lt; 207 or &gt; 253</td></tr>
+        <tr><td><code>classify_voltage_line_v2</code></td><td class="mono-col">380 &ndash; 420 V</td><td class="mono-col">371.2&ndash;380<br>420&ndash;428.8</td><td class="mono-col">360&ndash;371.2<br>428.8&ndash;440</td><td class="mono-col">&lt; 360 or &gt; 440</td></tr>
+        <tr><td><code>classify_frequency_v2</code></td><td class="mono-col">59.3 &ndash; 60.5 Hz</td><td class="mono-col">&mdash;</td><td class="mono-col">59&ndash;59.3<br>60.5&ndash;61</td><td class="mono-col">&lt; 59 or &gt; 61</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cap">All four return <code>'Invalid'</code> for NULL. An early draft of the dashboard used 0.85 as the power-factor threshold &mdash; the Saudi tariff penalty point &mdash; which is a defensible industry value and the wrong one here. Corrected to 0.80.</p>
+
+  <h3>A real gap in the status ladder</h3>
+  <p class="prose"><code>silver.status_rank</code> ranks six labels. The three-argument <code>classify_current_v2</code> emits two more that it does not rank, so both fall through to its <code>ELSE 0</code> branch &mdash; <em>below</em> Acceptable:</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Label</th><th>Condition</th><th>Rows</th><th>Ranked?</th></tr></thead>
+      <tbody>
+        <tr><td><code>Major Issue</code></td><td>Power recorded but current reads zero</td><td class="mono-col">34,069</td><td><span class="pill p-crit">NO</span></td></tr>
+        <tr><td><code>Major Problem</code></td><td>Current flowing but power reads zero</td><td class="mono-col">45,360</td><td><span class="pill p-crit">NO</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="prose">These are sensor-disagreement faults &mdash; exactly the readings an engineer most wants to see. The dashboard originally hard-coded the six-label ladder and so dropped all <strong>79,429</strong> of them. The fix was to stop assuming the domain and discover it at startup:</p>
+<pre>SELECT DISTINCT t.v
+FROM gold.energy_raw r
+CROSS JOIN LATERAL (VALUES ('status_vn1', r.status_vn1), ...) AS t(col, v)
+WHERE t.v IS NOT NULL;</pre>
+  <p class="cap">Known values are kept in ladder order, anything new is appended and printed to the console at boot. If a classifier gains a label tomorrow, the status page shows it instead of silently discarding those rows.</p>
+
+  <div class="why">
+    <span class="lab">Raised for the warehouse owner, not fixed here</span>
+    <p><code>status_rank</code> not ranking these two labels is harmless today because <code>worst_status</code> excludes the current channels. It would become a real defect the moment current is folded into the overall rollup, because a genuine fault would rank below <code>Acceptable</code>. That is a silver-layer change and was deliberately left alone by a read-only consumer.</p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2><span class="num">04 &middot; Server</span>Architecture and its constraints</h2>
+  <p class="deck">One Python file, no framework, no ORM. Everything below is a deliberate constraint rather than an absence.</p>
+
+  <h4>Read-only is enforced, then verified</h4>
+<pre>c = psycopg.connect(DSN, row_factory=dict_row, connect_timeout=10)
+c.execute('SET default_transaction_read_only = on')
+c.commit()
+mode = c.execute('SHOW transaction_read_only').fetchone()['transaction_read_only']
+if mode != 'on':
+    c.close()
+    raise RuntimeError('refusing to serve: connection is not read-only')</pre>
+  <p class="prose">Setting the flag is not enough &mdash; the setting is read back and the process refuses to serve if it did not take. The dashboard cannot write to the warehouse even if a query were malformed or hostile. Every query is parameterised (<code>%(name)s</code>); no user input is ever concatenated into SQL.</p>
+
+  <h4>Threading model</h4>
+  <p class="prose"><code>ThreadingHTTPServer</code> with one connection per thread, held in <code>threading.local()</code>. Each page issues 3&ndash;4 requests in a <code>Promise.all</code>; under the original single-threaded server those serialised, so one slow aggregate left every panel on the page showing an em-dash. Each handler ends with <code>rollback()</code> to close the implicit transaction and avoid holding a snapshot open.</p>
+
+  <h4>The dimension cache &mdash; the single biggest win</h4>
+  <div class="why">
+    <span class="lab">The problem</span>
+    <p><code>gold.meter</code>, <code>gold.zone</code> and <code>gold.facility</code> are views over silver staging views over bronze. Joining a 4.5M-row fact scan to them re-evaluates that entire stack per query. Measured: a <strong>4-second</strong> aggregate became <strong>90 seconds</strong>.</p>
+  </div>
+  <p class="prose">They are 31 and 21 rows. So they are resolved <strong>once at startup</strong> into a Python dict, facts are filtered on plain UUID keys, and zone/meter/facility labels are attached in Python afterwards. No fact query contains a join.</p>
+<pre>J_VAL = "FROM gold.energy_consumption_validated c"   <i>-- no joins, deliberately</i>
+J_RAW = "FROM gold.energy_raw r"</pre>
+  <p class="prose">The cost: a meter renamed in the warehouse is not reflected until the server restarts. For a static analytical snapshot that is an acceptable trade, and it is documented rather than hidden.</p>
+
+  <h4>Response cache</h4>
+  <p class="prose">Responses are memoised on the exact <code>path + query string</code>, capped at 400 entries and cleared wholesale on overflow. This is only safe because the warehouse is a static snapshot &mdash; there is no invalidation logic, and there deliberately is none to go wrong. <strong>If the warehouse becomes live-loading, this cache must be removed or given a TTL.</strong></p>
+</section>
+
+<hr class="pagebreak">
+
+<section>
+  <h2><span class="num">05 &middot; Filters</span>Two builders, and why</h2>
+  <p class="deck">The most subtle code in the system. Both correctness and performance live here.</p>
+
+  <p class="prose">There are two filter builders because the two fact sources carry time differently. <code>gold.energy_consumption_validated</code> has a real <code>reading_date_saudi</code> <em>date</em> column; <code>gold.energy_raw</code> has only <code>reading_timestamp_utc</code>.</p>
+
+  <h4>flt() &mdash; the validated side</h4>
+<pre>c.reading_date_saudi &gt;= %(d1)s AND c.reading_date_saudi &lt;= %(d2)s
+c.energy_meter_key = ANY(%(mk)s::uuid[])          <i>-- only when filtered</i>
+c.interval_quality  = ANY(%(iq)s)                 <i>-- optional</i></pre>
+
+  <h4>flt_raw() &mdash; the raw side, where it gets interesting</h4>
+<pre>r.reading_timestamp_utc &gt;= (%(d1)s::date - interval '3 hours')
+r.reading_timestamp_utc &lt;  (%(d2)s::date + interval '1 day' - interval '3 hours')</pre>
+  <div class="why">
+    <span class="lab">Why not the obvious form</span>
+    <p>The natural way to write this is <code>(reading_timestamp_utc + interval '3 hours')::date BETWEEN d1 AND d2</code>. That is <strong>not sargable</strong> &mdash; wrapping the indexed column in an expression makes the planner discard <code>pk_energy_readings_snapshot</code> and scan the heap. Moving the arithmetic to the <em>constant</em> side leaves the bare column exposed to the index and returns exactly the same rows, because Saudi time is a fixed UTC+3 with no daylight saving. Measured: <strong>103 ms &rarr; 28 ms</strong>.</p>
+  </div>
+
+  <h4>The counter-intuitive one: always name every meter</h4>
+<pre>mk = keys_for(qs)
+if mk is None:
+    <i># Supply every key even when unfiltered.</i>
+    mk = [r['mk'] for r in DIM['meters']]
+w.append('r.energy_meter_key = ANY(%(mk)s::uuid[])')</pre>
+  <p class="prose">Adding a predicate that excludes nothing looks like waste. It is the opposite. The primary key is <code>(energy_meter_key, reading_timestamp_utc)</code> &mdash; meter first. A timestamp-only range cannot lead with the index and degrades to a sequential scan. Naming all 31 keys turns one 4.5M-row scan into 31 index range searches. Measured on a 7-day aggregate: <strong>103 ms &rarr; 28 ms</strong>.</p>
+  <p class="prose">A zone or meter filter returning an empty list short-circuits to the literal <code>FALSE</code> rather than issuing a query that cannot match.</p>
+</section>
+
+<section>
+  <h2><span class="num">06 &middot; Time</span>The timezone model</h2>
+  <p class="deck">One rule, applied everywhere, and the bug that proved it matters.</p>
+  <div class="prose">
+    <ul>
+      <li><strong>Storage is UTC.</strong> <code>reading_timestamp_utc</code> is the only authoritative instant.</li>
+      <li><strong>Business time is Saudi.</strong> UTC+3, no DST, so the conversion is a fixed offset and never a lookup.</li>
+      <li><strong>The warehouse's <code>reading_date_saudi</code> is authoritative</strong> for day and month bucketing. Verified as exactly <code>(reading_timestamp_utc + interval '3 hours')::date</code> across all <strong>4,260,849</strong> rows, <strong>zero</strong> mismatches.</li>
+      <li><strong>Two forms, one meaning.</strong> Filtering shifts the <em>constant</em> (sargable, above); display shifts the <em>column</em> (<code>reading_timestamp_utc + interval '3 hours' AS ts</code>). Never the reverse.</li>
+    </ul>
+  </div>
+  <div class="why">
+    <span class="lab">Why this earns a whole section</span>
+    <p>Power BI carried a calculated column <code>Reading Month UTC = DATE(YEAR([reading_timestamp_utc]), MONTH(...), 1)</code> &mdash; bucketing by UTC while every other part of the model, including its own weekday and hour logic, used Saudi. Monthly figures diverged from the dashboard by up to 1,251.9 kWh while <em>annual</em> totals matched exactly, because it was a boundary reallocation, not lost energy. Per-meter grand totals agreed to the decimal both ways, which is what identified it as a bucketing fault rather than a calculation one. Corrected in Power BI to Saudi.</p>
+  </div>
+</section>
+
+<hr class="pagebreak">
+
+<section>
+  <h2><span class="num">07 &middot; Endpoints</span>The fourteen routes</h2>
+  <p class="deck">All under <code>/api/</code>, all GET, all JSON, all reading the two fact sources through the filter builders above.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Route</th><th>Source</th><th>Returns</th><th>Notable technique</th></tr></thead>
+      <tbody>
+        <tr><td><code>/api/meta</code></td><td>dims + bounds</td><td>Meter list, date bounds, thresholds</td><td>Served from the startup cache</td></tr>
+        <tr><td><code>/api/kpi</code></td><td>both</td><td>Headline cards</td><td>Two queries: consumption + electricals</td></tr>
+        <tr><td><code>/api/daily</code></td><td>validated</td><td>kWh per Saudi day</td><td><code>FILTER</code> split by interval_quality</td></tr>
+        <tr><td><code>/api/monthly</code></td><td>validated</td><td>kWh per Saudi month</td><td><code>to_char(reading_date_saudi,'YYYY-MM')</code></td></tr>
+        <tr><td><code>/api/zones</code></td><td>validated</td><td>kWh per zone</td><td>Zone names joined in Python</td></tr>
+        <tr><td><code>/api/meters</code></td><td>both</td><td>Per-meter table</td><td>Two aggregates merged on meter key</td></tr>
+        <tr><td><code>/api/series</code></td><td>raw</td><td>Per-reading time series</td><td>Branches: single meter vs summed</td></tr>
+        <tr><td><code>/api/readings</code></td><td>raw</td><td>Individual readings</td><td>Paged; honours time-of-day filter</td></tr>
+        <tr><td><code>/api/status</code></td><td>raw</td><td>16 status columns &times; N labels</td><td>Single pass, <code>FILTER</code> grid</td></tr>
+        <tr><td><code>/api/nonzero</code></td><td>raw</td><td>Per-signal availability</td><td>Single pass, 4 counters &times; 26 signals</td></tr>
+        <tr><td><code>/api/pfdist</code></td><td>raw</td><td>PF histogram, 4 channels</td><td><code>LATERAL VALUES</code> unpivot</td></tr>
+        <tr><td><code>/api/quality</code></td><td>gold views</td><td>Quality summary, gaps</td><td>Direct passthrough</td></tr>
+        <tr><td><code>/api/bill</code></td><td>gold.energy_bill</td><td>Invoice vs metered</td><td>Ordered by variance</td></tr>
+        <tr><td><code>/api/sql</code></td><td>&mdash;</td><td>The queries themselves</td><td>Transparency; re-runnable in psql</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>The technique that appears everywhere: one pass, many counters</h3>
+  <p class="prose">The naive shape for "count each status label in each of 16 columns" is a <code>UNION ALL</code> of 16 grouped queries &mdash; sixteen reads of a 4.5M-row table. Conditional aggregation does it in one:</p>
+<pre>SELECT count(*) FILTER (WHERE status_vn1 = 'Acceptable') AS vn1_acceptable,
+       count(*) FILTER (WHERE status_vn1 = 'Critical')   AS vn1_critical,
+       ...                                    <i>-- 16 columns x N labels</i>
+FROM gold.energy_raw r WHERE ...</pre>
+  <p class="prose">Applied to <code>/api/status</code> (was 16 passes), <code>/api/nonzero</code> (26), and <code>/api/pfdist</code> (4). The PF histogram additionally unpivots four columns into four rows per reading so the heap is touched once:</p>
+<pre>SELECT t.col, width_bucket(t.v, -1, 1.2, 44) AS b, count(*)
+FROM gold.energy_raw r
+CROSS JOIN LATERAL (VALUES ('pf1', r.power_factor_phase_1),
+                           ('pf2', r.power_factor_phase_2),
+                           ('pf3', r.power_factor_phase_3),
+                           ('pfa', r.power_factor_average)) AS t(col, v)
+WHERE ... AND t.v IS NOT NULL
+GROUP BY 1, 2;</pre>
+  <p class="cap">44 buckets of 0.05 spanning &minus;1 to 1.2. The range starts below zero on purpose: negative power factor is real in this data, and clipping the axis at zero was one of the things that made the first build misleading. Measured: 7.0 s &rarr; 1.6 s.</p>
+
+  <h3>Cadence is measured, never assumed</h3>
+  <p class="prose">Coverage needs an expected reading count. The nominal figure looks like 5 minutes; the true median inter-reading gap is <strong>244 s (~4.07 min)</strong>, about 354 readings per day. A hard-coded 288 understated the denominator by 23% and produced coverage figures above 100%. Each meter's own cadence is derived instead:</p>
+<pre>WITH g AS (
+  SELECT energy_meter_key,
+         EXTRACT(EPOCH FROM (reading_timestamp_utc
+           - LAG(reading_timestamp_utc) OVER (PARTITION BY energy_meter_key
+                                              ORDER BY reading_timestamp_utc))) AS gap_s
+  FROM gold.energy_raw r WHERE ...)
+SELECT energy_meter_key,
+       percentile_cont(0.5) WITHIN GROUP (ORDER BY gap_s) AS median_gap_s
+FROM g WHERE gap_s IS NOT NULL AND gap_s &gt; 0
+GROUP BY 1;</pre>
+  <p class="cap">Median rather than mean, so a single multi-day outage does not distort a meter's expected cadence.</p>
+
+  <h3>Availability is two questions, not one</h3>
+  <p class="prose"><code>/api/nonzero</code> reports <code>present</code> (NOT NULL) separately from <code>nonzero</code>. Every column except the kVA family is 100% NOT NULL, yet <code>reactive_energy_cumulative_kvarh</code> is exactly zero on well over half its rows. A single "availability" column conflated "always transmitted" with "always meaningful"; the five kVA columns are 0% transmitted, which is a different fact again from being zero.</p>
+</section>
+
+<hr class="pagebreak">
+
+<section>
+  <h2><span class="num">08 &middot; Front end</span>How the page is driven</h2>
+  <p class="deck">One HTML file, no build step, no framework. Chart.js from CDN is the only dependency.</p>
+
+  <h4>State and dispatch</h4>
+  <p class="prose">A single <code>state</code> object holds the filters. Changing any control mutates it and calls <code>render()</code>, which dispatches through a map rather than a conditional chain:</p>
+<pre>var RENDER = {cm:renderCommand, en:renderEnergy, cu:renderCurrent, vf:renderVolt,
+              pf:renderPF, rd:renderReadings, dq:renderDQ, bl:renderBill};</pre>
+  <p class="prose">Each renderer issues its requests with <code>Promise.all</code> and draws only when all resolve, so a page never paints half-populated.</p>
+
+  <h4>The staleness token &mdash; and the bug it was written to fix</h4>
+<pre>var _renderSeq = 0;                  <i>// incremented ONCE per render()</i>
+function api(path, extra){
+  var mine = _renderSeq;
+  return fetch(...).then(function(j){
+      return {data:j, stale: mine !== _renderSeq};  <i>// caller discards if stale</i>
+  });
+}</pre>
+  <div class="why">
+    <span class="lab">The subtlety</span>
+    <p>The first implementation incremented the counter inside <code>api()</code>, i.e. once per <em>request</em>. Inside a <code>Promise.all</code> of four calls, each call bumped the counter, so every request but the last marked <em>itself</em> stale and the render bailed out with every panel showing an em-dash. The counter must advance once per render, not once per request &mdash; a one-line distinction with a total-failure symptom.</p>
+  </div>
+
+  <h4>Chart conventions</h4>
+  <div class="prose">
+    <ul>
+      <li>Labels carry the <strong>full</strong> timestamp; the axis abbreviates via a tick callback. Truncating at source would make tooltips ambiguous.</li>
+      <li>Phase colours are fixed across every page: L1 / L2 / L3 always map to the same three CSS variables, so a reader never re-learns the legend.</li>
+      <li>Zoom and pan are enabled on the x-axis only, with double-click to reset.</li>
+      <li>Current unbalance uses NEMA MG-1 / IEEE 141 &mdash; <code>max|phase − mean| / mean</code> &mdash; blanked below 0.5 A mean, where the ratio is noise. The earlier <code>(max − min) / max</code> was a different quantity: capped at 100%, blind to which phase deviates, and inflated on lightly-loaded boards.</li>
+    </ul>
+  </div>
+
+  <h4>A Chart.js trap worth knowing</h4>
+  <p class="prose">One chart is horizontal (<code>indexAxis:'y'</code>). On such a chart <code>parsed.y</code> is the <strong>category index</strong> and <code>parsed.x</code> is the value &mdash; the reverse of every other chart. A shared tooltip that preferred <code>parsed.y</code> therefore printed the row number, identically for every series. The same inversion hit the axis: the shared <code>ticks.callback</code> formats numbers, and on a category axis it is handed the index, so signal names rendered as <code>0, 3.0, 6.0</code>. Both now branch on <code>indexAxis</code>.</p>
+</section>
+
+<hr>
+
+<section>
+  <h2><span class="num">09 &middot; Validation</span>The method, reproducibly</h2>
+  <p class="deck">Three independent levels. A figure was accepted only when all three agreed.</p>
+
+  <h4>Level 1 &mdash; against Power BI</h4>
+  <p class="prose">All 52 DAX measures re-computed in SQL. Every one reconciles. Two observations recorded as findings rather than defects: <code>meter_label</code> on <code>gold energy_raw</code> is a calculated column (<code>RELATED('gold meter'[meter_label])</code>) rather than a view column, and the model omits the <code>apparent_power_*</code>, <code>apparent_energy_cumulative_kvah</code> and both <code>*_average_v</code> columns &mdash; which the availability analysis later confirmed are 0% transmitted, so the omission was correct.</p>
+
+  <h4>Level 2 &mdash; against bronze, bypassing the warehouse</h4>
+  <p class="prose">The strongest check. Rather than trust the pipeline, the raw signals were re-pivoted independently and the dashboard's figures recomputed. Channel ids are resolved at runtime, never hard-coded:</p>
+<pre>SELECT id, key FROM bronze.telemetries_dictionaries
+WHERE key IN ('Amp1','Amp2','Amp3');        <i>-- e.g. 17, 33, 34</i>
+
+WITH bounds AS (
+  SELECT (extract(epoch from (%(d1)s::date)::timestamp
+          AT TIME ZONE 'Asia/Riyadh')*1000)::bigint AS lo, ...)
+SELECT t."timestamp",
+       max(round(t.dbl::numeric,1)) FILTER (WHERE t.key_id = 17) AS a1, ...
+FROM bronze.telemetries t CROSS JOIN bounds
+WHERE t.device_id = %(mk)s::uuid AND t.key_id = ANY(%(kids)s)
+  AND t."timestamp" &gt;= bounds.lo AND t."timestamp" &lt; bounds.hi
+GROUP BY t."timestamp";</pre>
+  <p class="prose">Then <code>FULL JOIN</code>ed to <code>gold.energy_raw</code> on the timestamp. Result for the sample meter and window:</p>
+<pre>readings compared        1,579      <i>channels per reading   3</i>
+in bronze not in gold        0      <i>amp rows           4,737  = 1,579 x 3</i>
+in gold not in bronze        0      <i>rows changed by rounding   0</i>
+values that disagree         0</pre>
+  <p class="cap">Repeated for current, voltage, frequency, power, power factor and consumption. Comparing totals alone would not have caught offsetting errors; the row-level FULL JOIN would.</p>
+
+  <h4>Level 3 &mdash; physics</h4>
+  <p class="prose">Two checks that an internally-consistent error cannot satisfy:</p>
+<pre><b>line-to-line / phase-to-neutral</b>   1.731836     <i>vs √3 = 1.732051  (0.012% error)</i>
+<b>register delta vs consumption</b>     710.8 kWh    <i>vs validated 710.8 kWh  (exact)</i></pre>
+  <p class="prose">The second is the strongest single check in the system: the meter's cumulative counter is independent of every calculation in the warehouse, so agreement is not something a pipeline bug could manufacture.</p>
+
+  <div class="why">
+    <span class="lab">Why "the totals match" is weak on its own</span>
+    <p>Two reports summing the same column will always agree, whatever that column contains. Only levels 2 and 3 test the column itself. When a discrepancy did appear &mdash; the UTC month bug &mdash; it was the <em>pattern</em> (annual totals identical, per-meter totals identical, monthly figures offsetting between adjacent months) that identified it as bucketing rather than arithmetic.</p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2><span class="num">10 &middot; Debt</span>Known limitations and traps</h2>
+  <p class="deck">Stated plainly, so nobody rediscovers them the hard way.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Item</th><th>Consequence</th><th>If you change it</th></tr></thead>
+      <tbody>
+        <tr><td>Dimension cache loaded once at startup</td><td>Meter or zone renames need a restart</td><td>Add a reload endpoint, or a TTL</td></tr>
+        <tr><td>Response cache has no invalidation</td><td>Safe only while the warehouse is a static snapshot</td><td><strong>Must</strong> be removed or given a TTL if loading becomes live</td></tr>
+        <tr><td>Time-of-day filter reaches only <code>/api/readings</code></td><td>KPI cards ignore the chip shown in the filter bar</td><td>Thread <code>t1</code>/<code>t2</code> through <code>flt_raw()</code></td></tr>
+        <tr><td>Single-process, localhost only</td><td>Not reachable by colleagues</td><td>Front with a real WSGI server before exposing it</td></tr>
+        <tr><td>DSN password has an in-code default</td><td>Convenience for a local tool</td><td>Move to <code>PGPASSWORD</code> / a secret store before any network exposure</td></tr>
+        <tr><td><code>/api/readings</code> capped at 20,000 rows</td><td>Very large windows truncate</td><td>Cap is reported in the response, not silent</td></tr>
+        <tr><td><code>status_rank</code> omits two labels</td><td>Latent, harmless today</td><td>Silver-layer fix; see section 03</td></tr>
+        <tr><td>kVAr channel unreliable at ZN.15-PB.2</td><td>Source data, not pipeline</td><td>Check other meters before trusting reactive power</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">11 &middot; Extending</span>Adding to the system</h2>
+  <h4>A new endpoint</h4>
+  <div class="prose">
+    <ul>
+      <li>Write <code>def ep_thing(qs)</code>; call <code>flt(qs)</code> or <code>flt_raw(qs)</code> for the WHERE fragment and params &mdash; never build a predicate by hand.</li>
+      <li>Return through <code>clean()</code> so Decimal, date and timedelta serialise correctly.</li>
+      <li>Register it in <code>ROUTES</code>. Caching, error handling and JSON encoding are inherited.</li>
+      <li>Add zone/meter context in Python from <code>DIM</code>; do not join to <code>gold.meter</code>.</li>
+    </ul>
+  </div>
+  <h4>A new page</h4>
+  <div class="prose">
+    <ul>
+      <li>Add an entry to <code>PAGES</code>, markup in <code>buildPages()</code>, a <code>renderX()</code> function, and one line in <code>RENDER</code>.</li>
+      <li>Use <code>api()</code> and honour the <code>stale</code> flag, or stale responses will overwrite fresh ones.</li>
+      <li>Take colours from CSS variables so both themes and the print stylesheet keep working.</li>
+    </ul>
+  </div>
+  <h4>Verifying a change</h4>
+  <p class="prose">Re-run the level-2 bronze comparison for any figure you touch. Totals agreeing is not sufficient evidence &mdash; that was the lesson of the UTC month bug, where every total agreed and the monthly figures were still wrong.</p>
+</section>
+
+<footer>
+  <p><strong>SADIN Energy Intelligence &mdash; engineering reference</strong>, 15 September 2026. Companion to the project record. Line counts, row counts and thresholds were read from the codebase and the production catalogue on the date of writing.</p>
+</footer>
+
+</div>

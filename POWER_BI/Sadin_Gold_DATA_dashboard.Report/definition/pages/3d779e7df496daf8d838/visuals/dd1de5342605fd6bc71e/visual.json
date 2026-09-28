@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "dd1de5342605fd6bc71e",
+  "position": {
+    "x": 32.828282828283037,
+    "y": 84.14141414141416,
+    "z": 2000,
+    "height": 46.666666666666664,
+    "width": 185.55555555555554,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "0.000041% of V/F Classification",
+                    "textStyle": {
+                      "color": "#64748b"
+                    }
+                  }
+                ],
+                "horizontalTextAlignment": "center"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "parentGroupName": "3f3ec35ec2db806c9efb"
+}

@@ -1,0 +1,266 @@
+relationship 29ce378a-edd3-4b58-9912-502118c433fe
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold zone'.source_created_at
+	toColumn: LocalDateTable_8e336d75-7956-48f2-9e96-4bc6015e7503.Date
+
+relationship 1801d70d-bf51-4388-b306-7be93e0f5bea
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold quality_summary'.computed_at
+	toColumn: LocalDateTable_ee7645b5-7a4b-4a9b-ada2-f72f0c365bdc.Date
+
+relationship 96ff696e-6a29-4704-b6db-fd1eddc41ac5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold meter'.assembly_date
+	toColumn: LocalDateTable_486f4f03-8aef-46fe-ac4a-23057c94bfec.Date
+
+relationship f9620172-8b10-46c1-b740-70c396195097
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold meter'.meter_source_created_at
+	toColumn: LocalDateTable_6b2d9930-99c4-44ab-a9c9-0bb470bff386.Date
+
+relationship eace37e1-d0a5-40fc-9e2b-be99f66d0430
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold mapping_audit'.meter_source_created_at
+	toColumn: LocalDateTable_ae099f39-1f4b-4f1f-9127-ba271f51e8a5.Date
+
+relationship 6cfd2adf-c990-43c5-b0b0-887c84725dac
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold facility'.source_created_at
+	toColumn: LocalDateTable_9e72cb67-9527-4eec-818c-787224a1870f.Date
+
+relationship d21c780d-ff43-46e0-b2f9-e655904feb78
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_bill'.start_period
+	toColumn: LocalDateTable_5235b20b-c8d3-4b80-98ab-92676b2d59df.Date
+
+relationship 26233788-64ce-4ab4-900b-3fc48e357fa6
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_bill'.end_period
+	toColumn: LocalDateTable_82561c94-7986-4b9b-a522-9a982dbef40b.Date
+
+relationship 5bfe285c-3a88-478b-b16e-9da0a021a01c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_bill'.system_reading_timestamp_utc
+	toColumn: LocalDateTable_6f6a2349-74ec-497f-b01b-2fb5b337e1fa.Date
+
+relationship 646d6f17-e481-404d-bc08-53d6e33a3a71
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_bill'.source_created_at
+	toColumn: LocalDateTable_91358f2a-5ef3-4f7d-a90b-7cfcb81e467b.Date
+
+relationship 14370932-0841-4cf0-b2bb-121737084ccb
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold date'.calendar_date
+	toColumn: LocalDateTable_522d441c-d5b7-42e4-bc43-00613291d530.Date
+
+relationship a753461b-d134-4b2f-a1ad-90e1c6e57468
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold date'.month_start_date
+	toColumn: LocalDateTable_6b994cec-9b64-4988-bdb9-d0254722f3f2.Date
+
+relationship df3fb3c3-8df5-4537-842d-3aa30d509136
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold date'.month_end_date
+	toColumn: LocalDateTable_4ac83658-6bee-4660-8c86-caf2fd86a901.Date
+
+relationship b2c5944b-8d4e-4200-8f51-4a8fdd54afe9
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold date'.quarter_start_date
+	toColumn: LocalDateTable_758770c8-e9df-4771-ae1e-f914169d20e2.Date
+
+relationship da5b282f-f686-4000-877e-48522bf7665f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold date'.year_start_date
+	toColumn: LocalDateTable_5a85bbcb-f4b5-411f-a6e9-da377b1d5755.Date
+
+relationship 4cf09a8d-32cd-4c2d-a5c2-bc45675d107f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold billing_account'.start_period
+	toColumn: LocalDateTable_d60c5609-3d99-4b28-b461-55e37c054b87.Date
+
+relationship 7edd0d63-1255-4938-b142-a9862da98df9
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold billing_account'.end_period
+	toColumn: LocalDateTable_fdc3eb3f-4d81-4365-aa7c-2d69065abd8f.Date
+
+relationship dcb57c22-5190-4e30-9ea4-0ef2af0141ee
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold billing_account'.source_created_at
+	toColumn: LocalDateTable_b86927cc-23ad-42bc-87a7-36b4a45e1f55.Date
+
+relationship AutoDetected_485d9ea2-8c1e-4d84-b361-ab5b2c3bf0f1
+	fromColumn: 'gold meter'.zone_key
+	toColumn: 'gold zone'.zone_key
+
+relationship AutoDetected_600fc9bf-a481-4d3d-b8f9-f21480d40a29
+	fromColumn: 'gold mapping_audit'.zone_key
+	toColumn: 'gold zone'.zone_key
+
+relationship AutoDetected_2bd54937-81d0-4ae5-b481-650e1c21861b
+	fromColumn: 'gold energy_bill'.zone_key
+	toColumn: 'gold zone'.zone_key
+
+relationship AutoDetected_0f7f24c8-863d-4c76-a45e-d419e097ab77
+	fromColumn: 'gold billing_account'.zone_key
+	toColumn: 'gold zone'.zone_key
+
+relationship AutoDetected_a0409247-e3e4-4ac6-8068-906e57507f81
+	fromColumn: 'gold zone'.facility_key
+	toColumn: 'gold facility'.facility_key
+
+relationship AutoDetected_055efa9a-e96f-416a-837b-bda8f230404f
+	isActive: false
+	fromColumn: 'gold meter'.facility_key
+	toColumn: 'gold facility'.facility_key
+
+relationship AutoDetected_b112e486-45df-4e16-87df-a8596ddf3c96
+	isActive: false
+	fromColumn: 'gold energy_bill'.facility_key
+	toColumn: 'gold facility'.facility_key
+
+relationship AutoDetected_c534bfcc-7e90-40a2-a436-7217181c100a
+	isActive: false
+	fromColumn: 'gold billing_account'.facility_key
+	toColumn: 'gold facility'.facility_key
+
+relationship AutoDetected_5f6a4968-6717-4893-948c-d4e5163bbccb
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'gold meter'.energy_meter_key
+	toColumn: 'gold quality_summary'.energy_meter_key
+
+relationship AutoDetected_df4720a2-b08f-4f4b-89d2-ed8ac52d7d3f
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'gold meter'.source_energy_meter_id
+	toColumn: 'gold mapping_audit'.source_energy_meter_id
+
+relationship AutoDetected_207b799e-318a-4679-9eca-7425812c0bc0
+	isActive: false
+	fromColumn: 'gold meter'.grid_billing_account_key
+	toColumn: 'gold billing_account'.grid_billing_account_key
+
+relationship AutoDetected_85c94f94-6272-444d-a430-db46c99cecf1
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'gold energy_bill'.grid_billing_account_key
+	toColumn: 'gold billing_account'.grid_billing_account_key
+
+relationship 16eaf170-e110-4966-bfa8-910f9d651802
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_raw'.reading_timestamp_utc
+	toColumn: LocalDateTable_2f15c838-18e9-4fbc-8fad-bb560d92b3a7.Date
+
+relationship AutoDetected_545e3285-4e6b-4d81-86d3-710d9a28e8aa
+	isActive: false
+	fromColumn: 'gold energy_raw'.zone_key
+	toColumn: 'gold zone'.zone_key
+
+relationship AutoDetected_763aec92-1ba9-4686-9a70-fe93c864955b
+	isActive: false
+	fromColumn: 'gold energy_raw'.facility_key
+	toColumn: 'gold facility'.facility_key
+
+relationship AutoDetected_90740541-3c83-4122-a56c-2765c2374143
+	isActive: false
+	fromColumn: 'gold energy_raw'.energy_meter_key
+	toColumn: 'gold quality_summary'.energy_meter_key
+
+relationship AutoDetected_8ec2a974-eafd-4417-9767-0442841d890b
+	isActive: false
+	fromColumn: 'gold energy_raw'.grid_billing_account_key
+	toColumn: 'gold billing_account'.grid_billing_account_key
+
+relationship 9ee36b3b-0004-a213-f84f-495d465e9556
+	fromColumn: 'gold energy_raw'.energy_meter_key
+	toColumn: 'gold meter'.energy_meter_key
+
+relationship 9bdf037a-f05e-dee9-6df9-2ce67850e605
+	fromColumn: 'gold energy_raw'.reading_date
+	toColumn: 'gold date'.calendar_date
+
+relationship 7db4f0f0-c414-4ce8-9f22-3f6cb03d95b1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_reading_gaps'.previous_reading_timestamp
+	toColumn: LocalDateTable_18cf7141-5218-4eee-a797-e3e68ec5a0b1.Date
+
+relationship d14139a6-4ea3-4b04-864c-5c669f1b999f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_reading_gaps'.current_reading_timestamp
+	toColumn: LocalDateTable_17c34ee6-3d52-4db4-b2ef-54b180b37e6d.Date
+
+relationship AutoDetected_605f12e4-e064-40cf-9041-03067cf4092b
+	fromColumn: 'gold energy_reading_gaps'.energy_meter_key
+	toColumn: 'gold quality_summary'.energy_meter_key
+
+relationship AutoDetected_8308027f-f2ad-40b1-a74e-362beea7207b
+	isActive: false
+	fromColumn: 'gold energy_reading_gaps'.meter_label
+	toColumn: 'gold meter'.meter_label
+
+relationship 74057616-e675-478e-8b0e-d839fab4004f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_consumption_validated'.reading_timestamp_utc
+	toColumn: LocalDateTable_82e41652-3b65-4d76-8d69-1daa5b618543.Date
+
+relationship 57ea509d-c882-40e8-a749-6dd128146ddf
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_consumption_validated'.reading_timestamp_saudi
+	toColumn: LocalDateTable_8a0dccc5-14b6-47c4-a065-74f3d37b9aac.Date
+
+relationship 79fa15fb-054e-4569-8fe5-7c475014a9fd
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_consumption_validated'.reading_date_saudi
+	toColumn: LocalDateTable_aa7590bb-29f6-477f-820f-7e820bb9915c.Date
+
+relationship 1ede1b47-438e-4498-a625-76e6adb5e76d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_consumption_validated'.previous_valid_timestamp
+	toColumn: LocalDateTable_64d239ec-b7b6-42ea-b48e-3d341ed72c7c.Date
+
+relationship AutoDetected_b2fc8a99-1357-4980-9f42-2085159d3e7e
+	isActive: false
+	fromColumn: 'gold energy_consumption_validated'.zone_key
+	toColumn: 'gold zone'.zone_key
+
+relationship AutoDetected_a20783ee-3cae-482c-a0f2-36f333d3d3ab
+	isActive: false
+	fromColumn: 'gold energy_consumption_validated'.facility_key
+	toColumn: 'gold facility'.facility_key
+
+relationship AutoDetected_cb2690a5-a738-4fc0-96da-bf842c65272f
+	isActive: false
+	fromColumn: 'gold energy_consumption_validated'.grid_billing_account_key
+	toColumn: 'gold billing_account'.grid_billing_account_key
+
+relationship 0fef4f56-fee8-8ce4-4c7b-12b88915eec8
+	fromColumn: 'gold energy_consumption_validated'.energy_meter_key
+	toColumn: 'gold meter'.energy_meter_key
+
+relationship 48849a34-7524-4819-908b-4bed542949e8
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_consumption_validated'.'Reading Month UTC'
+	toColumn: LocalDateTable_9881a707-29e7-4823-998f-a1eb299a65c1.Date
+
+relationship 6d8e8694-3d3d-4cf7-8bb0-1329ac9eb346
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_raw'.'Reading Timestamp Saudi'
+	toColumn: LocalDateTable_5732de40-c744-4741-9234-6c16b2371938.Date
+
+relationship 0d9f2587-5ea0-4aac-9ead-ca77310eaed4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_raw'.'Operational Date'
+	toColumn: LocalDateTable_86cc33fe-bb6a-43e6-8413-a9727be2a777.Date
+
+relationship 96d943a6-90b5-4497-a2c6-ea629ef28fc6
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Zone13 Decrement Events'.decrement_timestamp_saudi
+	toColumn: LocalDateTable_7d8ce9de-6e20-4799-82b4-142a134fa114.Date
+
+relationship f7aec97b-8dc5-475b-a980-c83f0349ac0c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'gold energy_consumption_validated'.'Reading Month Saudi'
+	toColumn: LocalDateTable_1029b4f1-c65a-4fbd-b56f-eb9dc83fd6c6.Date
+

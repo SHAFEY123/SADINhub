@@ -1,0 +1,130 @@
+# Task 4 - engineering review loop. EVERY sampling parameter lives here.
+# Design v4, approved for implementation 2026-09-20.
+#
+# Nothing in this file is allowed to depend on an engineering label: every selection rule is
+# frozen and written to disk BEFORE any row is drawn.
+
+budget:
+  total_labels: 200
+  stratum_a: 110              # Model 1 finding precision
+  stratum_d: 40               # unflagged_fault_rate
+  model3_total: 50            # C + B, where B = model3_total - C
+  stratum_c_cap: 20           # census of unexplained Top-100 items, capped
+
+seed:
+  master: 20260920
+  stratum_a: 20260921
+  stratum_b_high: 20260922
+  stratum_b_reference: 20260923
+  stratum_d: 20260924
+  sheet_shuffle: 20260925
+
+stratum_a:
+  # Only findings that ASSERT a fault. T4 asserts none (level shifts and telemetry
+  # outages), and commissioning findings are explicitly not asserted as faults.
+  families: ["T1", "T2", "T3", "T5"]
+  event_class: "ELECTRICAL_FAULT"
+  expected_frame: 255
+  # Integer-exact allocation:
+  #   base = floor(total / n_families) per family, capped at that family's size
+  #   then award the shortfall one unit at a time to the family with the most unused room
+  #   within a family, floor of `cell_floor` per non-empty severity cell, then the same
+  #   one-unit-at-a-time rule by remaining room
+  base_per_family: 27         # floor(110 / 4)
+  cell_floor: 2
+  expected_family_totals: {T1: 14, T2: 27, T3: 42, T5: 27}
+
+stratum_b:
+  # Model 3 ranking validation, WITHIN METER. Stratum D is never used for this.
+  source: "model3_top_n"
+  top_n: 100
+  high_rows: 25
+  reference_rows: 24
+  # A meter participates only if it can support a within-meter comparison.
+  min_high_pool: 2
+  min_reference_pool: 2
+  high_cell_floor: 2
+  high_cell_cap: 6
+  reference_floor: 1
+  # Approved reference eligibility rule.
+  reference_quantile: 0.25        # that meter's OWN bottom quartile of window_anomaly_pct
+  reference_min_separation_days: 14
+
+stratum_d:
+  # Model 1's own applicable history, NOT Model 3's warm-up-restricted universe.
+  frame: "observed_meter_days_not_flagged_by_model1"
+  expected_frame: 6356
+
+labels:
+  # Sheet 1, findings. Model 1 asserts a fault, so the question is whether it is confirmed.
+  findings_sheet:
+    editable: ["confirmed_fault", "fault_type", "notes", "reviewed_at"]
+    confirmed_fault_values: ["Y", "N", "Unsure"]
+  # Sheet 2, meter-days. Model 3 ranks ABNORMALITY, not faults, so the two are separated:
+  # stratum B's primary outcome is engineering_abnormality; stratum D's
+  # unflagged_fault_rate uses electrical_fault.
+  meter_days_sheet:
+    editable: ["engineering_abnormality", "electrical_fault", "abnormality_type",
+               "notes", "reviewed_at"]
+    engineering_abnormality_values: ["Y", "N", "Unsure"]
+    electrical_fault_values: ["Y", "N", "Unsure"]
+    abnormality_type_values:
+      - "Electrical fault"
+      - "Data availability"
+      - "Operational change"
+      - "Commissioning"
+      - "Normal"
+      - "Other"
+  # reviewer_id is pre-populated and LOCKED so the double-labelled overlap sample cannot be
+  # mis-attributed; reviewed_at is unlocked because only the reviewer knows it.
+  prepopulated_locked: ["reviewer_id"]
+  overlap_fraction: 0.10
+
+estimation:
+  # PRIMARY reported interval: survey-weighted linearisation with finite-population
+  # correction. Cells with pi_h = 1 are a census and contribute ZERO sampling variance.
+  # The FPC-aware stratified bootstrap is a SECONDARY cross-check only: it holds census
+  # cells fixed and rescales non-census cells by sqrt(1 - f_h). A simple binomial interval
+  # is never the reported figure.
+  method: "survey_weighted_linearisation_with_fpc"
+  cross_check: "fpc_aware_stratified_bootstrap"
+  never_report: "simple_binomial"
+  bootstrap_replicates: 10000
+  unsure_reporting: ["resolved_case", "weighted_unsure_rate", "conservative_all_N",
+                     "optimistic_all_Y"]
+  stratum_b_primary_outcome: "engineering_abnormality"
+  stratum_b_secondary_outcome: "electrical_fault"
+  stratum_d_outcome: "electrical_fault"
+
+assignment:
+  # Assignment decides WHO reviews a unit. It cannot change an inclusion probability:
+  # the 200 units and their weights are frozen, and this only partitions them.
+  seed: 20260926
+  overlap_fraction: 0.10        # about 20 of 200 double-reviewed
+  overlap_tolerance: 2
+  # Stratified by (sheet, stratum) so neither reviewer gets a skewed mix and the overlap
+  # sample spans strata rather than landing entirely in one.
+  stratify_by: ["sheet", "stratum"]
+  # Stratum C holds the ONLY unexplained Model-3 Top-100 item, so it is forced into the
+  # double review as a governance/quality check. The total stays at exactly 20 by demoting
+  # one Stratum-B overlap - specifically the LAST unit in B's existing seeded permutation,
+  # so which one is demoted follows from the seed already in use rather than a new decision.
+  force_overlap_strata: ["C"]
+  compensate_overlap_from: "B"
+  # A double review of a single unit is a quality check, not an estimate. Any agreement
+  # breakdown with fewer than this many pairs is reported as not estimable.
+  min_pairs_for_agreement: 5
+  expected_overlap_by_stratum: {A: 11, B: 4, C: 1, D: 4}
+
+governance:
+  # REQUIRED BEFORE ISSUANCE. A placeholder reviewer id makes the double-labelled overlap
+  # un-attributable, and an unnamed adjudicator leaves Unsure and disagreement with no
+  # owner. issue_workbooks.py writes _DRAFT copies and refuses to mark the package
+  # issuable while either is a placeholder.
+  adjudicator: "TBD - must be named before the workbooks are issued"
+  reviewers: ["reviewer_1", "reviewer_2"]
+
+frozen_runs:
+  model1: "model1_20260920T080937Z"
+  model3: "model3_20260920T085615Z"
+  model3_features: "model3_features_20260920T083853Z"

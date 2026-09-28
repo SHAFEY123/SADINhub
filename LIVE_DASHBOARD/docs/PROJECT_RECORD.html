@@ -1,0 +1,873 @@
+<title>SADIN Energy Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --ground:#FBFCFD;
+  --panel:#FFFFFF;
+  --sunk:#F2F6F8;
+  --ink:#0F1922;
+  --ink-2:#33454F;
+  --ink-3:#63757F;
+  --rule:#DCE4EA;
+  --rule-2:#EDF2F5;
+  --accent:#0B6F93;
+  --accent-soft:#E3F1F7;
+  --ok:#1B7350;
+  --ok-soft:#E2F2EB;
+  --warn:#96590A;
+  --warn-soft:#F8EEDC;
+  --crit:#97302E;
+  --crit-soft:#F8E8E7;
+  --shadow:0 1px 2px rgba(15,25,34,.05), 0 8px 24px -16px rgba(15,25,34,.22);
+  --serif:'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --sans:'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0C1319;
+    --panel:#131D25;
+    --sunk:#18242D;
+    --ink:#E6EDF2;
+    --ink-2:#B2C2CC;
+    --ink-3:#7D909C;
+    --rule:#26343E;
+    --rule-2:#1C2831;
+    --accent:#3FBDE4;
+    --accent-soft:#11313F;
+    --ok:#5BC79A;
+    --ok-soft:#102C22;
+    --warn:#D9A64E;
+    --warn-soft:#302512;
+    --crit:#E58480;
+    --crit-soft:#331A19;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0C1319;
+  --panel:#131D25;
+  --sunk:#18242D;
+  --ink:#E6EDF2;
+  --ink-2:#B2C2CC;
+  --ink-3:#7D909C;
+  --rule:#26343E;
+  --rule-2:#1C2831;
+  --accent:#3FBDE4;
+  --accent-soft:#11313F;
+  --ok:#5BC79A;
+  --ok-soft:#102C22;
+  --warn:#D9A64E;
+  --warn-soft:#302512;
+  --crit:#E58480;
+  --crit-soft:#331A19;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16.5px;
+  line-height:1.62;
+  margin:0;
+  padding-block:0 5rem;
+  padding-inline:20px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:53rem;margin:0 auto}
+.prose{max-width:40rem}
+
+/* ---------- masthead ---------- */
+.mast{
+  border-bottom:2px solid var(--ink);
+  padding-block:3.25rem 1.1rem;
+  margin-bottom:2.5rem;
+}
+.mast .org{
+  font-family:var(--mono);
+  font-size:.7rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin:0 0 1.4rem;
+  display:flex;
+  gap:.6rem;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.mast .org svg{flex:none}
+h1{
+  font-family:var(--serif);
+  font-weight:700;
+  font-size:clamp(2.1rem,5.5vw,3.15rem);
+  line-height:1.08;
+  letter-spacing:-.018em;
+  margin:0 0 .5rem;
+  text-wrap:balance;
+}
+.mast .standfirst{
+  font-family:var(--serif);
+  font-size:clamp(1.02rem,2.3vw,1.2rem);
+  line-height:1.5;
+  color:var(--ink-2);
+  margin:0 0 1.6rem;
+  max-width:38rem;
+}
+.byline{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.35rem 2.2rem;
+  font-family:var(--mono);
+  font-size:.72rem;
+  color:var(--ink-3);
+  letter-spacing:.02em;
+}
+.byline b{color:var(--ink-2);font-weight:500}
+
+/* ---------- section scaffolding ---------- */
+section{margin-block:3.4rem}
+h2{
+  font-family:var(--serif);
+  font-size:1.6rem;
+  font-weight:700;
+  letter-spacing:-.012em;
+  line-height:1.2;
+  margin:0 0 .3rem;
+  text-wrap:balance;
+}
+h2 .num{
+  font-family:var(--mono);
+  font-size:.7rem;
+  font-weight:500;
+  color:var(--accent);
+  letter-spacing:.1em;
+  display:block;
+  margin-bottom:.5rem;
+}
+.deck{color:var(--ink-3);font-size:.95rem;margin:0 0 1.5rem;max-width:38rem}
+h3{
+  font-family:var(--sans);
+  font-size:1rem;
+  font-weight:700;
+  letter-spacing:.005em;
+  margin:2rem 0 .5rem;
+}
+p{margin:0 0 1.05rem}
+a{color:var(--accent)}
+strong{font-weight:600}
+code,.m{font-family:var(--mono);font-size:.845em}
+code{
+  background:var(--sunk);
+  border:1px solid var(--rule-2);
+  border-radius:3px;
+  padding:.08em .34em;
+  color:var(--ink-2);
+  overflow-wrap:anywhere;
+}
+ul{margin:0 0 1.05rem;padding-left:1.15rem}
+li{margin-bottom:.4rem}
+li::marker{color:var(--ink-3)}
+
+/* ---------- headline figures ---------- */
+.figures{
+  display:grid;
+  /* 120px lets all five tiles sit on one row at page and desktop width;
+     a 150px floor dropped to four columns and left the fifth stranded
+     beside an empty cell. */
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:1px;
+  background:var(--rule);
+  border:1px solid var(--rule);
+  border-radius:5px;
+  overflow:hidden;
+  margin-bottom:1.8rem;
+}
+.fig{background:var(--panel);padding:1.05rem 1.1rem 1.15rem}
+.fig .v{
+  font-family:var(--serif);
+  font-size:1.62rem;
+  font-weight:700;
+  letter-spacing:-.018em;
+  line-height:1.1;
+  font-variant-numeric:tabular-nums;
+  display:block;
+}
+.fig .k{
+  font-family:var(--mono);
+  font-size:.635rem;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-top:.5rem;
+  display:block;
+  line-height:1.45;
+}
+
+/* ---------- verification ledger ---------- */
+.ledger{
+  border:1px solid var(--rule);
+  border-left:3px solid var(--ok);
+  border-radius:4px;
+  background:var(--panel);
+  padding:1.05rem 1.2rem;
+  margin:1.5rem 0;
+}
+.ledger .claim{
+  font-weight:600;
+  font-size:.95rem;
+  margin:0 0 .7rem;
+  display:flex;
+  gap:.55rem;
+  align-items:baseline;
+}
+.ledger .claim::before{
+  content:"VERIFIED";
+  font-family:var(--mono);
+  font-size:.6rem;
+  letter-spacing:.11em;
+  color:var(--ok);
+  background:var(--ok-soft);
+  border-radius:2px;
+  padding:.16em .45em;
+  flex:none;
+  position:relative;
+  top:-1px;
+}
+.ledger pre{
+  font-family:var(--mono);
+  font-size:.775rem;
+  line-height:1.65;
+  background:var(--sunk);
+  border:1px solid var(--rule-2);
+  border-radius:3px;
+  padding:.75rem .85rem;
+  margin:0;
+  overflow-x:auto;
+  color:var(--ink-2);
+}
+.ledger .how{font-size:.85rem;color:var(--ink-3);margin:.7rem 0 0}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:1.3rem 0;border:1px solid var(--rule);border-radius:5px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:.875rem;min-width:32rem}
+th{
+  font-family:var(--mono);
+  font-size:.635rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  text-align:left;
+  font-weight:500;
+  padding:.72rem .85rem;
+  border-bottom:1px solid var(--rule);
+  white-space:nowrap;
+  background:var(--sunk);
+}
+td{padding:.68rem .85rem;border-bottom:1px solid var(--rule-2);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:none}
+td:first-child{color:var(--ink);font-weight:500}
+.num-col{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---------- pills ---------- */
+.pill{
+  font-family:var(--mono);
+  font-size:.64rem;
+  letter-spacing:.06em;
+  padding:.18em .5em;
+  border-radius:3px;
+  white-space:nowrap;
+  font-weight:500;
+}
+.p-ok{background:var(--ok-soft);color:var(--ok)}
+.p-warn{background:var(--warn-soft);color:var(--warn)}
+.p-crit{background:var(--crit-soft);color:var(--crit)}
+.p-info{background:var(--accent-soft);color:var(--accent)}
+
+/* ---------- timeline ---------- */
+.tl{margin:1.6rem 0 0;padding:0;list-style:none}
+.tl li{
+  border-left:1px solid var(--rule);
+  padding:0 0 1.5rem 1.5rem;
+  margin:0;
+  position:relative;
+}
+.tl li:last-child{border-left-color:transparent;padding-bottom:0}
+.tl li::before{
+  content:"";
+  position:absolute;
+  left:-4.5px;
+  top:.45rem;
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--accent);
+}
+.tl .st{
+  font-family:var(--mono);
+  font-size:.62rem;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  display:block;
+  margin-bottom:.2rem;
+}
+.tl h4{font-size:.97rem;font-weight:700;margin:0 0 .35rem;font-family:var(--sans)}
+.tl p{font-size:.9rem;margin:0;color:var(--ink-2)}
+
+/* ---------- finding blocks ---------- */
+.finding{
+  background:var(--panel);
+  border:1px solid var(--rule);
+  border-radius:5px;
+  padding:1.1rem 1.2rem;
+  margin:1.1rem 0;
+}
+.finding h4{
+  margin:0 0 .45rem;
+  font-size:.97rem;
+  font-weight:700;
+  font-family:var(--sans);
+  display:flex;
+  gap:.6rem;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.finding p{font-size:.9rem;margin:0 0 .55rem;color:var(--ink-2)}
+.finding p:last-child{margin-bottom:0}
+
+/* ---------- architecture diagram ---------- */
+.diagram{
+  background:var(--panel);
+  border:1px solid var(--rule);
+  border-radius:5px;
+  padding:1.4rem 1.1rem;
+  margin:1.5rem 0;
+  overflow-x:auto;
+}
+.diagram svg{display:block;margin:0 auto;max-width:100%;height:auto;min-width:30rem}
+.cap{font-size:.82rem;color:var(--ink-3);margin:.9rem 0 0;text-align:center}
+
+/* ---------- callout ---------- */
+.callout{
+  background:var(--accent-soft);
+  border-radius:5px;
+  padding:1.15rem 1.3rem;
+  margin:1.5rem 0;
+}
+.callout p{margin:0 0 .7rem;font-size:.94rem}
+.callout p:last-child{margin-bottom:0}
+.callout .lab{
+  font-family:var(--mono);
+  font-size:.63rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  display:block;
+  margin-bottom:.6rem;
+  font-weight:500;
+}
+
+/* ---------- run steps ---------- */
+.steps{counter-reset:s;list-style:none;padding:0;margin:1.3rem 0}
+.steps li{
+  counter-increment:s;
+  position:relative;
+  padding-left:2.4rem;
+  margin-bottom:1rem;
+}
+.steps li::before{
+  content:counter(s);
+  position:absolute;left:0;top:.05rem;
+  font-family:var(--mono);
+  font-size:.72rem;
+  width:1.55rem;height:1.55rem;
+  border:1px solid var(--rule);
+  border-radius:50%;
+  display:grid;place-items:center;
+  color:var(--accent);
+  background:var(--panel);
+}
+
+hr{border:none;border-top:1px solid var(--rule);margin:3.2rem 0}
+footer{
+  border-top:2px solid var(--ink);
+  margin-top:3.5rem;
+  padding-top:1.3rem;
+  font-size:.83rem;
+  color:var(--ink-3);
+}
+footer p{margin:0 0 .6rem}
+
+@media (max-width:600px){
+  body{font-size:16px;padding-inline:16px}
+  .mast{padding-block:2.2rem 1rem}
+  .fig .v{font-size:1.42rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- print / PDF ---------- */
+@page{size:A4;margin:16mm 15mm}
+@media print{
+  /* Force the light palette regardless of the printing browser's theme.
+     The selector list matters: the dark block above uses
+     :root:not([data-theme="light"]), which outranks a bare :root, so a plain
+     :root here would lose and print a black page. */
+  :root,
+  :root[data-theme="dark"],
+  :root:not([data-theme="light"]){
+    --ground:#FFFFFF; --panel:#FFFFFF; --sunk:#F4F7F9;
+    --ink:#0F1922; --ink-2:#33454F; --ink-3:#5E7078;
+    --rule:#C9D4DB; --rule-2:#E4EBEF;
+    --accent:#0B6F93; --accent-soft:#EDF5F9;
+    --ok:#1B7350; --ok-soft:#EAF4EF;
+    --warn:#8A5209; --warn-soft:#FAF3E6;
+    --crit:#8C2B29; --crit-soft:#FAEDEC;
+    --shadow:none;
+  }
+  body{font-size:10.2pt;line-height:1.5;padding:0;background:#fff}
+  .wrap{max-width:none}
+  .prose{max-width:none}
+  a{color:var(--ink);text-decoration:none}
+
+  /* keep related blocks whole */
+  .ledger,.finding,.callout,.diagram,.fig,.tl li,.steps li{break-inside:avoid;page-break-inside:avoid}
+  table{break-inside:auto}
+  tr,th,td{break-inside:avoid;page-break-inside:avoid}
+  thead{display:table-header-group}
+  h2,h3{break-after:avoid;page-break-after:avoid}
+  h2{break-before:auto}
+  section{break-inside:auto;margin-block:1.5rem}
+
+  /* start each numbered section on a fresh page from section 04 onward,
+     so the long tables are not split across an awkward boundary */
+  .pb{break-before:page;page-break-before:always}
+
+  .mast{padding-block:0 .8rem;margin-bottom:1.4rem}
+  h1{font-size:26pt}
+  .mast .standfirst{font-size:11.5pt}
+  h2{font-size:14.5pt}
+  .fig .v{font-size:15pt}
+  .figures{box-shadow:none}
+  .tw{break-inside:auto}
+  hr{margin:1.3rem 0}
+  footer{margin-top:1.6rem}
+  .no-print{display:none}
+}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="org">
+    <svg width="15" height="15" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="3" stroke-linecap="round">
+        <path d="M8 12h24M8 20h24M8 28h24"/>
+      </g>
+    </svg>
+    SADIN &middot; Saudi Digital Innovation
+  </p>
+  <h1>Energy Intelligence</h1>
+  <p class="standfirst">An internal reporting tool that reads the company's electricity meters directly from the data warehouse, and the record of how every number on it was proven correct.</p>
+  <div class="byline">
+    <span><b>Prepared by</b> Shafey &middot; Data Science</span>
+    <span><b>Status</b> Delivered and validated</span>
+    <span><b>Date</b> 14 September 2026</span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="num">Summary</span>What this is, in one paragraph</h2>
+  <div class="prose">
+    <p>SADIN operates 31 electricity meters across 21 zones. Those meters have produced <strong>109 million</strong> individual measurements, which our data warehouse refines into <strong>4.5 million</strong> clean readings. Until now the only way to look at that data was a vendor-supplied web page that showed very little of it, and a Power BI report that answered management questions but could not be explored freely.</p>
+    <p>This project delivered a third thing: a private web dashboard, running on our own machine against our own database, that exposes the full detail &mdash; every meter, every phase, every individual reading &mdash; while reconciling <strong>exactly</strong> to the figures the Power BI report already publishes. Not approximately. To the decimal.</p>
+    <p>That reconciliation is the point of the whole exercise, and most of the effort went into proving it rather than into building the screens.</p>
+  </div>
+
+  <div class="figures">
+    <div class="fig"><span class="v">2,020,697.5</span><span class="k">kWh reconciled<br>to Power BI</span></div>
+    <div class="fig"><span class="v">4,535,918</span><span class="k">meter readings<br>available</span></div>
+    <div class="fig"><span class="v">31</span><span class="k">meters<br>21 zones</span></div>
+    <div class="fig"><span class="v">8</span><span class="k">dashboard<br>pages</span></div>
+    <div class="fig"><span class="v">0</span><span class="k">unexplained<br>discrepancies</span></div>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2><span class="num">01 &middot; Background</span>Why we built it</h2>
+  <p class="deck">The starting point was a tool nobody could get answers out of.</p>
+  <div class="prose">
+    <p>The existing vendor dashboard showed a handful of summary figures and no way to reach the data underneath them. It could not filter by zone, could not show an individual meter's behaviour, and could not display the electrical measurements &mdash; current, voltage, power factor &mdash; that tell you whether equipment is actually healthy. When a number looked wrong there was no way to check it.</p>
+    <p>Meanwhile the data warehouse already held everything anyone could want. The gap was purely one of access.</p>
+    <p>The brief was therefore specific: build something genuinely interactive, covering all 31 meters, showing consumption <em>and</em> electrical quality, driven by real database queries rather than pre-computed summaries &mdash; and make its numbers agree with the Power BI report that management already trusts.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">02 &middot; The product</span>What the dashboard does</h2>
+  <p class="deck">Eight pages, each answering a different operational question. Every page respects the same filters: date range, zone, meter, and time of day.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Page</th><th>Question it answers</th></tr></thead>
+      <tbody>
+        <tr><td>Command</td><td>How much energy did we use, where did it go, and is anything wrong right now?</td></tr>
+        <tr><td>Energy &amp; Demand</td><td>Consumption over time, and power draw at the raw reading cadence &mdash; total and per phase.</td></tr>
+        <tr><td>Bill Check</td><td>What the grid invoiced against what our meters actually recorded.</td></tr>
+        <tr><td>Current</td><td>Load on each of the three phases, and how evenly it is shared.</td></tr>
+        <tr><td>Voltage &amp; Frequency</td><td>Is supply quality inside the acceptable band?</td></tr>
+        <tr><td>Power Factor</td><td>Are we drawing power efficiently, and where are we not?</td></tr>
+        <tr><td>Readings</td><td>The individual meter readings themselves, searchable and exportable.</td></tr>
+        <tr><td>Data &amp; Status</td><td>How complete and trustworthy is the underlying data?</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="prose">Two things distinguish it from the tool it replaces. First, <strong>nothing is pre-aggregated</strong> &mdash; every chart is a live query, so any date range and any combination of meters can be examined, not just the ones someone anticipated. Second, <strong>every figure names its own source</strong>: each page header states which database view it reads, and each summary card states which column it sums.</p>
+</section>
+
+<section>
+  <h2><span class="num">03 &middot; Architecture</span>How it works</h2>
+  <p class="deck">A small program on our own machine, reading our own database. No copies of the data exist anywhere else.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 700 216" role="img" aria-label="Data flows from meters into the bronze, silver and gold warehouse layers, then to the dashboard and Power BI">
+      <defs>
+        <marker id="ar" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 z" fill="var(--ink-3)"/>
+        </marker>
+      </defs>
+      <g font-family="IBM Plex Mono, monospace" font-size="9.5">
+        <rect x="6" y="72" width="96" height="50" rx="4" fill="var(--sunk)" stroke="var(--rule)"/>
+        <text x="54" y="93" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="600">31 meters</text>
+        <text x="54" y="107" text-anchor="middle" fill="var(--ink-3)">on site</text>
+
+        <rect x="130" y="72" width="104" height="50" rx="4" fill="var(--sunk)" stroke="var(--rule)"/>
+        <text x="182" y="90" text-anchor="middle" fill="var(--ink)" font-weight="600">BRONZE</text>
+        <text x="182" y="103" text-anchor="middle" fill="var(--ink-3)">109,039,968</text>
+        <text x="182" y="114" text-anchor="middle" fill="var(--ink-3)">raw signals</text>
+
+        <rect x="262" y="72" width="104" height="50" rx="4" fill="var(--sunk)" stroke="var(--rule)"/>
+        <text x="314" y="90" text-anchor="middle" fill="var(--ink)" font-weight="600">SILVER</text>
+        <text x="314" y="103" text-anchor="middle" fill="var(--ink-3)">cleaned and</text>
+        <text x="314" y="114" text-anchor="middle" fill="var(--ink-3)">classified</text>
+
+        <rect x="394" y="72" width="104" height="50" rx="4" fill="var(--accent-soft)" stroke="var(--accent)"/>
+        <text x="446" y="90" text-anchor="middle" fill="var(--accent)" font-weight="600">GOLD</text>
+        <text x="446" y="103" text-anchor="middle" fill="var(--ink-2)">4,260,849</text>
+        <text x="446" y="114" text-anchor="middle" fill="var(--ink-2)">validated rows</text>
+
+        <rect x="558" y="18" width="136" height="46" rx="4" fill="var(--panel)" stroke="var(--rule)"/>
+        <text x="626" y="38" text-anchor="middle" fill="var(--ink)" font-weight="600">Power BI</text>
+        <text x="626" y="52" text-anchor="middle" fill="var(--ink-3)">management report</text>
+
+        <rect x="558" y="130" width="136" height="46" rx="4" fill="var(--panel)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="626" y="150" text-anchor="middle" fill="var(--ink)" font-weight="600">This dashboard</text>
+        <text x="626" y="164" text-anchor="middle" fill="var(--ink-3)">localhost:8770</text>
+
+        <g stroke="var(--ink-3)" fill="none" marker-end="url(#ar)">
+          <path d="M104 97 H126"/>
+          <path d="M236 97 H258"/>
+          <path d="M368 97 H390"/>
+          <path d="M500 92 C530 92 528 45 554 42"/>
+          <path d="M500 102 C530 102 528 150 554 153"/>
+        </g>
+        <text x="527" y="82" text-anchor="middle" fill="var(--ink-3)" font-size="8.5">same source</text>
+      </g>
+    </svg>
+    <p class="cap">Both reporting tools read the identical gold-layer table. That is <em>why</em> their numbers agree &mdash; it is structural, not a coincidence to be maintained.</p>
+  </div>
+
+  <h3>The three pieces</h3>
+  <div class="prose">
+    <p><strong>The database.</strong> Our existing PostgreSQL warehouse, unchanged. The project added nothing to it and altered nothing in it.</p>
+    <p><strong>The server</strong> (<code>serve.py</code>, 935 lines). A small Python program that accepts requests from the browser, turns them into database queries, and returns the results. It opens the database in <strong>enforced read-only mode</strong> and refuses to start if that setting does not take effect &mdash; so the dashboard is incapable of altering or deleting company data, by construction rather than by policy.</p>
+    <p><strong>The interface</strong> (<code>dashboard_updated.html</code>, 1,589 lines). One self-contained web page. Charts are drawn with Chart.js, a standard open-source library.</p>
+  </div>
+
+  <div class="callout">
+    <span class="lab">Why this matters commercially</span>
+    <p>There is no cloud service, no subscription, no third-party processor, and no copy of SADIN's consumption data outside our own network. The dashboard is a file and a small program; running costs are zero and the data never leaves the building.</p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2><span class="num">04 &middot; The central decision</span>One source of truth</h2>
+  <p class="deck">The single most consequential choice in the project, and the mistake that led to it.</p>
+
+  <div class="prose">
+    <p>The first version of the dashboard calculated consumption itself &mdash; taking each meter's cumulative register, subtracting consecutive readings, and applying sensible rules about gaps and implausible jumps. It produced <strong>1,780,590 kWh</strong>.</p>
+    <p>The Power BI report said <strong>2,020,697.5 kWh</strong>.</p>
+    <p>Both were defensible calculations. Only one was the company's number. The warehouse's gold layer already encodes SADIN's own definition of valid consumption &mdash; which readings to trust, how to treat gaps, which meters to exclude &mdash; in a column called <code>validated_kwh_consumption</code>. Power BI simply adds that column up.</p>
+    <p>The dashboard was rewritten to do exactly the same thing. It does not compute consumption; it reads the company's answer. The two reports now agree because they are summing the identical column of the identical table.</p>
+  </div>
+
+  <div class="ledger">
+    <p class="claim">Dashboard total equals Power BI total</p>
+<pre>SELECT sum(validated_kwh_consumption)
+FROM   gold.energy_consumption_validated;
+
+  2020697.5      <-- of which NORMAL 1,666,455.0 + LONG_GAP 354,242.5</pre>
+    <p class="how">The same query the Power BI measure runs. Any future divergence between the two reports would mean the warehouse changed, not that one tool drifted.</p>
+  </div>
+
+  <p class="prose">The same principle was applied to every threshold on the dashboard. What counts as an acceptable voltage, a poor power factor, or an abnormal current is <strong>not</strong> a textbook value &mdash; it is read from SADIN's own <code>classify_*</code> functions in the warehouse (19 of them). An early draft used the industry-standard 0.85 power-factor penalty point; the company's own definition is 0.80, and the dashboard was corrected to match. The dashboard states our standards, not generic ones.</p>
+</section>
+
+<section>
+  <h2><span class="num">05 &middot; Assurance</span>How the numbers were proven</h2>
+  <p class="deck">Agreement between two reports is weak evidence if both read the same table. So the data was traced further back, to the meters themselves.</p>
+
+  <div class="prose">
+    <p>Verification was done at three independent levels, and a figure was only accepted when all three agreed.</p>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Level</th><th>What was checked</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Report vs report</td><td>Every one of the 52 Power BI measures re-computed against the database</td><td><span class="pill p-ok">ALL RECONCILE</span></td></tr>
+        <tr><td>Gold vs bronze</td><td>Dashboard figures re-derived from the 109M raw signals, bypassing the warehouse entirely</td><td><span class="pill p-ok">IDENTICAL</span></td></tr>
+        <tr><td>Row by row</td><td>Every individual reading matched between layers, not just the totals</td><td><span class="pill p-ok">0 MISMATCHES</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="prose">The second level is the one worth understanding. Rather than trust that the warehouse transformed the meter signals correctly, the raw signals were pivoted independently &mdash; reading the meter's own channel codes for current, voltage, power and power factor &mdash; and the dashboard's figures recomputed from scratch. For a sample meter over a five-day window:</p>
+
+  <div class="ledger">
+    <p class="claim">Gold layer faithfully represents the raw meter signals</p>
+<pre>readings compared        1,579
+in raw but not in gold       0
+in gold but not in raw       0
+values that disagree         0
+channels per reading         3   (4,737 = 1,579 x 3, none missing)</pre>
+    <p class="how">Repeated for current, voltage, frequency, power, power factor and consumption. Every measurement class passed.</p>
+  </div>
+
+  <h3>Physical cross-checks</h3>
+  <p class="prose">Two checks used physics rather than arithmetic, because they cannot be satisfied by an error that is merely self-consistent:</p>
+
+  <div class="ledger">
+    <p class="claim">Voltages are internally coherent</p>
+<pre>measured line-to-line / phase-to-neutral   1.731836
+square root of 3                           1.732051
+                                   error   0.012 %</pre>
+    <p class="how">In a correctly wired three-phase system these two voltage families must differ by exactly &radic;3. They do. A transcription or scaling fault anywhere in the chain would break this.</p>
+  </div>
+
+  <div class="ledger">
+    <p class="claim">Consumption matches the meter's own mechanical counter</p>
+<pre>register at window start   81,127.6 kWh
+register at window end     81,838.4 kWh
+difference                    710.8 kWh
+validated consumption         710.8 kWh   <-- exact</pre>
+    <p class="how">The meter's cumulative counter is independent of every calculation in the warehouse. That it moves by precisely the amount the dashboard reports is the strongest single check performed.</p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2><span class="num">06 &middot; History</span>How it was built</h2>
+  <p class="deck">Delivered across several working sessions. Each round began with a review of the previous build and a list of corrections.</p>
+
+  <ol class="tl">
+    <li>
+      <span class="st">Stage 1</span>
+      <h4>Discovery and first build</h4>
+      <p>Mapped the warehouse, recovered the definitions of every relevant table and view, and built a first working dashboard covering all 31 meters.</p>
+    </li>
+    <li>
+      <span class="st">Stage 2</span>
+      <h4>The reconciliation failure &mdash; and the rewrite</h4>
+      <p>Review found the consumption figure disagreed with Power BI. Root cause: the dashboard was calculating consumption rather than reading the company's own validated column. Rewritten around the gold layer. Exact agreement achieved.</p>
+    </li>
+    <li>
+      <span class="st">Stage 3</span>
+      <h4>Depth and detail</h4>
+      <p>Added per-reading views, per-phase breakdowns for current, voltage and power factor, and the data-quality page. Thresholds switched from textbook values to SADIN's own classifiers.</p>
+    </li>
+    <li>
+      <span class="st">Stage 4</span>
+      <h4>Performance</h4>
+      <p>Slow pages rebuilt. Query times fell from around 90 seconds to under 2. Details in section 08.</p>
+    </li>
+    <li>
+      <span class="st">Stage 5</span>
+      <h4>Interface redesign</h4>
+      <p>Shafey produced a redesigned interface; the data layer was reconnected to it and re-verified end to end to confirm no query or figure had changed in the move.</p>
+    </li>
+    <li>
+      <span class="st">Stage 6</span>
+      <h4>Independent validation</h4>
+      <p>The bronze-layer and physics checks in section 05 were carried out, meter by meter and measurement by measurement, at Shafey's request.</p>
+    </li>
+    <li>
+      <span class="st">Stage 7</span>
+      <h4>Per-phase power and sign-off</h4>
+      <p>Active and reactive power added per phase, matching the treatment already given to current and voltage. Final validation pass completed.</p>
+    </li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">07 &middot; Corrections</span>Faults found and fixed</h2>
+  <p class="deck">Recorded in full, including faults in the dashboard itself. A validation record that lists no failures is not a validation record.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Fault</th><th>Effect</th><th>Resolution</th></tr></thead>
+      <tbody>
+        <tr><td>Consumption re-derived instead of read</td><td>Understated total by 240,107 kWh (11.9%)</td><td>Rewritten to sum the warehouse's validated column</td></tr>
+        <tr><td>Power-factor threshold set to 0.85</td><td>Used an industry value instead of SADIN's</td><td>Read from <code>classify_power_factor_v2</code> (0.80)</td></tr>
+        <tr><td>Status categories hard-coded</td><td>79,429 flagged readings hidden from view</td><td>Categories now discovered from the data at startup</td></tr>
+        <tr><td>Reading frequency assumed</td><td>Coverage figures exceeded 100%</td><td>Each meter's true cadence measured (244 s median)</td></tr>
+        <tr><td>Wrong imbalance formula</td><td>Understated phase imbalance</td><td>Replaced with the NEMA MG-1 / IEEE 141 definition</td></tr>
+        <tr><td>Negative power factor counted on the average channel only</td><td>Showed 0 where 587 readings had a phase reversed</td><td>Now counts a reading if <em>any</em> phase is negative</td></tr>
+        <tr><td>Chart tooltip read the wrong axis</td><td>Showed the row number instead of the value</td><td>Corrected; axis labels restored</td></tr>
+        <tr><td>Error logger crashed on missing files</td><td>Dropped browser connections</td><td>Type coerced before comparison</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="finding">
+    <h4>A fault found in Power BI, not in the dashboard <span class="pill p-info">RESOLVED BY SHAFEY</span></h4>
+    <p>Monthly totals differed slightly between the two reports &mdash; December 2024 read 27,401.9 kWh in Power BI against 27,207.4 on the dashboard. Investigation showed Power BI was grouping months by <strong>UTC</strong> while every other part of the system &mdash; including Power BI's own weekday and hourly logic &mdash; used <strong>Saudi time</strong>. Consumption was being assigned to the wrong month across each month boundary.</p>
+    <p>Annual totals were unaffected (both summed to 2,020,697.5) and no energy was lost or double-counted; it was purely a boundary misallocation. Shafey corrected the Power BI report to Saudi time, and the two now agree month by month. The change also repaired the <em>Average Daily Consumption</em> measure, which had been dividing a UTC-month total by a count of Saudi days.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">08 &middot; Performance</span>Making it fast enough to use</h2>
+  <p class="deck">The first build was correct but unusably slow. Four changes fixed it, none of which altered a single figure.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Problem</th><th>Change</th><th class="num-col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>Meter and zone details looked up for all 4.5M rows</td><td>Loaded once when the server starts</td><td class="num-col">90 s &rarr; 4 s</td></tr>
+        <tr><td>Date filter written so the database index could not be used</td><td>Rewritten to compare the timestamp directly</td><td class="num-col">103 ms &rarr; 28 ms</td></tr>
+        <tr><td>Some pages read the data 16&ndash;26 times over</td><td>Rewritten as a single pass</td><td class="num-col">7.0 s &rarr; 1.6 s</td></tr>
+        <tr><td>Requests handled one at a time</td><td>Server made multi-threaded</td><td class="num-col">panels load together</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="prose">All fourteen data endpoints now respond in well under a second for a typical selection.</p>
+</section>
+
+<hr>
+
+<section>
+  <h2><span class="num">09 &middot; Findings</span>What the dashboard revealed</h2>
+  <p class="deck">Operational issues that were present in the data all along but not visible in any existing report. These are engineering observations, not yet investigated on site.</p>
+
+  <div class="finding">
+    <h4>Load is badly unbalanced across phases <span class="pill p-crit">SITE-WIDE</span></h4>
+    <p>A three-phase supply should carry roughly equal current on each phase. The industry working limit is around 2%, and motor manufacturers derate above 1%. Across our estate, <strong>more than twenty meters sit between 40% and 70%</strong>, with several above 70%. At one board, phase&nbsp;1 carries 3.8&times; the current of phase&nbsp;3.</p>
+    <p>Sustained imbalance wastes energy, overheats cabling and shortens equipment life. It is usually correctable by redistributing circuits across phases &mdash; typically inexpensive work.</p>
+  </div>
+
+  <div class="finding">
+    <h4>Power factor is the estate's only real quality problem <span class="pill p-warn">33&ndash;39% OF READINGS</span></h4>
+    <p>Voltage, frequency and cumulative energy are flawless &mdash; <strong>100%</strong> of readings acceptable. Current is near-perfect. Every quality flag in the system traces back to power factor, which falls below our 0.80 standard on roughly a third of readings.</p>
+    <p>The pattern is diagnostic: power factor is worst overnight (0.78 at 03:00&ndash;06:00, when load is ~4 kW) and best at midday (0.90 at 12:00&ndash;13:00, when load is ~9 kW). That is the signature of equipment left energised out of hours with little useful work to do. It suggests scheduling or switched correction rather than a fixed capacitor installation.</p>
+  </div>
+
+  <div class="finding">
+    <h4>One meter's reactive-power channel cannot be trusted <span class="pill p-warn">DATA INTEGRITY</span></h4>
+    <p>At meter ZN.15-PB.2 the reported reactive power is inconsistent with that same meter's voltage, current, active power and power factor &mdash; all four of which agree with each other. The reported value is roughly 15&times; too large and of the opposite sign to what the other channels imply.</p>
+    <p>This is a fault at the meter or in its configuration, not in the warehouse: the raw signal and the processed value are identical, so the pipeline is faithfully carrying through what the device sent. <strong>Recommendation:</strong> confirm whether other meters show the same pattern before any analysis relies on reactive power.</p>
+  </div>
+
+  <div class="finding">
+    <h4>Some measurements were never collected <span class="pill p-info">FOR AWARENESS</span></h4>
+    <p>The apparent-power channels (kVA family) and the meters' own pre-averaged voltage and current channels contain no data at all &mdash; the devices do not transmit them. Separately, <code>reactive_energy_cumulative_kvarh</code> is present but reads exactly zero on more than half its rows.</p>
+    <p>The dashboard reports transmission and usefulness as two separate columns for exactly this reason: a channel can be 100% "received" and still carry no information. This also confirms that the Power BI model's omission of those columns was correct rather than an oversight.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">10 &middot; Limits</span>What this does not do</h2>
+  <div class="prose">
+    <ul>
+      <li><strong>It runs on one machine.</strong> The dashboard is started by double-clicking a file and is available at <code>localhost:8770</code> on that computer only. Making it available to colleagues would require hosting it on an internal server &mdash; straightforward, but not yet done.</li>
+      <li><strong>It shows data up to 2026-07-11.</strong> It always reflects whatever the warehouse currently holds; it does not itself refresh the warehouse.</li>
+      <li><strong>Zone 13 is absent from consumption figures.</strong> Its two meters are excluded from the validated layer by an existing business rule, so the dashboard covers 29 meters for consumption and all 31 for electrical measurements. This asymmetry is deliberate and is what makes the totals match Power BI.</li>
+      <li><strong>Billing analysis is limited.</strong> The warehouse holds one billing period, and the supplier's cost field is unreliable &mdash; 18 of 28 invoices imply roughly 0.0002 SAR/kWh against a plausible 0.25. The page reports the kWh comparison and flags the cost data rather than presenting it as fact.</li>
+      <li><strong>The time-of-day filter does not apply to every page.</strong> It filters the individual-readings view but not the summary cards. Known, documented, and fixable on request.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">11 &middot; Operation</span>Running it</h2>
+  <ol class="steps">
+    <li>Open the <code>LIVE_DASHBOARD</code> folder.</li>
+    <li>Double-click <code>START_DASHBOARD.bat</code>. A black window opens &mdash; that is the server; leave it running.</li>
+    <li>The browser opens automatically at <code>http://localhost:8770</code> after a few seconds.</li>
+    <li>To stop, close the black window.</li>
+  </ol>
+  <p class="prose">The first start takes a few seconds while the server counts rows and loads meter details. Opening the HTML file directly by double-clicking it will <em>not</em> work &mdash; the page needs the server running to reach the database.</p>
+</section>
+
+<hr>
+
+<section>
+  <h2><span class="num">Appendix</span>Technical reference</h2>
+
+  <h3>Files delivered</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>File</th><th class="num-col">Size</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>serve.py</code></td><td class="num-col">935 lines</td><td>Read-only database server, 14 data endpoints</td></tr>
+        <tr><td><code>dashboard_updated.html</code></td><td class="num-col">1,589 lines</td><td>The dashboard interface</td></tr>
+        <tr><td><code>START_DASHBOARD.bat</code></td><td class="num-col">&mdash;</td><td>One-click launcher</td></tr>
+        <tr><td><code>README.md</code></td><td class="num-col">269 lines</td><td>Operating notes and threshold tables</td></tr>
+        <tr><td><code>AUDIT.md</code></td><td class="num-col">417 lines</td><td>Full audit trail against Power BI and the database</td></tr>
+        <tr><td><code>dashboard.html</code></td><td class="num-col">1,187 lines</td><td>Superseded first interface, retained for comparison</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Data sources</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Source</th><th class="num-col">Rows</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td><code>gold.energy_consumption_validated</code></td><td class="num-col">4,260,849</td><td>All consumption figures (29 meters, 20 zones)</td></tr>
+        <tr><td><code>gold.energy_raw</code></td><td class="num-col">4,535,918</td><td>All electrical measurements (31 meters)</td></tr>
+        <tr><td><code>bronze.telemetries</code></td><td class="num-col">109,039,968</td><td>Independent verification only</td></tr>
+        <tr><td><code>silver.classify_*</code></td><td class="num-col">19 functions</td><td>Every threshold shown on the dashboard</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Conventions</h3>
+  <div class="prose">
+    <ul>
+      <li><strong>Time zone.</strong> All dates and times are Saudi local (UTC+3, no daylight saving), matching the warehouse's own <code>reading_date_saudi</code> column. Verified as exactly <code>(UTC + 3 hours)</code> across all 4,260,849 rows with zero mismatches.</li>
+      <li><strong>Reading cadence.</strong> Median 244 seconds (~4.07 minutes), measured rather than assumed.</li>
+      <li><strong>Long gaps.</strong> Energy recorded across an abnormally long interval is <em>included</em> in the totals, matching the warehouse's deliberate treatment (354,242.5 of the 2,020,697.5 kWh).</li>
+      <li><strong>Stack.</strong> Python 3.12 with psycopg 3, PostgreSQL 18, Chart.js 4.4.1. No paid components, no external services.</li>
+    </ul>
+  </div>
+
+  <h3>Method</h3>
+  <p class="prose">The warehouse, the classification logic and the Power BI model this dashboard reconciles against are SADIN's existing work. The dashboard application was specified, directed and reviewed by Shafey and implemented with AI pair-programming assistance (Claude), with every figure independently verified against the database as described in section 05. All verification queries are reproducible and recorded in <code>AUDIT.md</code>.</p>
+</section>
+
+<footer>
+  <p><strong>SADIN Energy Intelligence</strong> &mdash; project record, 14 September 2026.</p>
+  <p>Figures in this document were read from the production warehouse on the date of writing and are reproducible from the queries recorded in <code>AUDIT.md</code>.</p>
+</footer>
+
+</div>

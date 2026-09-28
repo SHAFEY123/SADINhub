@@ -1,0 +1,230 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY26SU07",
+      "reportVersionAtImport": {
+        "visual": "2.11.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "AccessibleDefault",
+      "reportVersionAtImport": {
+        "visual": "2.11.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          },
+          "visible": {
+            "expr": {
+              "Literal": {
+                "Value": "true"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "AccessibleDefault",
+          "path": "BuiltInThemes/AccessibleDefault.json",
+          "type": "CustomTheme"
+        },
+        {
+          "name": "CY26SU07",
+          "path": "BaseThemes/CY26SU07.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "2nd_page23586542091638563.png",
+          "path": "2nd_page23586542091638563.png",
+          "type": "Image"
+        },
+        {
+          "name": "3rd_page06699428613939351.png",
+          "path": "3rd_page06699428613939351.png",
+          "type": "Image"
+        },
+        {
+          "name": "4th_page3680549207314803.png",
+          "path": "4th_page3680549207314803.png",
+          "type": "Image"
+        },
+        {
+          "name": "5th_page5726748168408964.png",
+          "path": "5th_page5726748168408964.png",
+          "type": "Image"
+        },
+        {
+          "name": "6th_page0376743472710509.png",
+          "path": "6th_page0376743472710509.png",
+          "type": "Image"
+        },
+        {
+          "name": "7_th_page008110523738916853.png",
+          "path": "7_th_page008110523738916853.png",
+          "type": "Image"
+        },
+        {
+          "name": "8th_page07686236817057779.png",
+          "path": "8th_page07686236817057779.png",
+          "type": "Image"
+        },
+        {
+          "name": "Asy2984719026766761.png",
+          "path": "Asy2984719026766761.png",
+          "type": "Image"
+        },
+        {
+          "name": "bars7129469020830128.png",
+          "path": "bars7129469020830128.png",
+          "type": "Image"
+        },
+        {
+          "name": "blue_dot15739528703676386.png",
+          "path": "blue_dot15739528703676386.png",
+          "type": "Image"
+        },
+        {
+          "name": "ChatGPT_Image_Aug_31,_2026,_117886957577456839.png",
+          "path": "ChatGPT_Image_Aug_31,_2026,_117886957577456839.png",
+          "type": "Image"
+        },
+        {
+          "name": "ChatGPT_Image_Aug_31,_2026,_125081828830039736.png",
+          "path": "ChatGPT_Image_Aug_31,_2026,_125081828830039736.png",
+          "type": "Image"
+        },
+        {
+          "name": "ChatGPT_Image_Sep_7,_2026,_01_3896063361074069.png",
+          "path": "ChatGPT_Image_Sep_7,_2026,_01_3896063361074069.png",
+          "type": "Image"
+        },
+        {
+          "name": "current91994253825264.jpg",
+          "path": "current91994253825264.jpg",
+          "type": "Image"
+        },
+        {
+          "name": "graph5194211534525107.png",
+          "path": "graph5194211534525107.png",
+          "type": "Image"
+        },
+        {
+          "name": "home6905968516813897.png",
+          "path": "home6905968516813897.png",
+          "type": "Image"
+        },
+        {
+          "name": "hz23070065533091177.png",
+          "path": "hz23070065533091177.png",
+          "type": "Image"
+        },
+        {
+          "name": "morning31473606759080597.png",
+          "path": "morning31473606759080597.png",
+          "type": "Image"
+        },
+        {
+          "name": "negative8954223782560431.png",
+          "path": "negative8954223782560431.png",
+          "type": "Image"
+        },
+        {
+          "name": "night05055179227800033.png",
+          "path": "night05055179227800033.png",
+          "type": "Image"
+        },
+        {
+          "name": "orange9119006602374978.png",
+          "path": "orange9119006602374978.png",
+          "type": "Image"
+        },
+        {
+          "name": "pie038469380168503875.png",
+          "path": "pie038469380168503875.png",
+          "type": "Image"
+        },
+        {
+          "name": "purple04886083904538285.png",
+          "path": "purple04886083904538285.png",
+          "type": "Image"
+        },
+        {
+          "name": "purple14545962482227026.png",
+          "path": "purple14545962482227026.png",
+          "type": "Image"
+        },
+        {
+          "name": "sadin_logo6775000691290389.webp",
+          "path": "sadin_logo6775000691290389.webp",
+          "type": "Image"
+        },
+        {
+          "name": "sun6616921370092248.png",
+          "path": "sun6616921370092248.png",
+          "type": "Image"
+        },
+        {
+          "name": "total_daily8457069545268865.png",
+          "path": "total_daily8457069545268865.png",
+          "type": "Image"
+        },
+        {
+          "name": "warning08778232070946967.png",
+          "path": "warning08778232070946967.png",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  }
+}

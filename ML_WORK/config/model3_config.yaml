@@ -1,0 +1,122 @@
+# Model 3 - daily triage. EVERY threshold lives here; no module hard-codes one.
+# Design v2, approved for implementation 2026-09-20.
+# Read-only against Gold. Nothing in Bronze, Silver, Gold or Power BI is modified.
+
+scope:
+  # Zone 13 stays in scope: Model 3 uses no register-derived feature, and Zone 13's
+  # apparent electrical difference is entirely a low-load artifact that disappears under
+  # the power-factor load gate. (Decision 1.)
+  meters: 31
+  readings: 4535918
+  expected_meter_days: 15759
+  expected_scored_meter_days: 14130
+  expected_distinct_dates: 566
+  expected_first_scorable_date: "2025-02-07"
+
+saudi:
+  utc_offset_hours: 3          # no DST; the Saudi day closes at D 21:00:00 UTC
+
+features:
+  # The load gate is the production classifier's own third = margin/3 = 0.05 * CB.
+  # No new constant is introduced. (Decision 2.)
+  pf_gate_pct_cb: 5.0
+  pf_critical_below: 0.6
+  low_coverage_ratio: 0.5      # reporting flag only, NEVER a filter
+  dev28_window_days: 28
+  dev28_min_periods: 14
+
+  # Only these are genuine rates with numerator subset of denominator, so only these are
+  # asserted to lie in [0, 1]. (Decision 11 / correction C.)
+  bounded_rate_features:
+    - major_issue_rate
+    - major_problem_rate
+    - pf_critical_rate_gated_1
+    - pf_critical_rate_gated_2
+    - pf_critical_rate_gated_3
+    - pf_gate_open_rate_1
+    - pf_gate_open_rate_2
+    - pf_gate_open_rate_3
+    - negative_total_power_rate
+    - negative_phase_power_rate
+    - current_without_power_rate
+    - power_without_current_rate
+    - voltage_not_acceptable_rate
+    - frequency_not_acceptable_rate
+  # Not bounded. coverage_ratio exceeds 1 on ~20% of meter-days because its denominator is
+  # the facility MEDIAN; mean_load_pct_cb may exceed 100 and must never be clipped, since
+  # clipping would erase exactly the overload worth surfacing.
+  unbounded_features:
+    - coverage_ratio
+    - mean_load_pct_cb
+
+  # Tier 1 is the canonical v1 fitted set. (Decision 12.)
+  tier1:
+    - coverage_ratio
+    - major_issue_rate
+    - major_problem_rate
+    - pf_critical_rate_gated_1
+    - pf_critical_rate_gated_2
+    - pf_critical_rate_gated_3
+    - pf_gate_open_rate_1
+    - pf_gate_open_rate_2
+    - pf_gate_open_rate_3
+    - negative_total_power_rate
+    - negative_phase_power_rate
+    - current_without_power_rate
+    - power_without_current_rate
+    - voltage_not_acceptable_rate
+    - frequency_not_acceptable_rate
+    - mean_load_pct_cb
+  # Sensitivity variant only. Never selected as preferred on Model 1 lift. (Decision 12.)
+  tier2:
+    - major_issue_rate_dev28
+    - major_problem_rate_dev28
+    - pf_critical_rate_gated_1_dev28
+    - pf_critical_rate_gated_2_dev28
+    - pf_critical_rate_gated_3_dev28
+    - negative_total_power_rate_dev28
+    - negative_phase_power_rate_dev28
+  # Carried for reproducing the gated-vs-ungated comparison. Never fitted.
+  diagnostic:
+    - pf_critical_rate_ungated_1
+    - pf_critical_rate_ungated_2
+    - pf_critical_rate_ungated_3
+
+isolation_forest:
+  # Pre-specified. Not tuned, and never selected by maximising Model 1 overlap.
+  train_window_days: 180
+  # 60 DISTINCT prior Saudi calendar dates carrying observed data, NOT 60 meter-day rows.
+  min_train_dates: 60
+  n_estimators: 200
+  max_samples: 256
+  contamination: "auto"        # threshold only; predict() is never called (Decision 8)
+  random_state: 20260920
+  n_jobs: -1
+
+ranking:
+  # window_anomaly_pct is the PRIMARY cross-refit historical ranking score.
+  # window_anomaly_z is a DETERMINISTIC SECONDARY TIE-BREAK ONLY - not a probability,
+  # not a confidence, not an independent anomaly measure.
+  primary: "window_anomaly_pct"
+  tie_break: "window_anomaly_z"
+  final_tie_break: ["day_saudi", "meter_label"]
+  top_n: [25, 50, 100]
+  per_meter_top_n: 2
+
+crosscheck:
+  # Model 1 is opened ONLY after all Model 3 scoring is complete.
+  model1_run: null             # null = use the newest frozen Model 1 run
+  # A Model 1 event explains a Model 3 item only when ALL of these hold, judged on the
+  # SAME (meter_label, day_saudi) - never facility-wide.
+  explains_requires:
+    same_meter_same_day: true
+    event_class: "ELECTRICAL_FAULT"
+    commissioning: false
+  # Still joined and still shown as context, but never counted as an explanation.
+  context_only_classes:
+    - "COMMISSIONING"
+    - "DATA_AVAILABILITY"
+    - "ELECTRICAL_CHANGE"
+  families: ["T1", "T2", "T3", "T5"]
+  n_permutations: 10000
+  permutation_seed: 20260920

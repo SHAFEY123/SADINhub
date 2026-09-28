@@ -1,0 +1,172 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "734398b1e6494b3b54b0",
+  "position": {
+    "x": 0,
+    "y": 0,
+    "z": 4000,
+    "height": 341.42857142857144,
+    "width": 640,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold meter"
+                    }
+                  },
+                  "Property": "meter_label"
+                }
+              },
+              "queryRef": "gold meter.meter_label",
+              "nativeQueryRef": "meter_label1"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_reading_gaps"
+                    }
+                  },
+                  "Property": "previous_reading_timestamp"
+                }
+              },
+              "queryRef": "gold energy_reading_gaps.previous_reading_timestamp",
+              "nativeQueryRef": "previous_reading_timestamp"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_reading_gaps"
+                    }
+                  },
+                  "Property": "current_reading_timestamp"
+                }
+              },
+              "queryRef": "gold energy_reading_gaps.current_reading_timestamp",
+              "nativeQueryRef": "current_reading_timestamp"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_reading_gaps"
+                    }
+                  },
+                  "Property": "gap_minutes"
+                }
+              },
+              "queryRef": "Sum(gold energy_reading_gaps.gap_minutes)",
+              "nativeQueryRef": "gap_minutes"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_reading_gaps"
+                    }
+                  },
+                  "Property": "gap_hours"
+                }
+              },
+              "queryRef": "Sum(gold energy_reading_gaps.gap_hours)",
+              "nativeQueryRef": "gap_hours"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_reading_gaps"
+                    }
+                  },
+                  "Property": "gap_days"
+                }
+              },
+              "queryRef": "Sum(gold energy_reading_gaps.gap_days)",
+              "nativeQueryRef": "gap_days"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "gold energy_reading_gaps"
+                  }
+                },
+                "Property": "gap_days"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Reading Gap Evidence'"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E42C54'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "16D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

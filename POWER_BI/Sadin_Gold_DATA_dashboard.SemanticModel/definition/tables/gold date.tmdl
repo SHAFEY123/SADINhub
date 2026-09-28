@@ -1,0 +1,205 @@
+table 'gold date'
+	lineageTag: 304bd5af-8e0d-4d06-809c-ec5ac08bbe62
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 4ee5b419-241f-42fe-af2c-17a3e3eb6c73
+		summarizeBy: sum
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column calendar_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d168350f-8943-4554-b6ae-bf58ec01b0c2
+		summarizeBy: none
+		sourceColumn: calendar_date
+
+		variation Variation
+			isDefault
+			relationship: 14370932-0841-4cf0-b2bb-121737084ccb
+			defaultHierarchy: LocalDateTable_522d441c-d5b7-42e4-bc43-00613291d530.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column calendar_year
+		dataType: int64
+		formatString: 0
+		lineageTag: e8656a72-b38a-4b89-a0d3-8c160a75edf9
+		summarizeBy: sum
+		sourceColumn: calendar_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column calendar_quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: eb324526-9e61-41f8-9206-feff79679c6c
+		summarizeBy: sum
+		sourceColumn: calendar_quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_number
+		dataType: int64
+		formatString: 0
+		lineageTag: e5c8319a-5d79-43cc-a885-e3041aece42c
+		summarizeBy: sum
+		sourceColumn: month_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: dc885a16-f70f-4b2c-bec1-2bd925fe0217
+		summarizeBy: none
+		sourceColumn: month_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_short_name
+		dataType: string
+		lineageTag: 1d0442e6-6d85-4606-ad28-8088ca0b5f74
+		summarizeBy: none
+		sourceColumn: month_short_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_of_year
+		dataType: int64
+		formatString: 0
+		lineageTag: cfac2905-6726-4c54-a703-e242ca5287bf
+		summarizeBy: sum
+		sourceColumn: week_of_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column iso_day_of_week
+		dataType: int64
+		formatString: 0
+		lineageTag: ecc49727-f16c-4e30-b5f0-aee46e974fab
+		summarizeBy: sum
+		sourceColumn: iso_day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_name
+		dataType: string
+		lineageTag: 70063cfd-dc96-4c2b-a631-4f2e40757b16
+		summarizeBy: none
+		sourceColumn: day_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_short_name
+		dataType: string
+		lineageTag: ba94b857-90c4-4d89-9f16-de5e24391766
+		summarizeBy: none
+		sourceColumn: day_short_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_month
+		dataType: int64
+		formatString: 0
+		lineageTag: 3772fd32-6707-4a39-806e-ae3c79a9f36e
+		summarizeBy: sum
+		sourceColumn: day_of_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 0148f133-5988-4698-8b03-758ccae5bb2e
+		summarizeBy: sum
+		sourceColumn: day_of_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 132660d2-5b6a-4699-98d0-c138db4769ad
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 22a30d7b-aa2e-420b-9ffc-a6587011ebcd
+		summarizeBy: none
+		sourceColumn: month_start_date
+
+		variation Variation
+			isDefault
+			relationship: a753461b-d134-4b2f-a1ad-90e1c6e57468
+			defaultHierarchy: LocalDateTable_6b994cec-9b64-4988-bdb9-d0254722f3f2.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column month_end_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c4cbbc8a-e591-4acb-871f-7029a30dffb3
+		summarizeBy: none
+		sourceColumn: month_end_date
+
+		variation Variation
+			isDefault
+			relationship: df3fb3c3-8df5-4537-842d-3aa30d509136
+			defaultHierarchy: LocalDateTable_4ac83658-6bee-4660-8c86-caf2fd86a901.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column quarter_start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: f7b78abf-25f0-4a84-947a-9ee396bb9f78
+		summarizeBy: none
+		sourceColumn: quarter_start_date
+
+		variation Variation
+			isDefault
+			relationship: b2c5944b-8d4e-4200-8f51-4a8fdd54afe9
+			defaultHierarchy: LocalDateTable_758770c8-e9df-4771-ae1e-f914169d20e2.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year_start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 082e75f4-7445-4f6e-8d28-22e23d115d27
+		summarizeBy: none
+		sourceColumn: year_start_date
+
+		variation Variation
+			isDefault
+			relationship: da5b282f-f686-4000-877e-48522bf7665f
+			defaultHierarchy: LocalDateTable_5a85bbcb-f4b5-411f-a6e9-da377b1d5755.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition 'gold date' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "sadinhub"),
+				    gold_date = Source{[Schema="gold",Item="date"]}[Data]
+				in
+				    gold_date
+

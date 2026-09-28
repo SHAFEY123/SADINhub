@@ -1,0 +1,337 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "5ce3531ba55f7dcf7abf",
+  "position": {
+    "x": 240,
+    "y": 0,
+    "z": 2000,
+    "height": 243.75,
+    "width": 1040,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "reading_timestamp_utc"
+                }
+              },
+              "queryRef": "gold energy_raw.reading_timestamp_utc",
+              "nativeQueryRef": "reading_timestamp_utc"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "meter_label"
+                }
+              },
+              "queryRef": "gold energy_raw.meter_label",
+              "nativeQueryRef": "meter_label"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "frequency_hz"
+                }
+              },
+              "queryRef": "Sum(gold energy_raw.frequency_hz)",
+              "nativeQueryRef": "frequency_hz"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "status_hz"
+                }
+              },
+              "queryRef": "gold energy_raw.status_hz",
+              "nativeQueryRef": "status_hz"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "voltage_line_1_v"
+                }
+              },
+              "queryRef": "Sum(gold energy_raw.voltage_line_1_v)",
+              "nativeQueryRef": "voltage_line_1_v"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "status_v1"
+                }
+              },
+              "queryRef": "gold energy_raw.status_v1",
+              "nativeQueryRef": "status_v1"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "voltage_line_2_v"
+                }
+              },
+              "queryRef": "Sum(gold energy_raw.voltage_line_2_v)",
+              "nativeQueryRef": "voltage_line_2_v"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "status_v2"
+                }
+              },
+              "queryRef": "gold energy_raw.status_v2",
+              "nativeQueryRef": "status_v2"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "voltage_line_3_v"
+                }
+              },
+              "queryRef": "Sum(gold energy_raw.voltage_line_3_v)",
+              "nativeQueryRef": "voltage_line_3_v"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "status_v3"
+                }
+              },
+              "queryRef": "gold energy_raw.status_v3",
+              "nativeQueryRef": "status_v3"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "voltage_neutral_1_v"
+                }
+              },
+              "queryRef": "Sum(gold energy_raw.voltage_neutral_1_v)",
+              "nativeQueryRef": "voltage_neutral_1_v"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "status_vn1"
+                }
+              },
+              "queryRef": "gold energy_raw.status_vn1",
+              "nativeQueryRef": "status_vn1"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "voltage_neutral_2_v"
+                }
+              },
+              "queryRef": "Sum(gold energy_raw.voltage_neutral_2_v)",
+              "nativeQueryRef": "voltage_neutral_2_v"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "status_vn2"
+                }
+              },
+              "queryRef": "gold energy_raw.status_vn2",
+              "nativeQueryRef": "status_vn2"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "voltage_neutral_3_v"
+                }
+              },
+              "queryRef": "Sum(gold energy_raw.voltage_neutral_3_v)",
+              "nativeQueryRef": "voltage_neutral_3_v"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold energy_raw"
+                    }
+                  },
+                  "Property": "status_vn3"
+                }
+              },
+              "queryRef": "gold energy_raw.status_vn3",
+              "nativeQueryRef": "status_vn3"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Voltage / Frequency Reading Evidence.'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "16D"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "70914f5bce10957ba748",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "gold energy_raw"
+              }
+            },
+            "Property": "Selected Voltage Frequency Flag Row"
+          }
+        },
+        "type": "Advanced",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "g",
+              "Entity": "gold energy_raw",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 1,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "g"
+                        }
+                      },
+                      "Property": "Selected Voltage Frequency Flag Row"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "0L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      }
+    ]
+  }
+}

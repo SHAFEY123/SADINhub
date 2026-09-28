@@ -1,0 +1,27 @@
+table 'PF Phase Selector'
+	lineageTag: c79b6ac8-46ca-4008-96ec-4eed2b72e0bf
+
+	column Selection
+		lineageTag: 685943d7-67e1-4ea3-a61d-b974dae374dc
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Selection]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'PF Phase Selector' = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "Selection", STRING,
+				    {
+				        {"Any Phase"},
+				        {"Phase 1"},
+				        {"Phase 2"},
+				        {"Phase 3"}
+				    }
+				)
+
+	annotation PBI_Id = 51e6381d3e6b45cfb3fcee8a40ee9af5
+

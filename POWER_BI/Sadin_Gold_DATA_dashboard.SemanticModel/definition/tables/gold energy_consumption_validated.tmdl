@@ -1,0 +1,405 @@
+table 'gold energy_consumption_validated'
+	lineageTag: 19f54046-c899-423a-9efb-2cf015d981bf
+
+	measure 'Total Validated Consumption kWh' =
+			
+			SUM(
+			    'gold energy_consumption_validated'[validated_kwh_consumption]
+			)
+		formatString: #,##0.0 "kWh"
+		lineageTag: 4968f009-2f8b-43b7-8bd1-b445c725385b
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'Meters Included' =
+			
+			DISTINCTCOUNT(
+			    'gold energy_consumption_validated'[energy_meter_key]
+			)
+		formatString: 0
+		lineageTag: bc022c9d-1ae2-40b9-b7e7-ce86687259fd
+
+	measure 'Average Daily Consumption kWh' =
+			
+			AVERAGEX(
+			    VALUES(
+			        'gold energy_consumption_validated'[reading_date_saudi]
+			    ),
+			    [Total Validated Consumption kWh]
+			)
+		lineageTag: 53e991a3-8e21-4f80-bfab-3b136fc506af
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Consumption by Time Period kWh' =
+			
+			CALCULATE(
+			    SUM(
+			        'gold energy_consumption_validated'[validated_kwh_consumption]
+			    ),
+			    'gold energy_consumption_validated'[interval_quality] = "NORMAL_INTERVAL"
+			)
+		lineageTag: 0a31495a-6cd1-4b3f-8780-66b9a6173abd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Highest Consumption Period' =
+			
+			VAR PeriodTable =
+			    ADDCOLUMNS(
+			        ALL(
+			            'gold energy_consumption_validated'[Time Period]
+			        ),
+			        "@Consumption",
+			            CALCULATE(
+			                [Total Validated Consumption kWh]
+			            )
+			    )
+			
+			VAR TopPeriod =
+			    TOPN(
+			        1,
+			        PeriodTable,
+			        [@Consumption], DESC
+			    )
+			
+			RETURN
+			    MAXX(
+			        TopPeriod,
+			        'gold energy_consumption_validated'[Time Period]
+			    )
+		lineageTag: 7d4d820a-4ffc-4039-9694-8ed2ccd97e2c
+
+	measure 'Peak Period Consumption kWh' =
+			
+			VAR PeriodTable =
+			    ADDCOLUMNS(
+			        ALL(
+			            'gold energy_consumption_validated'[Time Period]
+			        ),
+			        "@Consumption",
+			            CALCULATE(
+			                [Total Validated Consumption kWh]
+			            )
+			    )
+			
+			VAR TopPeriod =
+			    TOPN(
+			        1,
+			        PeriodTable,
+			        [@Consumption], DESC
+			    )
+			
+			RETURN
+			    MAXX(
+			        TopPeriod,
+			        [@Consumption]
+			    )
+		lineageTag: 6ecf2875-66ed-4862-8b6b-b29e203800f7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Peak Period Share' =
+			
+			DIVIDE(
+			    [Peak Period Consumption kWh],
+			    [Total Validated Consumption kWh],
+			    0
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 16a055bb-ea95-4c82-8812-47eb4ebbe9cc
+
+	measure 'Time Period Share' =
+			
+			DIVIDE(
+			    [Total Validated Consumption kWh],
+			    CALCULATE(
+			        [Total Validated Consumption kWh],
+			        REMOVEFILTERS(
+			            'gold energy_consumption_validated'[Time Period]
+			        ),
+			        REMOVEFILTERS(
+			            'gold energy_consumption_validated'[Time Period Display]
+			        )
+			    ),
+			    0
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: e4e947c6-ce94-48b4-83c5-a68bcd11b1b7
+
+	measure 'Time Period Share Bar' =
+			
+			[Time Period Share]
+		lineageTag: f595c4e1-1697-4c02-8546-64a31e7b3362
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column energy_meter_key
+		dataType: string
+		lineageTag: cac40c48-197e-43b0-a864-0d775f66d472
+		summarizeBy: none
+		sourceColumn: energy_meter_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_key
+		dataType: string
+		lineageTag: 21cee349-70e0-4b79-ac0a-6dfc3b449162
+		summarizeBy: none
+		sourceColumn: facility_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_key
+		dataType: string
+		lineageTag: fa2a092e-be58-4d9b-92ec-40cd4dfe0b86
+		summarizeBy: none
+		sourceColumn: zone_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column grid_billing_account_key
+		dataType: string
+		lineageTag: 69893cf0-d0ba-4150-baac-b7763abe48f2
+		summarizeBy: none
+		sourceColumn: grid_billing_account_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column meter_label
+		dataType: string
+		lineageTag: 04b0fe10-bf72-4748-adf8-c408fa46c76d
+		summarizeBy: none
+		sourceColumn: meter_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column reading_timestamp_utc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 7b6b5e69-d196-4d4e-a2e6-d8fdaeb69db3
+		summarizeBy: none
+		sourceColumn: reading_timestamp_utc
+
+		variation Variation
+			isDefault
+			relationship: 74057616-e675-478e-8b0e-d839fab4004f
+			defaultHierarchy: LocalDateTable_82e41652-3b65-4d76-8d69-1daa5b618543.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column reading_timestamp_saudi
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5c041293-044c-4c29-9100-a571d15dba99
+		summarizeBy: none
+		sourceColumn: reading_timestamp_saudi
+
+		variation Variation
+			isDefault
+			relationship: 57ea509d-c882-40e8-a749-6dd128146ddf
+			defaultHierarchy: LocalDateTable_8a0dccc5-14b6-47c4-a065-74f3d37b9aac.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column reading_date_saudi
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 6cf5457b-fe34-406d-9be9-b7c1464fc105
+		summarizeBy: none
+		sourceColumn: reading_date_saudi
+
+		variation Variation
+			isDefault
+			relationship: 79fa15fb-054e-4569-8fe5-7c475014a9fd
+			defaultHierarchy: LocalDateTable_aa7590bb-29f6-477f-820f-7e820bb9915c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column active_energy_cumulative_kwh
+		dataType: double
+		lineageTag: ff3b8b22-cbb2-4834-8bef-e143d3eb593d
+		summarizeBy: sum
+		sourceColumn: active_energy_cumulative_kwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column previous_valid_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: cd0d490e-28e3-43d3-b2d9-cf21b37230a4
+		summarizeBy: none
+		sourceColumn: previous_valid_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 1ede1b47-438e-4498-a625-76e6adb5e76d
+			defaultHierarchy: LocalDateTable_64d239ec-b7b6-42ea-b48e-3d341ed72c7c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column previous_valid_kwh
+		dataType: double
+		lineageTag: e03ce195-acf7-4da9-a6af-910b167670e8
+		summarizeBy: sum
+		sourceColumn: previous_valid_kwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column validated_kwh_consumption
+		dataType: double
+		lineageTag: 59d91c6d-6dc9-4ac2-92b3-8a34ee61509b
+		summarizeBy: sum
+		sourceColumn: validated_kwh_consumption
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column consumption_cleaning_status
+		dataType: string
+		lineageTag: ce046af7-ad61-4ecc-8f39-111a83d2995f
+		summarizeBy: none
+		sourceColumn: consumption_cleaning_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column interval_quality
+		dataType: string
+		lineageTag: 18b13cfe-87d3-48c4-922a-93e52f93a672
+		summarizeBy: none
+		sourceColumn: interval_quality
+
+		annotation SummarizationSetBy = Automatic
+
+	column gap_minutes
+		dataType: double
+		lineageTag: 187ea7cc-066b-4a1e-bf87-2fe56a152769
+		summarizeBy: sum
+		sourceColumn: gap_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Reading Month UTC' =
+			
+			DATE(
+			    YEAR('gold energy_consumption_validated'[reading_timestamp_utc]),
+			    MONTH('gold energy_consumption_validated'[reading_timestamp_utc]),
+			    1
+			)
+		formatString: General Date
+		lineageTag: d2e54285-b067-4c3a-92ed-5c5c8a386604
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: 48849a34-7524-4819-908b-4bed542949e8
+			defaultHierarchy: LocalDateTable_9881a707-29e7-4823-998f-a1eb299a65c1.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Type' =
+			
+			VAR DayNumber =
+			    WEEKDAY(
+			        'gold energy_consumption_validated'[reading_date_saudi],
+			        2
+			    )
+			RETURN
+			IF(
+			    DayNumber IN {5, 6},
+			    "Weekend",
+			    "Weekday"
+			)
+		lineageTag: 8358c884-7a5b-42c2-b3a9-7625f4686cef
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Time Period' =
+			
+			VAR ReadingTime =
+			    TIME(
+			        HOUR('gold energy_consumption_validated'[reading_timestamp_saudi]),
+			        MINUTE('gold energy_consumption_validated'[reading_timestamp_saudi]),
+			        SECOND('gold energy_consumption_validated'[reading_timestamp_saudi])
+			    )
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			
+			    ReadingTime >= TIME(4,0,0)
+			        && ReadingTime < TIME(8,1,0),
+			        "4am to 8am",
+			
+			    ReadingTime >= TIME(8,1,0)
+			        && ReadingTime < TIME(17,1,0),
+			        "8:01am to 5pm",
+			
+			    "5:01pm to 3:59am"
+			)
+		lineageTag: 17016d6a-5e87-43e1-bcf8-82ea9d2f9d63
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Time Period Display' =
+			
+			SWITCH(
+			    'gold energy_consumption_validated'[Time Period],
+			    "4am to 8am", "4:00 AM – 8:00 AM",
+			    "8:01am to 5pm", "8:01 AM – 5:00 PM",
+			    "5:01pm to 3:59am", "5:01 PM – 3:59 AM"
+			)
+		lineageTag: c8032cc0-d8b7-4cb5-917a-e1424b472d37
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Reading Hour Saudi' =
+			
+			HOUR(
+			    'gold energy_consumption_validated'[reading_timestamp_saudi]
+			)
+		formatString: 0
+		lineageTag: 86a3dcf3-debc-45c0-93c1-1e495f24d083
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Reading Month Saudi' =
+			
+			DATE(
+			    YEAR('gold energy_consumption_validated'[reading_timestamp_saudi]),
+			    MONTH('gold energy_consumption_validated'[reading_timestamp_saudi]),
+			    1
+			)
+		formatString: General Date
+		lineageTag: ad7a1f32-39e2-4f50-80ab-0460d14b259a
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: f7aec97b-8dc5-475b-a980-c83f0349ac0c
+			defaultHierarchy: LocalDateTable_1029b4f1-c65a-4fbd-b56f-eb9dc83fd6c6.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'gold energy_consumption_validated' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5432", "sadinhub"),
+				    gold_energy_consumption_validated = Source{[Schema="gold",Item="energy_consumption_validated"]}[Data]
+				in
+				    gold_energy_consumption_validated
+

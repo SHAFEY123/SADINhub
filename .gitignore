@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# ML run outputs (meter-level results — data, not code)
+ML_WORK/outputs/
+
+# Power BI local state and data cache
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+*.pbix
+
+# Secrets
+.env
+*.env

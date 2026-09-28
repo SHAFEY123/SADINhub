@@ -1,0 +1,879 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Bookmark 1",
+  "name": "d8dc0d799e797e7dba7b",
+  "options": {
+    "targetVisualNames": []
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "697045e4e7161afd0074",
+    "sections": {
+      "697045e4e7161afd0074": {
+        "visualContainers": {
+          "0c9b59c3e4c091029bac": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "b064767e1ffff124b2a1",
+                  "type": "Advanced",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "g",
+                        "Entity": "gold energy_raw",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "Comparison": {
+                            "ComparisonKind": 1,
+                            "Left": {
+                              "Measure": {
+                                "Expression": {
+                                  "SourceRef": {
+                                    "Source": "g"
+                                  }
+                                },
+                                "Property": "Max Current Mismatch"
+                              }
+                            },
+                            "Right": {
+                              "Literal": {
+                                "Value": "100L"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "Max Current Mismatch"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "8bbe8f243f170e233edc",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "meter_label"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "dfb18a4457ad36b21c28",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "Total Phase Mismatch Events"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "ba91b7635288ffd6c0ab",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "Amp1 Mismatch Readings"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "9f544c60e3845d1c15a5",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "Amp2 Mismatch Readings"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "e8b8360ec80fc9bbdbf1",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "Amp3 Mismatch Readings"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "barChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "Total Phase Mismatch Events"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "meter_label"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "30f062c374474aa3f644": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "c34df76e9105089c1de0",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "g",
+                        "Entity": "gold energy_raw",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "Not": {
+                            "Expression": {
+                              "In": {
+                                "Expressions": [
+                                  {
+                                    "Column": {
+                                      "Expression": {
+                                        "SourceRef": {
+                                          "Source": "g"
+                                        }
+                                      },
+                                      "Property": "status_amp3"
+                                    }
+                                  }
+                                ],
+                                "Values": [
+                                  [
+                                    {
+                                      "Literal": {
+                                        "Value": "'Acceptable'"
+                                      }
+                                    }
+                                  ]
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "status_amp3"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "ca2789d94460e9603aac",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "meter_label"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "3b589546c216cd1785ac",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "Reading Count"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "pivotTable",
+              "objects": {},
+              "activeProjections": {
+                "Columns": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "status_amp3"
+                    }
+                  }
+                ],
+                "Rows": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "meter_label"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "588a2ae6e529028d447f": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "25973ed017988a8a2d4e",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "g",
+                        "Entity": "gold energy_raw",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "g"
+                                    }
+                                  },
+                                  "Property": "status_amp1"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'Critical'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'Major Issue'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'Major Problem'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'Problematic'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'Review Required'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "status_amp1"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "357ae61ba593a779b50f",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "meter_label"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "02d9405c515bda8ccc1d",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "Reading Count"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "pivotTable",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "meter_label"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Columns": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "status_amp1"
+                    }
+                  }
+                ],
+                "Rows": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "meter_label"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "8162b4033f1984c8d510": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "3fe0d69a4387921f03e4",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "status_amp1"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "8bb52a9abfd832ba10a5",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "status_amp2"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "a14e4676025c58a8ef2a",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "status_amp3"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "2dedfe99ce52730b62fb",
+                  "type": "Advanced",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "g",
+                        "Entity": "gold energy_raw",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "Comparison": {
+                            "ComparisonKind": 1,
+                            "Left": {
+                              "Measure": {
+                                "Expression": {
+                                  "SourceRef": {
+                                    "Source": "g"
+                                  }
+                                },
+                                "Property": "Any Phase Mismatch Row"
+                              }
+                            },
+                            "Right": {
+                              "Literal": {
+                                "Value": "0L"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "Any Phase Mismatch Row"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "f17e7f82309adbdbe138",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "reading_timestamp_utc"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "d30127b4ff74c99cf3d2",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "meter_label"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "a6b4ce9122f4bae1f923",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "current_phase_1_a"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "b2f4863c3c740d31c0dd",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "active_power_phase_1_kw"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "cea437d9e365fd3f9356",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "current_phase_2_a"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "40476ed0a43ba81e2f1e",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "active_power_phase_2_kw"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "d441f935e1d9ad7b28a4",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "current_phase_3_a"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "a3a51e80435a5935cc46",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "active_power_phase_3_kw"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "tableEx",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 1,
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "active_power_phase_2_kw"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "8f37db9c3f17da524cf5": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {}
+            }
+          },
+          "eceb3089f7bbe4306464": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "8a6748e4f7ef4799419a",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "g",
+                        "Entity": "gold energy_raw",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "g"
+                                    }
+                                  },
+                                  "Property": "status_amp2"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'Major Issue'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'Major Problem'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "status_amp2"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "527fe7deeb4a676fa4f0",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "meter_label"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "c27a4ce2f46a443b75f5",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "Reading Count"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "pivotTable",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 1,
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "meter_label"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Columns": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "status_amp2"
+                    }
+                  }
+                ],
+                "Rows": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "gold energy_raw"
+                        }
+                      },
+                      "Property": "meter_label"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "objects": {
+      "merge": {
+        "outspacePane": [
+          {
+            "properties": {
+              "expanded": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              },
+              "visible": {
+                "expr": {
+                  "Literal": {
+                    "Value": "true"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
